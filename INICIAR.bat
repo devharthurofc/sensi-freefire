@@ -1,0 +1,11 @@
+@echo off
+title SENSI PRO - Servidor
+cd /d "%~dp0"
+echo ============================================
+echo   SENSI PRO - iniciando servidor...
+echo   Site:   http://localhost:3000
+echo   Admin:  http://localhost:3000/admin
+echo   Para parar: feche esta janela ou CTRL+C
+echo ============================================
+node server.js
+pause

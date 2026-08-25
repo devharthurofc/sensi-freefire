@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SENSI PRO — Painel Administrativo</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08080f;--card:rgba(255,255,255,.04);--card-border:rgba(255,255,255,.09);
+  --violet:#8b5cf6;--text:#f3f4f6;--muted:#9ca3af;--ok:#22c55e;--err:#ef4444;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;padding:26px 16px 60px}
+.wrap{max-width:1060px;margin:0 auto}
+h1{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:900;letter-spacing:.06em;margin-bottom:4px}
+h1 span{color:var(--violet)}
+.sub{color:var(--muted);margin-bottom:24px;font-size:.9rem;letter-spacing:.06em}
+.card{border:1px solid var(--card-border);border-radius:18px;background:var(--card);padding:20px;margin-bottom:20px}
+.card h2{font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.card h2::after{content:"";flex:1;height:1px;background:var(--card-border)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.stat{border:1px solid var(--card-border);border-radius:14px;padding:16px;text-align:center}
+.stat b{font-family:'Orbitron',sans-serif;font-size:1.7rem;font-weight:900;display:block}
+.stat span{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+label{display:block;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
+input{background:rgba(0,0,0,.35);border:1px solid var(--card-border);border-radius:10px;color:var(--text);padding:11px 12px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:.95rem;outline:none}
+input:focus{border-color:var(--violet)}
+button{appearance:none;border:none;cursor:pointer;font-family:'Orbitron',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.72rem;padding:12px 18px;border-radius:10px;color:#fff;transition:.2s}
+button:hover{filter:brightness(1.15)}
+button:disabled{opacity:.6;cursor:wait}
+.b-vio{background:linear-gradient(135deg,var(--violet),#d946ef)}
+.b-red{background:linear-gradient(135deg,#b91c1c,#ef4444)}
+.b-gray{background:rgba(255,255,255,.07);border:1px solid var(--card-border)}
+.b-green{background:linear-gradient(135deg,#15803d,#22c55e)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th{text-align:left;color:var(--muted);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:9px 8px;border-bottom:1px solid var(--card-border)}
+td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+.badge{font-size:.62rem;font-weight:800;letter-spacing:.1em;padding:4px 9px;border-radius:99px;text-transform:uppercase}
+.bg-ok{background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.4)}
+.bg-off{background:rgba(239,68,68,.13);color:#fca5a5;border:1px solid rgba(239,68,68,.35)}
+.bg-warn{background:rgba(250,204,21,.12);color:#fde047;border:1px solid rgba(250,204,21,.4)}
+.code{font-family:'Orbitron',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.05em}
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+.actions button{padding:8px 11px;font-size:.62rem}
+.mini-inp{width:110px;padding:8px 9px;font-size:.85rem;border-radius:8px}
+.login-box{max-width:380px;margin:60px auto}
+.msg{margin-top:10px;font-weight:700;font-size:.92rem;display:none}
+.msg.show{display:block}
+.msg.ok{color:#86efac}.msg.err{color:#fca5a5}
+.topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:8px}
+@media(max-width:720px){table{display:block;overflow-x:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div id="loginView" class="login-box card">
+  <h1>SENSI<span>PRO</span> · ADMIN</h1>
+  <p class="sub">Acesso restrito a administradores.</p>
+  <label>Usuário</label>
+  <input id="admUser" style="width:100%" autocomplete="username">
+  <label>Senha</label>
+  <input id="admPass" type="password" style="width:100%" autocomplete="current-password">
+  <div style="margin-top:18px"><button class="b-vio" id="loginBtn">Entrar</button></div>
+  <div class="msg err" id="loginMsg"></div>
+</div>
+
+<div id="panelView" style="display:none">
+  <div class="topbar">
+    <div>
+      <h1>SENSI<span>PRO</span> · PAINEL ADMIN</h1>
+      <p class="sub" id="admWho"></p>
+    </div>
+    <button class="b-gray" id="logoutBtn">Sair</button>
+  </div>
+
+  <div class="card">
+    <h2>Dashboard</h2>
+    <div class="stats" id="statsBox"></div>
+  </div>
+
+  <div class="card">
+    <h2>Gerenciar Keys</h2>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
+      <div><label>Dias até expirar</label><input type="number" class="mini-inp" id="nkDays" min="0" placeholder="ex: 30"></div>
+      <div><label>+ Horas (opcional)</label><input type="number" class="mini-inp" id="nkHours" min="0" placeholder="ex: 12"></div>
+      <div><label>Usos permitidos</label><input type="number" class="mini-inp" id="nkUses" min="1" value="1"></div>
+      <button class="b-vio" id="genKeyBtn">+ Gerar nova KEY</button>
+      <button class="b-gray" id="reloadKeysBtn">Recarregar</button>
+    </div>
+    <div style="margin-top:14px">
+      <table>
+        <thead><tr><th>Código</th><th>Status</th><th>Usos</th><th>Expira</th><th>Ativada por</th><th>Ações</th></tr></thead>
+        <tbody id="keysBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Usuários</h2>
+    <table>
+      <thead><tr><th>Jogador</th><th>VIP</th><th>Origem</th><th>Visto por último</th><th>Ações</th></tr></thead>
+      <tbody id="usersBody"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Configurações</h2>
+    <label>Link de contato para solicitação de KEY (WhatsApp, Telegram...)</label>
+    <input id="cfgContact" style="width:100%" placeholder="https://wa.me/55DDDNÚMERO?text=...">
+    <label>Limite diário de gerações no modo FREE</label>
+    <input type="number" class="mini-inp" id="cfgLimit" min="0">
+    <div style="margin-top:14px"><button class="b-green" id="saveCfgBtn">Salvar configurações</button></div>
+
+    <h2 style="margin-top:26px">Alterar minha senha</h2>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
+      <div><label>Senha atual</label><input type="password" class="mini-inp" id="pwOld" style="width:170px" autocomplete="current-password"></div>
+      <div><label>Nova senha (min. 8)</label><input type="password" class="mini-inp" id="pwNew" style="width:170px" autocomplete="new-password"></div>
+      <button class="b-vio" id="changePwBtn">Trocar senha</button>
+    </div>
+    <div class="msg" id="cfgMsg"></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+const TKEY = 'sensipro_admin_token';
+let token = sessionStorage.getItem(TKEY) || '';
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+async function api(path, opts = {}) {
+  const headers = Object.assign({'Content-Type':'application/json'}, opts.headers || {});
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  const res = await fetch(path, {
+    method: opts.method || (opts.body ? 'POST' : 'GET'),
+    headers,
+    body: opts.body ? JSON.stringify(opts.body) : undefined
+  });
+  let data = {};
+  try { data = await res.json(); } catch(_){}
+  data._status = res.status;
+  return data;
+}
+
+function showMsg(el, text, ok) {
+  el.textContent = text;
+  el.className = 'msg show ' + (ok ? 'ok' : 'err');
+  setTimeout(() => { el.className = 'msg'; }, 3500);
+}
+
+async function boot() {
+  if (!token) { renderLogin(); return; }
+  const me = await api('/api/admin/me');
+  if (me._status !== 200) { token=''; sessionStorage.removeItem(TKEY); renderLogin(); return; }
+  renderPanel(me.admin);
+}
+
+function renderLogin() {
+  $('loginView').style.display = 'block';
+  $('panelView').style.display = 'none';
+}
+function renderPanel(admin) {
+  $('loginView').style.display = 'none';
+  $('panelView').style.display = 'block';
+  $('admWho').textContent = 'Conectado como: ' + admin.username + (admin.mustChange ? ' · ⚠ troque a senha padrão!' : '');
+  refreshAll();
+}
+function refreshAll(){ loadDashboard(); loadKeys(); loadUsers(); loadSettings(); }
+
+$('loginBtn').addEventListener('click', async () => {
+  const btn = $('loginBtn'); btn.disabled = true;
+  const r = await api('/api/admin/login', { body: { username: $('admUser').value.trim(), password: $('admPass').value } });
+  btn.disabled = false;
+  if (r._status === 200 && r.token) {
+    token = r.token;
+    sessionStorage.setItem(TKEY, token);
+    renderPanel(r.admin);
+  } else {
+    showMsg($('loginMsg'), r.message || 'Falha no login.', false);
+  }
+});
+$('admPass').addEventListener('keydown', e => { if (e.key === 'Enter') $('loginBtn').click(); });
+$('logoutBtn').addEventListener('click', async () => {
+  await api('/api/admin/logout', { method: 'POST' });
+  token = ''; sessionStorage.removeItem(TKEY); renderLogin();
+});
+
+async function loadDashboard() {
+  const r = await api('/api/admin/dashboard');
+  if (r._status !== 200) return;
+  const items = [
+    ['Usuários', r.users], ['Usuários VIP', r.vipUsers],
+    ['Keys ativas', r.activeKeys], ['Keys expiradas', r.expiredKeys],
+    ['Gerações hoje', r.generationsToday]
+  ];
+  $('statsBox').innerHTML = items.map(([l, v]) => '<div class="stat"><b>' + v + '</b><span>' + l + '</span></div>').join('');
+}
+
+async function loadKeys() {
+  const r = await api('/api/admin/keys');
+  const tb = $('keysBody');
+  if (r._status !== 200) { tb.innerHTML = ''; return; }
+  if (!r.keys.length) { tb.innerHTML = '<tr><td colspan="6" style="color:var(--muted)">Nenhuma KEY criada ainda.</td></tr>'; return; }
+  tb.innerHTML = '';
+  r.keys.forEach(k => {
+    const tr = document.createElement('tr');
+    const statusBadge = k.status === 'ativa'
+      ? (k.expired ? '<span class="badge bg-warn">expirada</span>' : '<span class="badge bg-ok">ativa</span>')
+      : '<span class="badge bg-off">inativa</span>';
+    const usesTxt = k.maxUses ? (k.uses + '/' + k.maxUses) : (k.uses + '/∞');
+    tr.innerHTML =
+      '<td><span class="code">' + esc(k.code) + '</span></td>' +
+      '<td>' + statusBadge + '</td>' +
+      '<td>' + usesTxt + '</td>' +
+      '<td><input type="date" class="mini-inp exp-inp" value="' + (k.expiresAt ? k.expiresAt.slice(0,10) : '') + '"></td>' +
+      '<td>' + esc(k.activatedByLabel || '—') + '</td>' +
+      '<td><div class="actions">' +
+        '<button class="b-gray cp">Copiar</button>' +
+        '<button class="' + (k.status === 'ativa' ? 'b-red tg' : 'b-green tg') + '">' + (k.status === 'ativa' ? 'Desativar' : 'Ativar') + '</button>' +
+        '<button class="b-vio sv">Salvar data/usos</button>' +
+        '<button class="b-red del">Excluir</button>' +
+      '</div></td>';
+    tr.querySelector('.cp').onclick = () => navigator.clipboard.writeText(k.code).then(() => alert('KEY copiada!'));
+    tr.querySelector('.tg').onclick = async () => {
+      await api('/api/admin/keys/' + k.id, { method: 'PATCH', body: { status: k.status === 'ativa' ? 'inativa' : 'ativa' } });
+      loadKeys(); loadDashboard();
+    };
+    tr.querySelector('.sv').onclick = async () => {
+      const dateVal = tr.querySelector('.exp-inp').value;
+      const usesStr = prompt('Quantidade máxima de usos (vazio = ilimitado):', k.maxUses || '');
+      const body = {};
+      body.expiresAt = dateVal ? dateVal : null;
+      if (usesStr !== null) body.maxUses = usesStr === '' ? 0 : parseInt(usesStr, 10);
+      const rr = await api('/api/admin/keys/' + k.id, { method: 'PATCH', body });
+      if (rr._status === 200) { loadKeys(); loadDashboard(); }
+      else alert(rr.message || 'Erro ao salvar.');
+    };
+    tr.querySelector('.del').onclick = async () => {
+      if (!confirm('Excluir a KEY ' + k.code + '?')) return;
+      await api('/api/admin/keys/' + k.id, { method: 'DELETE' });
+      loadKeys(); loadDashboard();
+    };
+    tb.appendChild(tr);
+  });
+}
+
+$('genKeyBtn').addEventListener('click', async () => {
+  const btn = $('genKeyBtn'); btn.disabled = true;
+  const r = await api('/api/admin/keys', { body: { expiresInDays: $('nkDays').value, expiresInHours: $('nkHours').value, maxUses: $('nkUses').value } });
+  btn.disabled = false;
+  if (r.key) {
+    try { await navigator.clipboard.writeText(r.key.code); } catch(_){}
+    alert('KEY gerada e copiada:\n\n' + r.key.code);
+    loadKeys(); loadDashboard();
+  }
+});
+$('reloadKeysBtn').addEventListener('click', loadKeys);
+
+async function loadUsers() {
+  const r = await api('/api/admin/users');
+  const tb = $('usersBody');
+  if (r._status !== 200) { tb.innerHTML = ''; return; }
+  if (!r.users.length) { tb.innerHTML = '<tr><td colspan="5" style="color:var(--muted)">Nenhum usuário ainda.</td></tr>'; return; }
+  tb.innerHTML = '';
+  r.users.forEach(u => {
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><b>' + esc(u.label) + '</b></td>' +
+      '<td>' + (u.isVip ? '<span class="badge bg-ok">VIP</span>' : '<span class="badge bg-off">Free</span>') + '</td>' +
+      '<td>' + esc(u.vipSource || '—') + '</td>' +
+      '<td style="color:var(--muted)">' + new Date(u.lastSeenAt).toLocaleString('pt-BR') + '</td>' +
+      '<td><div class="actions">' +
+        (u.isVip
+          ? '<button class="b-red rm">Remover VIP</button>'
+          : '<button class="b-green gv">Liberar VIP</button>') +
+      '</div></td>';
+    const b = tr.querySelector('.gv') || tr.querySelector('.rm');
+    b.onclick = async () => {
+      await api('/api/admin/users/' + u.id, { method: 'PATCH', body: { isVip: !u.isVip } });
+      loadUsers(); loadDashboard();
+    };
+    tb.appendChild(tr);
+  });
+}
+
+async function loadSettings() {
+  const r = await api('/api/admin/settings');
+  if (r._status !== 200) return;
+  $('cfgContact').value = r.contactLink || '';
+  $('cfgLimit').value = r.freeDailyLimit != null ? r.freeDailyLimit : 3;
+}
+$('saveCfgBtn').addEventListener('click', async () => {
+  const r = await api('/api/admin/settings', { method: 'PUT', body: {
+    contactLink: $('cfgContact').value, freeDailyLimit: $('cfgLimit').value
+  }});
+  showMsg($('cfgMsg'), r._status === 200 ? 'Configurações salvas!' : 'Erro ao salvar.', r._status === 200);
+});
+$('changePwBtn').addEventListener('click', async () => {
+  const r = await api('/api/admin/change-password', { body: {
+    currentPassword: $('pwOld').value, newPassword: $('pwNew').value
+  }});
+  showMsg($('cfgMsg'), r._status === 200 ? 'Senha alterada com sucesso!' : (r.message || 'Erro.'), r._status === 200);
+  if (r._status === 200) { $('pwOld').value = ''; $('pwNew').value = ''; }
+});
+
+boot();
+</script>
+</body>
+</html>
