@@ -127,6 +127,7 @@ function fmtResult(r) {
   if (r.deviceName) s += "Aparelho: " + r.deviceName + "\n";
   NAMES.forEach(([k, label]) => { s += label + ": " + r.values[k] + "\n"; });
   s += "Botão de disparo: " + r.fireButton + "%\n";
+  if (r.ciclos) s += "Ciclos: " + r.ciclos + "\n";
   s += "DPI recomendado: " + r.dpi + "\n";
   return s;
 }
@@ -162,6 +163,7 @@ function setupOpts(id) {
 setupOpts("freeRamOpts"); setupOpts("freeStyleOpts");
 setupOpts("vipStyleOpts"); setupOpts("vipLevelOpts"); setupOpts("vipAimOpts");
 setupOpts("gStyleOpts"); setupOpts("gLevelOpts"); setupOpts("gAimOpts");
+setupOpts("ipStyleOpts"); setupOpts("ipLevelOpts"); setupOpts("ipAimOpts");
 
 function selVal(id) {
   const b = document.getElementById(id);
@@ -332,6 +334,15 @@ function fillDeviceSelect(id) {
     '<option value="">Selecione o modelo...</option>' +
     (window.__devices || []).map(d => '<option value="' + escapeHtml(d) + '">' + escapeHtml(d) + '</option>').join('') +
     '<option value="__other">Outro modelo (digitar)</option>';
+}
+
+function fillIphoneSelect() {
+  const sel = document.getElementById("ipModel");
+  if (!sel) return;
+  const iphones = (window.__devices || []).filter(d => d.indexOf("iPhone") === 0);
+  sel.innerHTML =
+    '<option value="">Selecione o modelo...</option>' +
+    iphones.map(d => '<option value="' + escapeHtml(d) + '">' + escapeHtml(d) + '</option>').join('');
 }
 
 function getModelValue(selId, custId) {
@@ -543,6 +554,58 @@ document.getElementById("gCopyBtn").addEventListener("click", () => {
   if (state.lastGen) copyText(fmtResult(state.lastGen), "Config copiada!");
 });
 
+/* ================== MODO IPHONE ================== */
+
+document.getElementById("ipGenBtn").addEventListener("click", async () => {
+  const warn = document.getElementById("ipWarn");
+  const model = document.getElementById("ipModel").value.trim();
+  if (!model) {
+    warn.classList.add("show");
+    document.getElementById("ipModel").focus();
+    return;
+  }
+  warn.classList.remove("show");
+
+  const btn = document.getElementById("ipGenBtn");
+  btn.disabled = true;
+  btn.innerHTML = "<span class='spinner'></span> Gerando...";
+  const r = await api("/api/generate/iphone", { body: {
+    deviceModel: model,
+    refreshHz: document.getElementById("ipHz").value,
+    style: selVal("ipStyleOpts"),
+    level: selVal("ipLevelOpts"),
+    aim: selVal("ipAimOpts")
+  }});
+  btn.disabled = false;
+  btn.innerHTML = "🍎 Gerar Sensi iPhone";
+
+  if (r._status === 429) {
+    toast(r.message, true);
+    document.getElementById("ipRemaining").textContent = "Limite diário atingido — vire VIP 👑";
+    openUpsell();
+    return;
+  }
+  if (r.error) { toast(r.message || "Erro ao gerar.", true); return; }
+
+  state.lastIphone = r;
+  renderGrid(document.getElementById("ipGenGrid"), r.values);
+  animateNum(document.getElementById("ipDpiVal"), r.dpi);
+  animateNum(document.getElementById("ipCicVal"), r.ciclos);
+  animateNumPercent(document.getElementById("ipBtnVal"), r.fireButton);
+  document.getElementById("ipCopyBtn").style.display = "inline-flex";
+  document.getElementById("ipResult").classList.add("visible");
+  document.getElementById("ipNote").innerHTML =
+    "<b>" + escapeHtml(r.deviceName) + "</b> — " + escapeHtml(r.summary);
+  updateRemaining(r);
+  state.historyLoaded = false;
+  loadHistoryOnce();
+  toast("Sensi iPhone gerada!");
+});
+
+document.getElementById("ipCopyBtn").addEventListener("click", () => {
+  if (state.lastIphone) copyText(fmtResult(state.lastIphone), "Config iPhone copiada!");
+});
+
 /* ================== histórico ================== */
 
 function loadHistoryOnce(force) {
@@ -663,6 +726,8 @@ async function shareSite() {
   }
 }
 
+document.getElementById("shareFab").addEventListener("click", shareSite);
+
 document.querySelectorAll(".faq-item").forEach(item => {
   item.querySelector(".faq-q").addEventListener("click", () => {
     const wasOpen = item.classList.contains("open");
@@ -689,5 +754,6 @@ document.querySelectorAll(".faq-item").forEach(item => {
     window.__devices = r.devices;
     fillDeviceSelect("freeModel");
     fillDeviceSelect("gModel");
+    fillIphoneSelect();
   });
 })();

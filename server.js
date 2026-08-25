@@ -11,8 +11,32 @@ const devices = require('./src/devices');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Necessário para o rate limiting funcionar certo atrás de hospedagens (Render/Railway etc.)
+app.set('trust proxy', 1);
+
 app.disable('x-powered-by');
 app.use(express.json({ limit: '32kb' }));
+
+/* ================= headers de segurança ================= */
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Referrer-Policy', 'no-referrer');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+    "font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; " +
+    "frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
+  );
+  // painel e APIs de admin nunca ficam em cache
+  const panelPath = store.getSettings().adminPanelPath || '/admin';
+  if (req.path.startsWith('/api/admin') || req.path === panelPath) {
+    res.setHeader('Cache-Control', 'no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+  }
+  next();
+});
 
 /* ================= utilidades de segurança ================= */
 
@@ -300,6 +324,38 @@ app.post('/api/generate/gerado', requireVip, (req, res) => {
   res.json(result);
 });
 
+app.post('/api/generate/iphone', requireUser, (req, res) => {
+  const b = req.body || {};
+  const deviceModel = cleanStr(b.deviceModel, 60);
+  if (!deviceModel) {
+    return res.status(400).json({ error: 'missing_model', message: 'Escolha o modelo do seu iPhone para continuar.' });
+  }
+  const result = engine.generateIphone({
+    deviceModel,
+    style: b.style, level: b.level, aim: b.aim, refreshHz: b.refreshHz
+  });
+  if (result.error) {
+    return res.status(400).json({ error: 'bad_model', message: result.message });
+  }
+  const inputs = { deviceModel, style: b.style, level: b.level, aim: b.aim, refreshHz: b.refreshHz };
+  if (!req.user.isVip) {
+    const limit = store.getSettings().freeDailyLimit;
+    const used = store.countFreeToday(req.user.id);
+    if (limit > 0 && used >= limit) {
+      return res.status(429).json({
+        error: 'daily_limit',
+        message: `Você atingiu o limite de ${limit} gerações de hoje. Ative uma KEY VIP para gerar sem limites.`,
+        used,
+        limit
+      });
+    }
+    recordGen(req.user, 'iphone', inputs, result);
+    return res.json({ ...result, remaining: Math.max(0, limit - (used + 1)), limit });
+  }
+  recordGen(req.user, 'iphone', inputs, result);
+  res.json({ ...result, remaining: null, unlimited: true });
+});
+
 /* ================= histórico (VIP) ================= */
 
 app.get('/api/history', requireVip, (req, res) => {
@@ -337,6 +393,26 @@ const adminLoginLimiter = rateLimiter({
   message: 'Muitas tentativas de login. Tente novamente em alguns minutos.'
 });
 
+/* Bloqueio progressivo por usuário: 5 erros = 15 min travado */
+const loginLocks = new Map();
+function isLocked(username) {
+  const l = loginLocks.get(username);
+  if (!l) return false;
+  if (l.until && Date.now() < l.until) return true;
+  if (l.until && Date.now() >= l.until) { loginLocks.delete(username); }
+  return false;
+}
+function registerFail(username) {
+  const l = loginLocks.get(username) || { count: 0, until: null };
+  l.count += 1;
+  if (l.count >= 5) {
+    l.until = Date.now() + 15 * 60 * 1000;
+    l.count = 0;
+  }
+  loginLocks.set(username, l);
+}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
 function ensureDefaultAdmin() {
   const db = store.getDb();
   // normaliza contas antigas sem role
@@ -360,17 +436,36 @@ function ensureDefaultAdmin() {
   }
 }
 
-app.post('/api/admin/login', adminLoginLimiter, (req, res) => {
+app.post('/api/admin/login', adminLoginLimiter, async (req, res) => {
   const { username, password } = req.body || {};
+  const uname = cleanStr(username, 40);
+  const ip = req.ip || '?';
+
+  if (isLocked(uname)) {
+    store.addAudit('login_locked', 'usuário: ' + uname, ip);
+    await sleep(400);
+    return res.status(429).json({ error: 'locked', message: 'Conta temporariamente bloqueada por tentativas inválidas. Tente mais tarde.' });
+  }
+
   const db = store.getDb();
-  const admin = db.admins.find(a => a.username === cleanStr(username, 40));
-  if (!admin || !verifyPassword(password || '', admin.passwordHash)) {
+  const admin = db.admins.find(a => a.username === uname);
+  const ok = admin && verifyPassword(password || '', admin.passwordHash);
+
+  if (!ok) {
+    registerFail(uname);
+    store.addAudit('login_fail', 'usuário: ' + (uname || '(vazio)'), ip);
+    await sleep(350 + Math.floor(Math.random() * 250)); // atrasa bruteforce
     return res.status(401).json({ error: 'bad_credentials', message: 'Usuário ou senha inválidos.' });
   }
+
+  loginLocks.delete(uname);
+  store.addAudit('login_ok', admin.role + ': ' + admin.username, ip);
+
   const token = store.createAdminSession(admin);
   res.cookie(ADMIN_COOKIE, token, {
     httpOnly: true,
     sameSite: 'lax',
+    secure: process.env.COOKIE_SECURE === '1' || req.secure,
     path: '/',
     maxAge: 12 * 3600 * 1000
   });
@@ -428,6 +523,7 @@ app.post('/api/admin/mods', requireAdmin, requireOwner, (req, res) => {
     mustChange: false
   });
   store.persistNow();
+  store.addAudit('mod_created', username, req.ip);
   res.json({ ok: true });
 });
 
@@ -442,7 +538,20 @@ app.delete('/api/admin/mods/:id', requireAdmin, requireOwner, (req, res) => {
   store.getDb().sessions = store.getDb().sessions.filter(s => s.adminId !== target.id);
   db.admins = db.admins.filter(a => a.id !== target.id);
   store.persistNow();
+  store.addAudit('mod_deleted', target.username, req.ip);
   res.json({ ok: true });
+});
+
+/* ---------- segurança / auditoria (somente dono) ---------- */
+
+app.get('/api/admin/security', requireAdmin, requireOwner, (req, res) => {
+  const d = store.getDb();
+  const dayAgo = Date.now() - 24 * 3600 * 1000;
+  res.json({
+    failedLogins24h: d.auditLog.filter(a => a.action === 'login_fail' && new Date(a.at).getTime() > dayAgo).length,
+    lockedEvents24h: d.auditLog.filter(a => a.action === 'login_locked' && new Date(a.at).getTime() > dayAgo).length,
+    events: store.listAudit(60)
+  });
 });
 
 app.post('/api/admin/change-password', requireAdmin, (req, res) => {
@@ -458,6 +567,11 @@ app.post('/api/admin/change-password', requireAdmin, (req, res) => {
   admin.passwordHash = hashPassword(newPassword);
   admin.mustChange = false;
   store.persistNow();
+  // por segurança, derruba todas as outras sessões desta conta
+  const t = getToken(req) || getCookie(req, ADMIN_COOKIE);
+  store.getDb().sessions = store.getDb().sessions.filter(s => s.isAdmin === false || s.adminId !== admin.id || s.token === t);
+  store.persistNow();
+  store.addAudit('password_changed', admin.username, req.ip);
   res.json({ ok: true });
 });
 
@@ -513,6 +627,7 @@ app.post('/api/admin/keys', requireAdmin, (req, res) => {
     maxUses = Number.isInteger(n) && n > 0 ? n : 0;
   }
   const key = store.createKey({ expiresAt, maxUses });
+  store.addAudit('key_created', key.code.slice(0, 10) + '…', req.ip);
   res.json({ key: publicKey(key) });
 });
 
@@ -540,8 +655,10 @@ app.patch('/api/admin/keys/:id', requireAdmin, (req, res) => {
 });
 
 app.delete('/api/admin/keys/:id', requireAdmin, (req, res) => {
+  const k = store.getDb().keys.find(x => x.id === req.params.id);
   const ok = store.deleteKey(req.params.id);
   if (!ok) return res.status(404).json({ error: 'not_found' });
+  store.addAudit('key_deleted', k ? k.code.slice(0, 10) + '…' : req.params.id, req.ip);
   res.json({ ok: true });
 });
 
@@ -567,6 +684,7 @@ app.patch('/api/admin/users/:id', requireAdmin, (req, res) => {
   const b = req.body || {};
   if (typeof b.isVip === 'boolean') {
     store.setUserVip(user, b.isVip, 'admin', null);
+    store.addAudit(b.isVip ? 'vip_granted' : 'vip_removed', user.label, req.ip);
   }
   res.json({ user: { id: user.id, label: user.label, isVip: user.isVip, vipSource: user.vipSource } });
 });
@@ -577,8 +695,12 @@ app.get('/api/admin/settings', requireAdmin, requireOwner, (req, res) => {
 });
 
 app.put('/api/admin/settings', requireAdmin, requireOwner, (req, res) => {
+  const oldPath = store.getSettings().adminPanelPath;
   const s = store.updateSettings(req.body || {});
-  res.json({ contactLink: s.contactLink, freeDailyLimit: s.freeDailyLimit });
+  if (s.adminPanelPath !== oldPath) {
+    store.addAudit('panel_path_changed', oldPath + ' → ' + s.adminPanelPath, req.ip);
+  }
+  res.json({ contactLink: s.contactLink, freeDailyLimit: s.freeDailyLimit, adminPanelPath: s.adminPanelPath });
 });
 
 /* ================= estáticos ================= */
@@ -624,6 +746,10 @@ app.use((err, req, res, next) => {
 store.load();
 ensureDefaultAdmin();
 const PANEL_PATH = ensurePanelPath();
+
+// limpeza periódica de sessões vencidas
+store.pruneSessions();
+setInterval(() => store.pruneSessions(), 3600 * 1000).unref();
 
 app.listen(PORT, () => {
   console.log(`SENSI PRO rodando em http://localhost:${PORT}`);

@@ -15,6 +15,7 @@ const DEFAULT_DB = {
   sessions: [],
   generations: [],
   profiles: [],
+  auditLog: [],
   settings: {
     contactLink: '',
     freeDailyLimit: 3
@@ -105,13 +106,17 @@ function setUserVip(user, isVip, source, keyId) {
 }
 
 /* ---------- sessões ---------- */
+const USER_SESSION_TTL_MS = 30 * 24 * 3600 * 1000;   // 30 dias
+const ADMIN_SESSION_TTL_MS = 12 * 3600 * 1000;       // 12 horas
+
 function createSession(user) {
   const token = crypto.randomBytes(32).toString('hex');
   getDb().sessions.push({
     token,
     userId: user.id,
     isAdmin: false,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    expiresAt: new Date(Date.now() + USER_SESSION_TTL_MS).toISOString()
   });
   scheduleSave();
   return token;
@@ -123,14 +128,48 @@ function createAdminSession(admin) {
     userId: null,
     adminId: admin.id,
     isAdmin: true,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    expiresAt: new Date(Date.now() + ADMIN_SESSION_TTL_MS).toISOString()
   });
   scheduleSave();
   return token;
 }
 function findSession(token) {
   if (!token || typeof token !== 'string') return null;
-  return getDb().sessions.find(s => s.token === token) || null;
+  const d = getDb();
+  const i = d.sessions.findIndex(s => s.token === token);
+  if (i < 0) return null;
+  const s = d.sessions[i];
+  // sessão sem validade (legado) ou vencida é descartada na hora
+  if (!s.expiresAt || new Date(s.expiresAt).getTime() <= Date.now()) {
+    d.sessions.splice(i, 1);
+    scheduleSave();
+    return null;
+  }
+  return s;
+}
+function pruneSessions() {
+  const d = getDb();
+  const now = Date.now();
+  const before = d.sessions.length;
+  d.sessions = d.sessions.filter(s => s.expiresAt && new Date(s.expiresAt).getTime() > now);
+  if (d.sessions.length !== before) scheduleSave();
+}
+
+/* ---------- auditoria de segurança ---------- */
+function addAudit(action, detail, ip) {
+  const d = getDb();
+  d.auditLog.push({
+    at: new Date().toISOString(),
+    action,
+    detail: String(detail || '').slice(0, 200),
+    ip: String(ip || '').slice(0, 60)
+  });
+  if (d.auditLog.length > 400) d.auditLog = d.auditLog.slice(-400);
+  scheduleSave();
+}
+function listAudit(limit = 60) {
+  return [...getDb().auditLog].reverse().slice(0, limit);
 }
 function destroySession(token) {
   const d = getDb();
@@ -203,7 +242,9 @@ function addGeneration(entry) {
 }
 function countFreeToday(userId) {
   const today = new Date().toISOString().slice(0, 10);
-  return getDb().generations.filter(g => g.userId === userId && g.mode === 'free' && g.at.slice(0, 10) === today).length;
+  return getDb().generations.filter(g =>
+    g.userId === userId && ['free', 'iphone'].includes(g.mode) && g.at.slice(0, 10) === today
+  ).length;
 }
 function listHistory(userId, limit = 100) {
   return getDb().generations
@@ -255,9 +296,10 @@ module.exports = {
   getDb, load, persistNow,
   id,
   findUserByDevice, findUserById, createUser, touchUser, setUserVip,
-  createSession, createAdminSession, findSession, destroySession,
+  createSession, createAdminSession, findSession, destroySession, pruneSessions,
   findKeyByCode, normalizeKey, createKey, saveKey, deleteKey, isKeyExpired, keyUsesLeft,
   addGeneration, countFreeToday, listHistory,
   listProfiles, addProfile, deleteProfile,
-  getSettings, updateSettings
+  getSettings, updateSettings,
+  addAudit, listAudit
 };

@@ -201,4 +201,54 @@ function generateGerado(data) {
   };
 }
 
-module.exports = { generateFree, generateVip, generateGerado, MAX_SENSI };
+/**
+ * MODO IPHONE — gerador dedicado a aparelhos Apple.
+ * Saída inclui sensi completa, botão de disparo e ciclos recomendados.
+ */
+function generateIphone({ deviceModel, style, level, aim, refreshHz }) {
+  if (!String(deviceModel || '').trim()) {
+    return { error: true, message: 'Escolha o modelo do seu iPhone para continuar.' };
+  }
+  const device = findDevice(deviceModel);
+  if (!device || device.brand !== 'Apple') {
+    return { error: true, message: 'Escolha um modelo de iPhone da lista.' };
+  }
+
+  const st = STYLE_BASE[style] || STYLE_BASE.eq;
+  const aimAdj = AIM_ADJ[aim] || AIM_ADJ.equilibrada;
+  const combined = {};
+  for (const k of Object.keys(aimAdj)) {
+    combined[k] = aimAdj[k] + (device.adj[k] || 0);
+  }
+
+  const globalAdj =
+    (HZ_ADJ[String(refreshHz || '60')] || 0) +
+    (LEVEL_ADJ[level] || 0) +
+    rand(-2, 3);
+
+  const values = buildValues(st, combined, { globalAdj });
+  const dpi = computeDpi(device, null, null);
+
+  // ciclos recomendados: aparelhos mais fortes aguentam ciclagem maior
+  const baseCiclos = { 1: 55, 2: 68, 3: 82 }[device.tier] || 60;
+  const ciclos = clamp(
+    baseCiclos + (aim === 'cabeca' ? 6 : 0) + (style === 'ag' ? 4 : 0) - (style === 'pr' ? 5 : 0) + rand(-3, 3),
+    40,
+    95
+  );
+
+  const fireButton = clamp(rand(device.btn[0], device.btn[1]) + (style === 'ag' ? 4 : 0), 45, 78);
+
+  return {
+    mode: 'iphone',
+    knownDevice: true,
+    deviceName: device.name,
+    values,
+    dpi,
+    ciclos,
+    fireButton,
+    summary: 'Configuração dedicada ao ' + device.name + ', ajustada ao seu estilo de jogo.'
+  };
+}
+
+module.exports = { generateFree, generateVip, generateGerado, generateIphone, MAX_SENSI };

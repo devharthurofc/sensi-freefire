@@ -129,6 +129,17 @@ tr:last-child td{border-bottom:none}
     </div>
     <div class="msg" id="cfgMsg"></div>
   </div>
+  <div class="card" id="secCard" style="display:none">
+    <h2>Segurança · só o dono</h2>
+    <div class="stats" style="margin-bottom:14px">
+      <div class="stat"><b id="fail24">0</b><span>logins falhos (24h)</span></div>
+      <div class="stat"><b id="lock24">0</b><span>bloqueios (24h)</span></div>
+    </div>
+    <table>
+      <thead><tr><th>Quando</th><th>Evento</th><th>Detalhe</th><th>IP</th></tr></thead>
+      <tbody id="auditBody"></tbody>
+    </table>
+  </div>
 
 </div>
 
@@ -167,9 +178,44 @@ async function boot() {
   if (myRole === 'owner') {
     $('modsCard').style.display = 'block';
     $('settingsCard').style.display = 'block';
+    $('secCard').style.display = 'block';
     loadMods();
+    loadSecurity();
   }
   refreshAll();
+}
+
+async function loadSecurity() {
+  const r = await api('/api/admin/security');
+  if (r._status !== 200) return;
+  $('fail24').textContent = r.failedLogins24h;
+  $('lock24').textContent = r.lockedEvents24h;
+  const tb = $('auditBody');
+  tb.innerHTML = '';
+  if (!r.events.length) { tb.innerHTML = '<tr><td colspan="4" style="color:var(--muted)">Nenhum evento registrado.</td></tr>'; return; }
+  const names = {
+    login_fail: ['Tentativa inválida', 'bg-off'],
+    login_locked: ['Conta bloqueada', 'bg-warn'],
+    login_ok: ['Login OK', 'bg-ok'],
+    key_created: ['KEY criada', 'bg-owner'],
+    key_deleted: ['KEY excluída', 'bg-off'],
+    vip_granted: ['VIP liberado', 'bg-ok'],
+    vip_removed: ['VIP removido', 'bg-off'],
+    mod_created: ['Moderador criado', 'bg-owner'],
+    mod_deleted: ['Moderador removido', 'bg-off'],
+    password_changed: ['Senha alterada', 'bg-warn'],
+    panel_path_changed: ['Endereço do painel mudou', 'bg-warn']
+  };
+  r.events.forEach(e => {
+    const n = names[e.action] || [e.action, 'bg-warn'];
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td style="color:var(--muted)">' + new Date(e.at).toLocaleString('pt-BR') + '</td>' +
+      '<td><span class="badge ' + n[1] + '">' + n[0] + '</span></td>' +
+      '<td>' + esc(e.detail) + '</td>' +
+      '<td style="color:var(--muted)">' + esc(e.ip || '—') + '</td>';
+    tb.appendChild(tr);
+  });
 }
 
 function refreshAll(){ loadDashboard(); loadKeys(); loadUsers(); if (myRole==='owner') loadSettings(); }
