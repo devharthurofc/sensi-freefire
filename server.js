@@ -376,6 +376,7 @@ app.post('/api/admin/login', adminLoginLimiter, (req, res) => {
   });
   res.json({
     ok: true,
+    redirect: store.getSettings().adminPanelPath || '/admin',
     admin: { username: admin.username, role: admin.role, mustChange: !!admin.mustChange }
   });
 });
@@ -501,6 +502,10 @@ app.post('/api/admin/keys', requireAdmin, (req, res) => {
   if (Number.isInteger(days) && days > 0) ms += days * 24 * 3600 * 1000;
   const hours = parseInt(b.expiresInHours, 10);
   if (Number.isInteger(hours) && hours > 0) ms += hours * 3600 * 1000;
+  const minutes = parseInt(b.expiresInMinutes, 10);
+  if (Number.isInteger(minutes) && minutes > 0) ms += minutes * 60 * 1000;
+  const seconds = parseInt(b.expiresInSeconds, 10);
+  if (Number.isInteger(seconds) && seconds > 0) ms += seconds * 1000;
   const expiresAt = ms > 0 ? new Date(Date.now() + ms).toISOString() : null;
   let maxUses = 1;
   if (b.maxUses !== undefined && b.maxUses !== null && b.maxUses !== '') {
@@ -566,9 +571,9 @@ app.patch('/api/admin/users/:id', requireAdmin, (req, res) => {
   res.json({ user: { id: user.id, label: user.label, isVip: user.isVip, vipSource: user.vipSource } });
 });
 
-app.get('/api/admin/settings', requireAdmin, (req, res) => {
+app.get('/api/admin/settings', requireAdmin, requireOwner, (req, res) => {
   const s = store.getSettings();
-  res.json({ contactLink: s.contactLink, freeDailyLimit: s.freeDailyLimit });
+  res.json({ contactLink: s.contactLink, freeDailyLimit: s.freeDailyLimit, adminPanelPath: s.adminPanelPath || '/admin' });
 });
 
 app.put('/api/admin/settings', requireAdmin, requireOwner, (req, res) => {
@@ -578,11 +583,23 @@ app.put('/api/admin/settings', requireAdmin, requireOwner, (req, res) => {
 
 /* ================= estáticos ================= */
 
+/* Endereço secreto do painel: gerado no primeiro boot, configurável pelo dono */
+function ensurePanelPath() {
+  const s = store.getSettings();
+  if (!s.adminPanelPath) {
+    s.adminPanelPath = '/painel-' + crypto.randomBytes(4).toString('hex');
+    store.persistNow();
+  }
+  return s.adminPanelPath;
+}
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// A rota /admin só entrega o painel para sessão de administrador válida (cookie).
-// Qualquer outra pessoa recebe apenas a tela de login — sem o HTML do painel.
-app.get('/admin', (req, res) => {
+// O painel só existe no endereço secreto. Qualquer outra rota (como /admin)
+// cai no 404 normal do site — para o visitante, o painel "não existe".
+app.use((req, res, next) => {
+  const panelPath = store.getSettings().adminPanelPath || '/admin';
+  if (req.path !== panelPath) return next();
   const sess = findValidAdminSession(req);
   if (sess && sess.isAdmin) {
     return res.sendFile(path.join(__dirname, 'views', 'admin.html'));
@@ -594,7 +611,7 @@ app.use((req, res, next) => {
   if (req.path.startsWith('/api/')) {
     return res.status(404).json({ error: 'not_found' });
   }
-  next();
+  res.status(404).send('<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>404</title></head><body style="background:#000103;color:#9ca3af;font-family:sans-serif;text-align:center;padding-top:18vh"><h1 style="color:#f3f4f6">404</h1><p>Página não encontrada.</p><p><a href="/" style="color:#38bdf8">Voltar ao início</a></p></body></html>');
 });
 
 app.use((err, req, res, next) => {
@@ -606,7 +623,14 @@ app.use((err, req, res, next) => {
 
 store.load();
 ensureDefaultAdmin();
+const PANEL_PATH = ensurePanelPath();
 
 app.listen(PORT, () => {
   console.log(`SENSI PRO rodando em http://localhost:${PORT}`);
+  console.log('==============================================================');
+  console.log('  PAINEL ADMIN (endereço secreto): ' + PANEL_PATH);
+  console.log('  Abra: http://localhost:' + PORT + PANEL_PATH);
+  console.log('  /admin comum retorna 404 de propósito.');
+  console.log('  Você pode mudar esse endereço no painel, em Configurações.');
+  console.log('==============================================================');
 });

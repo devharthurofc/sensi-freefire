@@ -73,7 +73,9 @@ tr:last-child td{border-bottom:none}
     <h2>Gerenciar Keys</h2>
     <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
       <div><label>Dias até expirar</label><input type="number" class="mini-inp" id="nkDays" min="0" placeholder="ex: 30"></div>
-      <div><label>+ Horas (opcional)</label><input type="number" class="mini-inp" id="nkHours" min="0" placeholder="ex: 12"></div>
+      <div><label>+ Horas</label><input type="number" class="mini-inp" id="nkHours" min="0" placeholder="ex: 12"></div>
+      <div><label>+ Minutos</label><input type="number" class="mini-inp" id="nkMin" min="0" placeholder="ex: 30"></div>
+      <div><label>+ Segundos</label><input type="number" class="mini-inp" id="nkSec" min="0" placeholder="ex: 45"></div>
       <div><label>Usos permitidos</label><input type="number" class="mini-inp" id="nkUses" min="1" value="1"></div>
       <button class="b-blue" id="genKeyBtn">+ Gerar nova KEY</button>
       <button class="b-gray" id="reloadKeysBtn">Recarregar</button>
@@ -113,6 +115,8 @@ tr:last-child td{border-bottom:none}
     <h2>Configurações · só o dono</h2>
     <label>Link de contato para solicitação de KEY (WhatsApp, Telegram...)</label>
     <input id="cfgContact" style="width:100%" placeholder="https://wa.me/55DDDNÚMERO?text=...">
+    <label>Endereço secreto do painel (mude e guarde bem!)</label>
+    <input id="cfgPath" style="width:100%" placeholder="/painel-xxxx">
     <label>Limite diário de gerações no modo FREE</label>
     <input type="number" class="mini-inp" id="cfgLimit" min="0">
     <div style="margin-top:14px"><button class="b-green" id="saveCfgBtn">Salvar configurações</button></div>
@@ -155,7 +159,7 @@ function showMsg(el, text, ok) {
 
 async function boot() {
   const me = await api('/api/admin/me');
-  if (me._status !== 200) { location.href = '/admin'; return; }
+  if (me._status !== 200) { location.reload(); return; } // sem sessão -> servidor mostra a tela de login no mesmo endereço secreto
   myRole = me.admin.role || 'mod';
   const cargo = myRole === 'owner' ? '<span class="badge bg-owner">DONO</span>' : '<span class="badge bg-ok">MODERADOR</span>';
   $('admWho').innerHTML = 'Conectado como: <b>' + esc(me.admin.username) + '</b> ' + cargo +
@@ -172,7 +176,7 @@ function refreshAll(){ loadDashboard(); loadKeys(); loadUsers(); if (myRole==='o
 
 $('logoutBtn').addEventListener('click', async () => {
   await api('/api/admin/logout', { method: 'POST' });
-  location.href = '/admin';
+  location.reload(); // volta para a tela de login no mesmo endereço secreto
 });
 
 async function loadDashboard() {
@@ -236,7 +240,11 @@ async function loadKeys() {
 
 $('genKeyBtn').addEventListener('click', async () => {
   const btn = $('genKeyBtn'); btn.disabled = true;
-  const r = await api('/api/admin/keys', { body: { expiresInDays: $('nkDays').value, expiresInHours: $('nkHours').value, maxUses: $('nkUses').value } });
+  const r = await api('/api/admin/keys', { body: {
+    expiresInDays: $('nkDays').value, expiresInHours: $('nkHours').value,
+    expiresInMinutes: $('nkMin').value, expiresInSeconds: $('nkSec').value,
+    maxUses: $('nkUses').value
+  }});
   btn.disabled = false;
   if (r.key) {
     try { await navigator.clipboard.writeText(r.key.code); } catch(_){}
@@ -318,12 +326,19 @@ async function loadSettings() {
   if (r._status !== 200) return;
   $('cfgContact').value = r.contactLink || '';
   $('cfgLimit').value = r.freeDailyLimit != null ? r.freeDailyLimit : 3;
+  $('cfgPath').value = r.adminPanelPath || '';
 }
 $('saveCfgBtn').addEventListener('click', async () => {
+  const novoCaminho = $('cfgPath').value.trim();
   const r = await api('/api/admin/settings', { method: 'PUT', body: {
-    contactLink: $('cfgContact').value, freeDailyLimit: $('cfgLimit').value
+    contactLink: $('cfgContact').value, freeDailyLimit: $('cfgLimit').value,
+    adminPanelPath: novoCaminho
   }});
   showMsg($('cfgMsg'), r._status === 200 ? 'Configurações salvas!' : 'Erro ao salvar.', r._status === 200);
+  if (r._status === 200 && r.adminPanelPath && r.adminPanelPath !== location.pathname) {
+    alert('Endereço do painel alterado para:\n' + r.adminPanelPath + '\n\nVocê será levado ao novo endereço (login de novo).');
+    location.href = r.adminPanelPath;
+  }
 });
 $('changePwBtn').addEventListener('click', async () => {
   const r = await api('/api/admin/change-password', { body: {

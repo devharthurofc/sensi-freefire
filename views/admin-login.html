@@ -49,7 +49,8 @@ async function login() {
       body: JSON.stringify({ username: document.getElementById('u').value.trim(), password: document.getElementById('p').value })
     });
     if (r.ok) {
-      location.href = '/admin';
+      const d = await r.json().catch(() => ({}));
+      location.href = d.redirect || '/';
       return;
     }
     const d = await r.json().catch(() => ({}));

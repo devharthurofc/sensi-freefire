@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#04070f;
+  --bg:#000103;
   --card:rgba(255,255,255,.04);
   --card-border:rgba(255,255,255,.08);
   --fire1:#2563eb;
@@ -23,10 +23,11 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden}
-.orb{position:fixed;border-radius:50%;filter:blur(110px);opacity:.35;z-index:-1;animation:float 14s ease-in-out infinite alternate}
+.orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:.14;z-index:-1;animation:float 14s ease-in-out infinite alternate}
 .orb.a{width:480px;height:480px;background:#1d4ed8;top:-140px;left:-120px}
-.orb.b{width:420px;height:420px;background:#8b5cf6;bottom:-120px;right:-100px;animation-delay:-6s}
-.orb.c{width:300px;height:300px;background:#0ea5e9;top:40%;left:55%;opacity:.18;animation-delay:-3s}
+.orb.b{width:420px;height:420px;background:#8b5cf6;bottom:-120px;right:-100px;animation-delay:-6s;opacity:.10}
+.orb.c{width:300px;height:300px;background:#0ea5e9;top:40%;left:55%;opacity:.08;animation-delay:-3s}
+#bgParticles{position:fixed;inset:0;z-index:-2;pointer-events:none}
 @keyframes float{from{transform:translate(0,0) scale(1)}to{transform:translate(60px,40px) scale(1.15)}}
 .wrap{max-width:1080px;margin:0 auto;padding:24px 18px 60px}
 
@@ -598,6 +599,7 @@ footer b{color:var(--muted)}
 
 <div class="toast" id="toast"><span id="toastMsg">Copiado!</span></div>
 
+<script src="/particles.js"></script>
 <script src="/app.js"></script>
 </body>
 </html>

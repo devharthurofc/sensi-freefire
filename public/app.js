@@ -175,27 +175,80 @@ function setSel(id, v) {
 
 /* ================== estado VIP na interface ================== */
 
+let vipExpireTimer = null;
+
+/* Agenda o reload automático da página no exato momento em que a KEY expira */
+function scheduleVipExpiryCheck() {
+  clearTimeout(vipExpireTimer);
+  if (!state.user.isVip || !state.user.vipExpiresAt) return;
+  let ms = new Date(state.user.vipExpiresAt).getTime() - Date.now();
+  if (ms < 0) ms = 0;
+  const MAX_TIMEOUT = 2147483000;
+  if (ms > MAX_TIMEOUT) {
+    vipExpireTimer = setTimeout(scheduleVipExpiryCheck, MAX_TIMEOUT);
+    return;
+  }
+  vipExpireTimer = setTimeout(() => location.reload(), ms + 800);
+}
+
+/* Verifica a cada minuto se o VIP ainda é válido (ex: admin desativou a key) */
+setInterval(async () => {
+  if (!state.user.isVip) return;
+  try {
+    const r = await api("/api/me");
+    if (r && r.user) {
+      const eraVip = state.user.isVip;
+      state.user = r.user;
+      if (eraVip && !r.user.isVip) {
+        location.reload();
+        return;
+      }
+      applyVipState();
+    }
+  } catch (_) {}
+}, 60000);
+
+let chipCountdown = null;
+
+function updateVipChipText() {
+  const txt = document.getElementById("vipChipTxt");
+  if (!state.user.isVip || !state.user.vipExpiresAt) {
+    txt.textContent = "VIP Ativo";
+    return;
+  }
+  const ms = new Date(state.user.vipExpiresAt).getTime() - Date.now();
+  if (ms <= 0) { location.reload(); return; }
+  const s = Math.floor(ms / 1000);
+  if (s >= 86400) {
+    const d = new Date(state.user.vipExpiresAt);
+    txt.textContent = "VIP até " + d.toLocaleDateString("pt-BR") + " " + d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  } else {
+    const h = String(Math.floor(s / 3600)).padStart(2, "0");
+    const m = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
+    const ss = String(s % 60).padStart(2, "0");
+    txt.textContent = "VIP expira em " + h + ":" + m + ":" + ss;
+  }
+}
+
 function applyVipState() {
   const chip = document.getElementById("vipChip");
-  const txt = document.getElementById("vipChipTxt");
   const wasVip = localStorage.getItem("sensipro_was_vip") === "1";
   if (state.user.isVip) {
     localStorage.setItem("sensipro_was_vip", "1");
-    let label = "VIP Ativo";
-    if (state.user.vipExpiresAt) {
-      const exp = new Date(state.user.vipExpiresAt);
-      label = "VIP até " + exp.toLocaleDateString("pt-BR") + " " + exp.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-    }
-    txt.textContent = label;
     chip.style.display = "inline-flex";
+    clearInterval(chipCountdown);
+    updateVipChipText();
+    chipCountdown = setInterval(updateVipChipText, 1000);
   } else {
+    clearInterval(chipCountdown);
     if (wasVip) {
       localStorage.removeItem("sensipro_was_vip");
       toast("⏰ Sua KEY VIP expirou — acesso VIP encerrado.", true);
     }
-    txt.textContent = "VIP Ativo";
+    document.getElementById("vipChipTxt").textContent = "VIP Ativo";
     chip.style.display = "none";
   }
+  scheduleVipExpiryCheck();
   ["vipLock", "genLock"].forEach(id => {
     document.getElementById(id).classList.toggle("hide-lock", state.user.isVip);
   });
