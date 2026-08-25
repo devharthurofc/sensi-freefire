@@ -65,6 +65,12 @@ function getToken(req) {
   return m ? m[1].trim() : null;
 }
 
+function getCookie(req, name) {
+  const h = req.headers.cookie || '';
+  const m = h.match(new RegExp('(?:^|;\\s*)' + name + '=([^;]*)'));
+  return m ? decodeURIComponent(m[1]) : null;
+}
+
 function currentUser(req) {
   const sess = store.findSession(getToken(req));
   if (!sess || sess.isAdmin) return null;
@@ -113,12 +119,29 @@ function requireVip(req, res, next) {
   });
 }
 
+const ADMIN_COOKIE = 'sensi_admin';
+
+function findValidAdminSession(req) {
+  const token = getToken(req) || getCookie(req, ADMIN_COOKIE);
+  const sess = store.findSession(token);
+  if (!sess || !sess.isAdmin) return null;
+  return sess;
+}
+
 function requireAdmin(req, res, next) {
-  const sess = store.findSession(getToken(req));
-  if (!sess || !sess.isAdmin) {
+  const sess = findValidAdminSession(req);
+  if (!sess) {
     return res.status(403).json({ error: 'forbidden', message: 'Acesso restrito a administradores.' });
   }
   req.adminId = sess.adminId;
+  next();
+}
+
+function requireOwner(req, res, next) {
+  const admin = store.getDb().admins.find(a => a.id === req.adminId);
+  if (!admin || admin.role !== 'owner') {
+    return res.status(403).json({ error: 'forbidden', message: 'Apenas o dono pode fazer isso.' });
+  }
   next();
 }
 
@@ -316,18 +339,21 @@ const adminLoginLimiter = rateLimiter({
 
 function ensureDefaultAdmin() {
   const db = store.getDb();
+  // normaliza contas antigas sem role
+  db.admins.forEach((a, i) => { if (!a.role) a.role = i === 0 ? 'owner' : 'mod'; });
   if (db.admins.length === 0) {
     const pass = process.env.ADMIN_PASSWORD || 'sensi-admin-2026';
     db.admins.push({
       id: store.id('adm'),
       username: process.env.ADMIN_USERNAME || 'admin',
       passwordHash: hashPassword(pass),
+      role: 'owner',
       createdAt: new Date().toISOString(),
       mustChange: !process.env.ADMIN_PASSWORD
     });
     store.persistNow();
     console.log('==============================================================');
-    console.log('  ADMIN criado -> usuário: admin | senha: ' + pass);
+    console.log('  DONO criado -> usuário: admin | senha: ' + pass);
     console.log('  (definida pela env ADMIN_PASSWORD ou padrão acima)');
     console.log('  Troque a senha no painel administrativo após o primeiro acesso.');
     console.log('==============================================================');
@@ -342,21 +368,80 @@ app.post('/api/admin/login', adminLoginLimiter, (req, res) => {
     return res.status(401).json({ error: 'bad_credentials', message: 'Usuário ou senha inválidos.' });
   }
   const token = store.createAdminSession(admin);
+  res.cookie(ADMIN_COOKIE, token, {
+    httpOnly: true,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 12 * 3600 * 1000
+  });
   res.json({
-    token,
-    admin: { username: admin.username, mustChange: !!admin.mustChange }
+    ok: true,
+    admin: { username: admin.username, role: admin.role, mustChange: !!admin.mustChange }
   });
 });
 
 app.post('/api/admin/logout', requireAdmin, (req, res) => {
-  store.destroySession(getToken(req));
+  store.destroySession(getToken(req) || getCookie(req, ADMIN_COOKIE));
+  res.clearCookie(ADMIN_COOKIE, { path: '/' });
   res.json({ ok: true });
 });
 
 app.get('/api/admin/me', requireAdmin, (req, res) => {
   const db = store.getDb();
   const admin = db.admins.find(a => a.id === req.adminId);
-  res.json({ admin: { username: admin ? admin.username : '?', mustChange: !!(admin && admin.mustChange) } });
+  if (!admin) return res.status(403).json({ error: 'forbidden' });
+  res.json({ admin: { username: admin.username, role: admin.role || 'mod', mustChange: !!admin.mustChange } });
+});
+
+/* ---------- moderadores (somente dono) ---------- */
+
+app.get('/api/admin/mods', requireAdmin, requireOwner, (req, res) => {
+  const mods = store.getDb().admins.map(a => ({
+    id: a.id,
+    username: a.username,
+    role: a.role || 'mod',
+    createdAt: a.createdAt
+  }));
+  res.json({ admins: mods });
+});
+
+app.post('/api/admin/mods', requireAdmin, requireOwner, (req, res) => {
+  const username = cleanStr(req.body && req.body.username, 40);
+  const password = (req.body && req.body.password) || '';
+  if (!/^[a-zA-Z0-9_.-]{3,40}$/.test(username)) {
+    return res.status(400).json({ error: 'bad_request', message: 'Usuário inválido (3+ caracteres, letras/números).' });
+  }
+  const db = store.getDb();
+  if (db.admins.some(a => a.username.toLowerCase() === username.toLowerCase())) {
+    return res.status(400).json({ error: 'bad_request', message: 'Esse usuário já existe.' });
+  }
+  if (typeof password !== 'string' || password.length < 8) {
+    return res.status(400).json({ error: 'weak_password', message: 'A senha precisa ter pelo menos 8 caracteres.' });
+  }
+  db.admins.push({
+    id: store.id('adm'),
+    username,
+    passwordHash: hashPassword(password),
+    role: 'mod',
+    createdAt: new Date().toISOString(),
+    mustChange: false
+  });
+  store.persistNow();
+  res.json({ ok: true });
+});
+
+app.delete('/api/admin/mods/:id', requireAdmin, requireOwner, (req, res) => {
+  const db = store.getDb();
+  const target = db.admins.find(a => a.id === req.params.id);
+  if (!target) return res.status(404).json({ error: 'not_found' });
+  if (target.role === 'owner') {
+    return res.status(400).json({ error: 'bad_request', message: 'O dono não pode ser removido.' });
+  }
+  // encerra sessões do moderador removido
+  store.getDb().sessions = store.getDb().sessions.filter(s => s.adminId !== target.id);
+  db.admins = db.admins.filter(a => a.id !== target.id);
+  store.persistNow();
+  res.json({ ok: true });
 });
 
 app.post('/api/admin/change-password', requireAdmin, (req, res) => {
@@ -486,7 +571,7 @@ app.get('/api/admin/settings', requireAdmin, (req, res) => {
   res.json({ contactLink: s.contactLink, freeDailyLimit: s.freeDailyLimit });
 });
 
-app.put('/api/admin/settings', requireAdmin, (req, res) => {
+app.put('/api/admin/settings', requireAdmin, requireOwner, (req, res) => {
   const s = store.updateSettings(req.body || {});
   res.json({ contactLink: s.contactLink, freeDailyLimit: s.freeDailyLimit });
 });
@@ -495,8 +580,14 @@ app.put('/api/admin/settings', requireAdmin, (req, res) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// A rota /admin só entrega o painel para sessão de administrador válida (cookie).
+// Qualquer outra pessoa recebe apenas a tela de login — sem o HTML do painel.
 app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+  const sess = findValidAdminSession(req);
+  if (sess && sess.isAdmin) {
+    return res.sendFile(path.join(__dirname, 'views', 'admin.html'));
+  }
+  res.sendFile(path.join(__dirname, 'views', 'admin-login.html'));
 });
 
 app.use((req, res, next) => {

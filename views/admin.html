@@ -8,13 +8,13 @@
 <style>
 :root{
   --bg:#08080f;--card:rgba(255,255,255,.04);--card-border:rgba(255,255,255,.09);
-  --violet:#8b5cf6;--text:#f3f4f6;--muted:#9ca3af;--ok:#22c55e;--err:#ef4444;
+  --violet:#8b5cf6;--text:#f3f4f6;--muted:#9ca3af;--ok:#22c55e;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;padding:26px 16px 60px}
 .wrap{max-width:1060px;margin:0 auto}
 h1{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:900;letter-spacing:.06em;margin-bottom:4px}
-h1 span{color:var(--violet)}
+h1 span{color:#38bdf8}
 .sub{color:var(--muted);margin-bottom:24px;font-size:.9rem;letter-spacing:.06em}
 .card{border:1px solid var(--card-border);border-radius:18px;background:var(--card);padding:20px;margin-bottom:20px}
 .card h2{font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:10px}
@@ -25,11 +25,11 @@ h1 span{color:var(--violet)}
 .stat span{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
 label{display:block;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
 input{background:rgba(0,0,0,.35);border:1px solid var(--card-border);border-radius:10px;color:var(--text);padding:11px 12px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:.95rem;outline:none}
-input:focus{border-color:var(--violet)}
+input:focus{border-color:#38bdf8}
 button{appearance:none;border:none;cursor:pointer;font-family:'Orbitron',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.72rem;padding:12px 18px;border-radius:10px;color:#fff;transition:.2s}
 button:hover{filter:brightness(1.15)}
 button:disabled{opacity:.6;cursor:wait}
-.b-vio{background:linear-gradient(135deg,var(--violet),#d946ef)}
+.b-blue{background:linear-gradient(135deg,#2563eb,#38bdf8)}
 .b-red{background:linear-gradient(135deg,#b91c1c,#ef4444)}
 .b-gray{background:rgba(255,255,255,.07);border:1px solid var(--card-border)}
 .b-green{background:linear-gradient(135deg,#15803d,#22c55e)}
@@ -41,11 +41,11 @@ tr:last-child td{border-bottom:none}
 .bg-ok{background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.4)}
 .bg-off{background:rgba(239,68,68,.13);color:#fca5a5;border:1px solid rgba(239,68,68,.35)}
 .bg-warn{background:rgba(250,204,21,.12);color:#fde047;border:1px solid rgba(250,204,21,.4)}
+.bg-owner{background:rgba(56,189,248,.14);color:#7dd3fc;border:1px solid rgba(56,189,248,.45)}
 .code{font-family:'Orbitron',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.05em}
 .actions{display:flex;gap:6px;flex-wrap:wrap}
 .actions button{padding:8px 11px;font-size:.62rem}
 .mini-inp{width:110px;padding:8px 9px;font-size:.85rem;border-radius:8px}
-.login-box{max-width:380px;margin:60px auto}
 .msg{margin-top:10px;font-weight:700;font-size:.92rem;display:none}
 .msg.show{display:block}
 .msg.ok{color:#86efac}.msg.err{color:#fca5a5}
@@ -56,18 +56,6 @@ tr:last-child td{border-bottom:none}
 <body>
 <div class="wrap">
 
-<div id="loginView" class="login-box card">
-  <h1>SENSI<span>PRO</span> · ADMIN</h1>
-  <p class="sub">Acesso restrito a administradores.</p>
-  <label>Usuário</label>
-  <input id="admUser" style="width:100%" autocomplete="username">
-  <label>Senha</label>
-  <input id="admPass" type="password" style="width:100%" autocomplete="current-password">
-  <div style="margin-top:18px"><button class="b-vio" id="loginBtn">Entrar</button></div>
-  <div class="msg err" id="loginMsg"></div>
-</div>
-
-<div id="panelView" style="display:none">
   <div class="topbar">
     <div>
       <h1>SENSI<span>PRO</span> · PAINEL ADMIN</h1>
@@ -87,7 +75,7 @@ tr:last-child td{border-bottom:none}
       <div><label>Dias até expirar</label><input type="number" class="mini-inp" id="nkDays" min="0" placeholder="ex: 30"></div>
       <div><label>+ Horas (opcional)</label><input type="number" class="mini-inp" id="nkHours" min="0" placeholder="ex: 12"></div>
       <div><label>Usos permitidos</label><input type="number" class="mini-inp" id="nkUses" min="1" value="1"></div>
-      <button class="b-vio" id="genKeyBtn">+ Gerar nova KEY</button>
+      <button class="b-blue" id="genKeyBtn">+ Gerar nova KEY</button>
       <button class="b-gray" id="reloadKeysBtn">Recarregar</button>
     </div>
     <div style="margin-top:14px">
@@ -106,8 +94,23 @@ tr:last-child td{border-bottom:none}
     </table>
   </div>
 
-  <div class="card">
-    <h2>Configurações</h2>
+  <div class="card" id="modsCard" style="display:none">
+    <h2>Moderadores · só o dono</h2>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
+      <div><label>Usuário do moderador</label><input class="mini-inp" id="modUser" style="width:170px" placeholder="ex: moderador1"></div>
+      <div><label>Senha (min. 8)</label><input class="mini-inp" id="modPass" style="width:170px" placeholder="senha forte"></div>
+      <button class="b-green" id="addModBtn">+ Criar moderador</button>
+    </div>
+    <div style="margin-top:14px">
+      <table>
+        <thead><tr><th>Usuário</th><th>Cargo</th><th>Criado em</th><th>Ações</th></tr></thead>
+        <tbody id="modsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" id="settingsCard" style="display:none">
+    <h2>Configurações · só o dono</h2>
     <label>Link de contato para solicitação de KEY (WhatsApp, Telegram...)</label>
     <input id="cfgContact" style="width:100%" placeholder="https://wa.me/55DDDNÚMERO?text=...">
     <label>Limite diário de gerações no modo FREE</label>
@@ -118,26 +121,24 @@ tr:last-child td{border-bottom:none}
     <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
       <div><label>Senha atual</label><input type="password" class="mini-inp" id="pwOld" style="width:170px" autocomplete="current-password"></div>
       <div><label>Nova senha (min. 8)</label><input type="password" class="mini-inp" id="pwNew" style="width:170px" autocomplete="new-password"></div>
-      <button class="b-vio" id="changePwBtn">Trocar senha</button>
+      <button class="b-blue" id="changePwBtn">Trocar senha</button>
     </div>
     <div class="msg" id="cfgMsg"></div>
   </div>
+
 </div>
 
 <script>
 'use strict';
-const TKEY = 'sensipro_admin_token';
-let token = sessionStorage.getItem(TKEY) || '';
+let myRole = 'mod';
 
 function $(id){ return document.getElementById(id); }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 async function api(path, opts = {}) {
-  const headers = Object.assign({'Content-Type':'application/json'}, opts.headers || {});
-  if (token) headers['Authorization'] = 'Bearer ' + token;
   const res = await fetch(path, {
     method: opts.method || (opts.body ? 'POST' : 'GET'),
-    headers,
+    headers: Object.assign({'Content-Type':'application/json'}),
     body: opts.body ? JSON.stringify(opts.body) : undefined
   });
   let data = {};
@@ -153,40 +154,25 @@ function showMsg(el, text, ok) {
 }
 
 async function boot() {
-  if (!token) { renderLogin(); return; }
   const me = await api('/api/admin/me');
-  if (me._status !== 200) { token=''; sessionStorage.removeItem(TKEY); renderLogin(); return; }
-  renderPanel(me.admin);
-}
-
-function renderLogin() {
-  $('loginView').style.display = 'block';
-  $('panelView').style.display = 'none';
-}
-function renderPanel(admin) {
-  $('loginView').style.display = 'none';
-  $('panelView').style.display = 'block';
-  $('admWho').textContent = 'Conectado como: ' + admin.username + (admin.mustChange ? ' · ⚠ troque a senha padrão!' : '');
+  if (me._status !== 200) { location.href = '/admin'; return; }
+  myRole = me.admin.role || 'mod';
+  const cargo = myRole === 'owner' ? '<span class="badge bg-owner">DONO</span>' : '<span class="badge bg-ok">MODERADOR</span>';
+  $('admWho').innerHTML = 'Conectado como: <b>' + esc(me.admin.username) + '</b> ' + cargo +
+    (me.admin.mustChange ? ' · ⚠ troque a senha padrão!' : '');
+  if (myRole === 'owner') {
+    $('modsCard').style.display = 'block';
+    $('settingsCard').style.display = 'block';
+    loadMods();
+  }
   refreshAll();
 }
-function refreshAll(){ loadDashboard(); loadKeys(); loadUsers(); loadSettings(); }
 
-$('loginBtn').addEventListener('click', async () => {
-  const btn = $('loginBtn'); btn.disabled = true;
-  const r = await api('/api/admin/login', { body: { username: $('admUser').value.trim(), password: $('admPass').value } });
-  btn.disabled = false;
-  if (r._status === 200 && r.token) {
-    token = r.token;
-    sessionStorage.setItem(TKEY, token);
-    renderPanel(r.admin);
-  } else {
-    showMsg($('loginMsg'), r.message || 'Falha no login.', false);
-  }
-});
-$('admPass').addEventListener('keydown', e => { if (e.key === 'Enter') $('loginBtn').click(); });
+function refreshAll(){ loadDashboard(); loadKeys(); loadUsers(); if (myRole==='owner') loadSettings(); }
+
 $('logoutBtn').addEventListener('click', async () => {
   await api('/api/admin/logout', { method: 'POST' });
-  token = ''; sessionStorage.removeItem(TKEY); renderLogin();
+  location.href = '/admin';
 });
 
 async function loadDashboard() {
@@ -221,7 +207,7 @@ async function loadKeys() {
       '<td><div class="actions">' +
         '<button class="b-gray cp">Copiar</button>' +
         '<button class="' + (k.status === 'ativa' ? 'b-red tg' : 'b-green tg') + '">' + (k.status === 'ativa' ? 'Desativar' : 'Ativar') + '</button>' +
-        '<button class="b-vio sv">Salvar data/usos</button>' +
+        '<button class="b-blue sv">Salvar data/usos</button>' +
         '<button class="b-red del">Excluir</button>' +
       '</div></td>';
     tr.querySelector('.cp').onclick = () => navigator.clipboard.writeText(k.code).then(() => alert('KEY copiada!'));
@@ -286,6 +272,46 @@ async function loadUsers() {
     tb.appendChild(tr);
   });
 }
+
+/* ---------- moderadores ---------- */
+
+async function loadMods() {
+  const r = await api('/api/admin/mods');
+  const tb = $('modsBody');
+  if (r._status !== 200 || !r.admins) { tb.innerHTML = ''; return; }
+  tb.innerHTML = '';
+  r.admins.forEach(a => {
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><b>' + esc(a.username) + '</b></td>' +
+      '<td>' + (a.role === 'owner' ? '<span class="badge bg-owner">DONO</span>' : '<span class="badge bg-ok">MODERADOR</span>') + '</td>' +
+      '<td style="color:var(--muted)">' + new Date(a.createdAt).toLocaleDateString('pt-BR') + '</td>' +
+      '<td>' + (a.role === 'owner' ? '' : '<div class="actions"><button class="b-red del">Remover</button></div>') + '</td>';
+    const del = tr.querySelector('.del');
+    if (del) del.onclick = async () => {
+      if (!confirm('Remover o moderador ' + a.username + '?')) return;
+      const rr = await api('/api/admin/mods/' + a.id, { method: 'DELETE' });
+      if (rr._status !== 200) alert(rr.message || 'Erro.');
+      loadMods();
+    };
+    tb.appendChild(tr);
+  });
+}
+
+$('addModBtn').addEventListener('click', async () => {
+  const btn = $('addModBtn'); btn.disabled = true;
+  const r = await api('/api/admin/mods', { body: { username: $('modUser').value.trim(), password: $('modPass').value } });
+  btn.disabled = false;
+  if (r._status === 200) {
+    $('modUser').value = ''; $('modPass').value = '';
+    loadMods();
+    alert('Moderador criado! Passe o usuário e a senha para ele.\nEle entra pelo mesmo endereço /admin.');
+  } else {
+    alert(r.message || 'Erro ao criar moderador.');
+  }
+});
+
+/* ---------- configurações ---------- */
 
 async function loadSettings() {
   const r = await api('/api/admin/settings');

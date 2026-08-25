@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SENSI PRO</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#04070f;color:#f3f4f6;font-family:'Rajdhani',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.box{width:min(380px,100%);border:1px solid rgba(255,255,255,.09);border-radius:20px;background:rgba(255,255,255,.04);padding:30px 26px;text-align:center}
+h1{font-family:'Orbitron',sans-serif;font-size:1.25rem;font-weight:900}
+h1 span{color:#38bdf8}
+p{color:#9ca3af;font-size:.9rem;margin:6px 0 22px}
+label{display:block;text-align:left;font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af;margin:12px 0 6px}
+input{width:100%;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:#f3f4f6;padding:12px 13px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:.98rem;outline:none}
+input:focus{border-color:#38bdf8}
+button{margin-top:18px;width:100%;appearance:none;border:none;cursor:pointer;font-family:'Orbitron',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.8rem;padding:14px;border-radius:11px;color:#fff;background:linear-gradient(135deg,#2563eb,#38bdf8)}
+button:hover{filter:brightness(1.15)}
+button:disabled{opacity:.6;cursor:wait}
+.msg{margin-top:12px;font-weight:700;font-size:.9rem;color:#fca5a5;display:none}
+.msg.show{display:block}
+.home{display:inline-block;margin-top:18px;color:#60a5fa;text-decoration:none;font-weight:700}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>SENSI<span>PRO</span></h1>
+  <p>Acesso restrito à equipe autorizada.</p>
+  <label>Usuário</label>
+  <input id="u" autocomplete="username">
+  <label>Senha</label>
+  <input id="p" type="password" autocomplete="current-password">
+  <button id="b">Entrar</button>
+  <div class="msg" id="m"></div>
+  <a class="home" href="/">← Voltar ao site</a>
+</div>
+<script>
+'use strict';
+async function login() {
+  const btn = document.getElementById('b');
+  const m = document.getElementById('m');
+  m.className = 'msg';
+  btn.disabled = true;
+  try {
+    const r = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: document.getElementById('u').value.trim(), password: document.getElementById('p').value })
+    });
+    if (r.ok) {
+      location.href = '/admin';
+      return;
+    }
+    const d = await r.json().catch(() => ({}));
+    m.textContent = d.message || 'Usuário ou senha inválidos.';
+    m.classList.add('show');
+  } catch (_) {
+    m.textContent = 'Erro de conexão com o servidor.';
+    m.classList.add('show');
+  }
+  btn.disabled = false;
+}
+document.getElementById('b').addEventListener('click', login);
+document.getElementById('p').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+document.getElementById('u').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('p').focus(); });
+</script>
+</body>
+</html>
