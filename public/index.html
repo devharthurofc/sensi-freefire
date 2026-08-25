@@ -318,26 +318,8 @@ footer b{color:var(--muted)}
       <input class="inp" id="modelCustom" placeholder='Ex: Redmi Note 13 Pro' autocomplete="off" maxlength="60" style="display:none;margin-top:10px">
       <div class="warn-msg" id="genWarn">Informe o modelo do seu celular para continuar.</div>
 
-      <div class="f-row" style="margin-top:4px">
-        <div>
-          <label class="field-label">Tela</label>
-          <select class="inp" id="hzSel">
-            <option value="60">60 Hz</option><option value="90">90 Hz</option>
-            <option value="120" selected>120 Hz</option><option value="144">144 Hz</option>
-          </select>
-        </div>
-        <div>
-          <label class="field-label">FPS no jogo</label>
-          <select class="inp" id="fpsSel">
-            <option value="30">30 FPS</option><option value="60" selected>60 FPS</option>
-            <option value="90">90 FPS</option><option value="120">120 FPS</option>
-          </select>
-        </div>
-        <div>
-          <label class="field-label">DPI atual (opcional)</label>
-          <input type="number" class="inp" id="dpiAtual" min="200" max="1200" placeholder="Ex: 480">
-        </div>
-      </div>
+      <label class="field-label">DPI atual do celular (opcional)</label>
+      <input type="number" class="inp" id="dpiAtual" min="200" max="1200" placeholder="Ex: 480" style="max-width:260px">
 
       <label class="field-label">Estilo de jogo</label>
       <div class="opts" id="styleOpts">

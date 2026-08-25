@@ -500,8 +500,6 @@ function genInputs() {
   return {
     tier: state.tier,
     deviceModel: getModelValue(),
-    refreshHz: document.getElementById("hzSel").value,
-    fps: document.getElementById("fpsSel").value,
     dpiAtual: document.getElementById("dpiAtual").value,
     style: selVal("styleOpts"),
     level: selVal("levelOpts"),
@@ -600,8 +598,6 @@ function applyProfile(inputs) {
   if (!inputs) return;
   switchTier(inputs.tier || 'normal');
   if (inputs.deviceModel !== undefined) setDeviceValue(inputs.deviceModel || "");
-  if (inputs.refreshHz) document.getElementById("hzSel").value = inputs.refreshHz;
-  if (inputs.fps) document.getElementById("fpsSel").value = inputs.fps;
   if (inputs.dpiAtual) document.getElementById("dpiAtual").value = inputs.dpiAtual;
   setOpt("styleOpts", inputs.style);
   setOpt("levelOpts", inputs.level);

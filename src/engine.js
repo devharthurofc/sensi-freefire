@@ -30,9 +30,6 @@ const LEVEL_ADJ = {
   competitivo: 8
 };
 
-const HZ_ADJ = { '60': 3, '90': 0, '120': -3, '144': -5 };
-const FPS_ADJ = { '30': 4, '60': 0, '90': -2, '120': -4 };
-
 const DEFAULT_DPI = [420, 520];
 
 /* ================== ajuste por tier ==================
@@ -138,9 +135,7 @@ function generate(data) {
 
   let globalAdj =
     tune.global +
-    (HZ_ADJ[String(data.refreshHz)] || 0) +
-    (FPS_ADJ[String(data.fps)] || 0) +
-    Math.round((LEVEL_ADJ[data.level] || 0) * scale);
+    (LEVEL_ADJ[data.level] || 0);
 
   // compensação inversa em relação ao DPI atual informado
   let dpiComp = 0;

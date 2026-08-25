@@ -276,7 +276,7 @@ app.post('/api/generate', requireUser, (req, res) => {
   const inputs = {
     tier,
     deviceModel,
-    refreshHz: b.refreshHz, fps: b.fps, dpiAtual: b.dpiAtual,
+    dpiAtual: b.dpiAtual,
     style: b.style, level: b.level, aim: b.aim
   };
 
