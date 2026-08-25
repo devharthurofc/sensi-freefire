@@ -63,7 +63,7 @@ async function boot() {
     loadSettings();
   }
   refreshAll();
-  setInterval(loadDashboard, 60000); // auto-refresh do dashboard
+  setInterval(refreshAll, 30000); // auto-refresh: usuários logados aparecem sozinhos
 }
 
 function refreshAll(){ loadDashboard(); loadKeys(); loadUsers(); }
@@ -81,12 +81,13 @@ async function loadDashboard() {
   const r = await api('/api/admin/dashboard');
   if (r._status !== 200) return;
   const items = [
-    ['Usuários', r.users], ['Usuários VIP', r.vipUsers],
+    ['Online agora', r.onlineUsers || 0, true], ['Usuários', r.users],
+    ['Usuários VIP', r.vipUsers],
     ['Keys ativas', r.activeKeys], ['Keys expiradas', r.expiredKeys],
     ['Gerações hoje', r.generationsToday]
   ];
-  $('statsBox').innerHTML = items.map(([l, v]) =>
-    '<div class="stat"><b>' + v + '</b><span>' + l + '</span></div>').join('');
+  $('statsBox').innerHTML = items.map(([l, v, hot]) =>
+    '<div class="stat"><b style="' + (hot && v > 0 ? 'color:#86efac' : '') + '">' + v + '</b><span>' + l + '</span></div>').join('');
 }
 
 /* ---------- keys ---------- */
@@ -196,21 +197,27 @@ async function loadUsers() {
 function renderUsers() {
   const tb = $('usersBody');
   const q = ($('userSearch').value || '').toLowerCase().trim();
-  const list = allUsers.filter(u => !q || u.label.toLowerCase().includes(q));
+  const list = allUsers.filter(u => !q || (u.label || '').toLowerCase().includes(q));
 
   if (!list.length) {
     tb.innerHTML = '<tr><td colspan="5" style="color:var(--muted)">' +
-      (q ? 'Nenhum jogador encontrado.' : 'Nenhum usuário ainda.') + '</td></tr>';
+      (q ? 'Nenhum jogador encontrado.' : 'Nenhum usuário ainda. Ele aparece aqui assim que alguém abrir o site.') + '</td></tr>';
     return;
   }
+  const fiveMinAgo = Date.now() - 5 * 60 * 1000;
   tb.innerHTML = '';
   list.forEach(u => {
+    const online = u.lastSeenAt && new Date(u.lastSeenAt).getTime() > fiveMinAgo;
+    const seen = u.lastSeenAt
+      ? new Date(u.lastSeenAt).toLocaleString('pt-BR')
+      : '—';
     const tr = document.createElement('tr');
     tr.innerHTML =
-      '<td><b>' + esc(u.label) + '</b></td>' +
+      '<td><b>' + esc(u.label || '(sem nome)') + '</b>' +
+      (online ? ' <span class="badge bg-ok" title="Ativo nos últimos 5 minutos">online</span>' : '') + '</td>' +
       '<td>' + (u.isVip ? '<span class="badge bg-ok">VIP</span>' : '<span class="badge bg-off">Free</span>') + '</td>' +
       '<td>' + esc(u.vipSource || '—') + '</td>' +
-      '<td style="color:var(--muted)">' + new Date(u.lastSeenAt).toLocaleString('pt-BR') + '</td>' +
+      '<td style="color:var(--muted)">' + seen + '</td>' +
       '<td><div class="actions">' +
         (u.isVip
           ? '<button class="b-red act rm">Remover VIP</button>'

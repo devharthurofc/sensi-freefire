@@ -245,7 +245,7 @@ function addGeneration(entry) {
 function countFreeToday(userId) {
   const today = new Date().toISOString().slice(0, 10);
   return getDb().generations.filter(g =>
-    g.userId === userId && ['free', 'iphone'].includes(g.mode) && g.at.slice(0, 10) === today
+    g.userId === userId && ['normal', 'free', 'iphone'].includes(g.mode) && g.at.slice(0, 10) === today
   ).length;
 }
 function listHistory(userId, limit = 100) {

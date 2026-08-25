@@ -543,9 +543,11 @@ app.get('/api/admin/dashboard', requireAdmin, (req, res) => {
   const db = store.getDb();
   const activeKeys = db.keys.filter(k => k.status === 'ativa' && !store.isKeyExpired(k)).length;
   const expiredKeys = db.keys.filter(k => k.status === 'expirada' || store.isKeyExpired(k)).length;
+  const fiveMinAgo = Date.now() - 5 * 60 * 1000;
   res.json({
     users: db.users.length,
     vipUsers: db.users.filter(u => u.isVip).length,
+    onlineUsers: db.users.filter(u => u.lastSeenAt && new Date(u.lastSeenAt).getTime() > fiveMinAgo).length,
     activeKeys,
     expiredKeys,
     generationsToday: db.generations.filter(g => g.at.slice(0, 10) === new Date().toISOString().slice(0, 10)).length
@@ -627,11 +629,12 @@ app.delete('/api/admin/keys/:id', requireAdmin, (req, res) => {
 });
 
 app.get('/api/admin/users', requireAdmin, (req, res) => {
+  // mais recentemente ativos primeiro: quem está logado/usando o site aparece no topo
   const users = [...store.getDb().users]
-    .sort((a, b) => (b.vipSince || b.createdAt).localeCompare(a.vipSince || a.createdAt))
+    .sort((a, b) => String(b.lastSeenAt || b.createdAt || '').localeCompare(String(a.lastSeenAt || a.createdAt || '')))
     .map(u => ({
       id: u.id,
-      label: u.label,
+      label: u.label || '(sem nome)',
       isVip: !!u.isVip,
       vipSource: u.vipSource,
       vipSince: u.vipSince,
