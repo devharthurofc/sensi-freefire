@@ -4,14 +4,39 @@
 
 const LS_DEVICE = 'sensipro_device_id';
 const LS_TOKEN = 'sensipro_token';
+const LS_TIER = 'sensipro_tier';
+
+const TIER_INFO = {
+  normal: {
+    label: 'SENSI NORMAL',
+    desc: 'Configuração equilibrada gerada na hora. Informe o modelo do seu celular e comece.',
+    btn: 'Gerar Sensi Normal',
+    resTitle: 'Sua Sensi Normal',
+    lock: false
+  },
+  premium: {
+    label: 'SENSI PREMIUM',
+    desc: 'Análise do seu aparelho + suas preferências para uma config refinada.',
+    btn: 'Gerar Sensi Premium',
+    resTitle: 'Sua Sensi Premium',
+    lock: true
+  },
+  proibida: {
+    label: 'SENSI PROIBIDA',
+    desc: 'O modo mais agressivo. Mira alta, drag rápido e controle total — treine bastante!',
+    btn: 'Gerar Sensi Proibida',
+    resTitle: 'Sua Sensi Proibida',
+    lock: true
+  }
+};
 
 const state = {
   token: null,
   user: { id: null, label: null, isVip: false },
   contactLink: '',
-  lastFree: null,
-  lastVip: null,
-  lastGen: null,
+  lastResult: null,
+  tier: 'normal',
+  dpiSel: 'equilibrada',
   historyLoaded: false
 };
 
@@ -93,6 +118,16 @@ function animateNum(elm, target) {
   requestAnimationFrame(step);
 }
 
+function animateNumPercent(elm, target) {
+  const start = performance.now();
+  function step(t) {
+    const p = Math.min((t - start) / 700, 1);
+    elm.textContent = Math.round(target * p) + "%";
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
 function renderGrid(gridEl, values) {
   gridEl.innerHTML = "";
   NAMES.forEach(([k, label]) => {
@@ -122,30 +157,56 @@ async function copyText(text, msg) {
   toast(msg || "Copiado!");
 }
 
+function tierLabelOf(mode) {
+  return (TIER_INFO[mode] && TIER_INFO[mode].label.replace('SENSI ', '')) ||
+    { normal: 'Normal', premium: 'Premium', proibida: 'Proibida' }[mode] || mode.toUpperCase();
+}
+
 function fmtResult(r) {
   let s = "=== SENSI PRO | FREE FIRE ===\n";
+  s += "Sensi: " + tierLabelOf(r.mode || r.tier) + "\n";
   if (r.deviceName) s += "Aparelho: " + r.deviceName + "\n";
-  NAMES.forEach(([k, label]) => { s += label + ": " + r.values[k] + "\n"; });
+  const values = (state.dpiSel && r.valuesByDpi) ? r.valuesByDpi[state.dpiSel] : r.values;
+  NAMES.forEach(([k, label]) => { s += label + ": " + values[k] + "\n"; });
   s += "Botão de disparo: " + r.fireButton + "%\n";
-  if (r.ciclos) s += "Ciclos: " + r.ciclos + "\n";
-  if (r.mode !== "iphone") s += "DPI recomendado: " + r.dpi + "\n";
+  if (r.ciclos != null) s += "Ciclos: " + r.ciclos + "\n";
+  if (r.dpiOptions && state.dpiSel) {
+    s += "DPI (" + state.dpiSel + "): " + r.dpiOptions[state.dpiSel].dpi + "\n";
+  } else {
+    s += "DPI recomendado: " + r.dpi + "\n";
+  }
   return s;
 }
 
-/* ================== seletor de modo ================== */
+/* ================== seletor de tier ================== */
 
 document.querySelectorAll("#modes .mode-card").forEach(btn => {
-  btn.addEventListener("click", () => switchMode(btn.dataset.tab));
+  btn.addEventListener("click", () => switchTier(btn.dataset.tier));
 });
 
-function switchMode(tab) {
-  document.querySelectorAll("#modes .mode-card").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
-  document.querySelectorAll(".panel").forEach(p => p.classList.remove("show"));
-  document.getElementById("panel-" + tab).classList.add("show");
-  if ((tab === 'vip' || tab === 'gerado') && state.user.isVip) {
-    loadHistoryOnce();
-    loadProfiles();
-  }
+function switchTier(tier) {
+  if (!TIER_INFO[tier]) tier = 'normal';
+  state.tier = tier;
+  localStorage.setItem(LS_TIER, tier);
+  document.querySelectorAll("#modes .mode-card").forEach(b => b.classList.toggle("active", b.dataset.tier === tier));
+  document.body.dataset.tier = tier;
+
+  const info = TIER_INFO[tier];
+  document.getElementById("heroTitle").innerHTML = "<em>" + info.label + "</em>";
+  document.getElementById("heroDesc").textContent = info.desc;
+  document.getElementById("genBtnLabel").textContent = info.btn;
+  document.getElementById("resTitle").textContent = info.resTitle;
+
+  const locked = info.lock && !state.user.isVip;
+  document.getElementById("tierLock").classList.toggle("hide-lock", !locked);
+  document.getElementById("genBox").classList.toggle("blur-lock", locked);
+
+  // ícone do cadeado: ouro no premium, vermelho na proibida
+  document.getElementById("lockIcon").className = "lock-icon" + (tier === 'premium' ? ' gold' : '');
+  document.getElementById("lockTitle").textContent =
+    "🔒 Sensi " + tierLabelOf(tier) + " · Área VIP";
+
+  if (!locked && state.user.isVip) loadExtrasOnce();
 }
 
 /* ================== opções (chips) ================== */
@@ -160,26 +221,17 @@ function setupOpts(id) {
     });
   });
 }
-setupOpts("freeRamOpts"); setupOpts("freeStyleOpts");
-setupOpts("vipStyleOpts"); setupOpts("vipLevelOpts"); setupOpts("vipAimOpts");
-setupOpts("gStyleOpts"); setupOpts("gLevelOpts"); setupOpts("gAimOpts");
-setupOpts("ipStyleOpts"); setupOpts("ipLevelOpts"); setupOpts("ipAimOpts");
+setupOpts("styleOpts"); setupOpts("levelOpts"); setupOpts("aimOpts");
 
 function selVal(id) {
   const b = document.getElementById(id);
   return b ? b.querySelector(".opt.sel")?.dataset.v : undefined;
-}
-function setSel(id, v) {
-  const b = document.getElementById(id);
-  if (!b) return;
-  b.querySelectorAll(".opt").forEach(o => o.classList.toggle("sel", o.dataset.v === v));
 }
 
 /* ================== estado VIP na interface ================== */
 
 let vipExpireTimer = null;
 
-/* Agenda o reload automático da página no exato momento em que a KEY expira */
 function scheduleVipExpiryCheck() {
   clearTimeout(vipExpireTimer);
   if (!state.user.isVip || !state.user.vipExpiresAt) return;
@@ -193,7 +245,6 @@ function scheduleVipExpiryCheck() {
   vipExpireTimer = setTimeout(() => location.reload(), ms + 800);
 }
 
-/* Verifica a cada minuto se o VIP ainda é válido (ex: admin desativou a key) */
 setInterval(async () => {
   if (!state.user.isVip) return;
   try {
@@ -251,16 +302,7 @@ function applyVipState() {
     chip.style.display = "none";
   }
   scheduleVipExpiryCheck();
-  ["vipLock", "genLock"].forEach(id => {
-    document.getElementById(id).classList.toggle("hide-lock", state.user.isVip);
-  });
-  ["vipContent", "genContent"].forEach(id => {
-    document.getElementById(id).classList.remove("blur-lock");
-  });
-  if (state.user.isVip) {
-    loadHistoryOnce();
-    loadProfiles();
-  }
+  switchTier(state.tier); // reavalia o bloqueio do tier atual
 }
 
 /* ================== ativação de KEY ================== */
@@ -322,7 +364,7 @@ document.getElementById("upsellModal").addEventListener("click", e => {
 });
 document.getElementById("upsellGo").addEventListener("click", () => {
   closeUpsell();
-  switchMode("vip");
+  document.getElementById("tierLock").scrollIntoView({ behavior: "smooth", block: "center" });
 });
 
 /* ================== seleção de modelo ================== */
@@ -336,285 +378,161 @@ function fillDeviceSelect(id) {
     '<option value="__other">Outro modelo (digitar)</option>';
 }
 
-function fillIphoneSelect() {
-  const sel = document.getElementById("ipModel");
-  if (!sel) return;
-  const iphones = (window.__devices || []).filter(d => d.indexOf("iPhone") === 0);
-  sel.innerHTML =
-    '<option value="">Selecione o modelo...</option>' +
-    iphones.map(d => '<option value="' + escapeHtml(d) + '">' + escapeHtml(d) + '</option>').join('');
-}
-
-function getModelValue(selId, custId) {
-  const sel = document.getElementById(selId);
-  if (!sel) return '';
-  return sel.value === '__other' ? document.getElementById(custId).value.trim() : sel.value.trim();
-}
-
-function setDeviceValue(selId, custId, val) {
-  const sel = document.getElementById(selId);
-  const cust = document.getElementById(custId);
-  if (!sel) return;
-  const opts = [...sel.options].map(o => o.value);
-  if (val && opts.includes(val)) {
-    sel.value = val;
-    cust.style.display = 'none';
-    cust.value = '';
-  } else if (val) {
-    sel.value = '__other';
-    cust.style.display = 'block';
-    cust.value = val;
-  } else {
-    sel.value = '';
-    cust.style.display = 'none';
-    cust.value = '';
-  }
-}
-
-["freeModel", "gModel"].forEach(id => {
+["modelSel"].forEach(id => {
   document.getElementById(id).addEventListener("change", () => {
-    const other = document.getElementById(id).value === "__other";
-    const cust = document.getElementById(id === "freeModel" ? "freeModelCustom" : "gModelCustom");
+    const sel = document.getElementById(id);
+    const other = sel.value === "__other";
+    const cust = document.getElementById("modelCustom");
     cust.style.display = other ? "block" : "none";
     if (other) cust.focus();
   });
 });
 
-/* ================== MODO FREE ================== */
+function getModelValue() {
+  const sel = document.getElementById("modelSel");
+  if (!sel) return '';
+  return sel.value === '__other' ? document.getElementById("modelCustom").value.trim() : sel.value.trim();
+}
 
-document.getElementById("freeGenBtn").addEventListener("click", async () => {
-  const warn = document.getElementById("freeWarn");
-  const model = getModelValue("freeModel", "freeModelCustom");
+/* ================== seletor de DPI ================== */
+
+function renderDpiPicker(r) {
+  animateNum(document.getElementById("dpiB"), r.dpiOptions.baixa.dpi);
+  animateNum(document.getElementById("dpiEq"), r.dpiOptions.equilibrada.dpi);
+  animateNum(document.getElementById("dpiA"), r.dpiOptions.alta.dpi);
+  document.querySelectorAll("#dpiPicker .dp-opt").forEach(b => {
+    b.classList.toggle("sel", b.dataset.dpi === state.dpiSel);
+  });
+}
+
+document.querySelectorAll("#dpiPicker .dp-opt").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const r = state.lastResult;
+    if (!r || !r.valuesByDpi) return;
+    state.dpiSel = btn.dataset.dpi;
+    document.querySelectorAll("#dpiPicker .dp-opt").forEach(b =>
+      b.classList.toggle("sel", b.dataset.dpi === state.dpiSel));
+    const opt = r.dpiOptions[state.dpiSel];
+    renderGrid(document.getElementById("resGrid"), r.valuesByDpi[state.dpiSel]);
+
+    const note = document.getElementById("resDpiNote");
+    if (opt.delta < 0) {
+      note.innerHTML = "<b>DPI Alta (" + opt.dpi + ")</b> — a tela responde mais, então <b>reduzimos a sensi em " +
+        Math.abs(opt.delta) + " pontos</b> para a mira não ficar acelerada demais.";
+    } else if (opt.delta > 0) {
+      note.innerHTML = "<b>DPI Baixa (" + opt.dpi + ")</b> — a tela responde menos, então <b>subimos a sensi em " +
+        opt.delta + " pontos</b> para o drag continuar rápido.";
+    } else {
+      note.style.display = "none";
+      return;
+    }
+    note.style.display = "block";
+  });
+});
+
+/* ================== GERADOR UNIFICADO ================== */
+
+document.getElementById("genBtn").addEventListener("click", async () => {
+  const warn = document.getElementById("genWarn");
+  const model = getModelValue();
   if (!model) {
     warn.textContent = "Informe o modelo do seu celular para continuar.";
     warn.classList.add("show");
-    if (document.getElementById("freeModel").value === "__other") document.getElementById("freeModelCustom").focus();
+    if (document.getElementById("modelSel").value === "__other") document.getElementById("modelCustom").focus();
     return;
   }
   warn.classList.remove("show");
-  const btn = document.getElementById("freeGenBtn");
+
+  const btn = document.getElementById("genBtn");
   btn.disabled = true;
   btn.innerHTML = "<span class='spinner'></span> Gerando...";
-  const r = await api("/api/generate/free", { body: {
-    deviceModel: model,
-    ram: selVal("freeRamOpts"),
-    style: selVal("freeStyleOpts")
-  }});
+  const r = await api("/api/generate", { body: genInputs() });
   btn.disabled = false;
-  btn.innerHTML = "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round'><path d='M13 2L3 14h7l-1 8 10-12h-7l1-8z'/></svg>Gerar Novamente";
+  btn.innerHTML = "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round'><path d='M13 2L3 14h7l-1 8 10-12h-7l1-8z'/></svg><span id='genBtnLabel'>Gerar Novamente</span>";
 
+  if (r._status === 403) {
+    openUpsell();
+    return;
+  }
   if (r._status === 429) {
     toast(r.message, true);
-    document.getElementById("freeRemaining").textContent = "Limite diário atingido — vire VIP 👑";
+    document.getElementById("remaining").textContent = "Limite diário atingido — vire VIP 👑";
     openUpsell();
     return;
   }
   if (r.error) { toast(r.message || "Erro ao gerar.", true); return; }
 
-  state.lastFree = r;
-  renderGrid(document.getElementById("freeGenGrid"), r.values);
-  animateNum(document.getElementById("freeDpiVal"), r.dpi);
-  animateNumPercent(document.getElementById("freeBtnVal"), r.fireButton);
-  document.getElementById("freeCopyBtn").style.display = "inline-flex";
-  document.getElementById("freeResult").classList.add("visible");
+  state.lastResult = r;
+  state.dpiSel = 'equilibrada';
+  renderDpiPicker(r);
+  renderGrid(document.getElementById("resGrid"), r.valuesByDpi.equilibrada);
+  animateNumPercent(document.getElementById("resBtn"), r.fireButton);
+  document.getElementById("resDpiNote").style.display = "none";
 
-  const note = document.getElementById("freeNote");
-  if (r.knownDevice) note.innerHTML = "Perfil do dispositivo reconhecido: <b>" + r.deviceName + "</b>.";
-  else note.innerHTML = "Modelo não encontrado. Usaremos as características informadas para gerar uma configuração personalizada.";
+  const cicChip = document.getElementById("cicChip");
+  if (r.ciclos != null) {
+    cicChip.style.display = "";
+    animateNum(document.getElementById("resCic"), r.ciclos);
+  } else {
+    cicChip.style.display = "none";
+  }
+
+  const note = document.getElementById("resNote");
+  if (r.knownDevice) {
+    note.innerHTML = "Dispositivo identificado: <b>" + escapeHtml(r.deviceName) + "</b>. " + escapeHtml(r.summary);
+  } else {
+    note.innerHTML = escapeHtml(r.unknownMessage || "");
+  }
+  if (r.ciclos != null) note.innerHTML += " Aparelho Apple detectado — <b>ciclos recomendados</b> incluídos.";
+
+  document.getElementById("copyBtn").style.display = "inline-flex";
+  const result = document.getElementById("result");
+  result.classList.add("visible");
 
   updateRemaining(r);
-  toast("Config gerada com sucesso!");
+  state.historyLoaded = false;
+  if (state.user.isVip) loadExtrasOnce(true);
+  toast(tierLabelOf(r.mode) + " gerada! Agora treine com ela 💪");
+  setTimeout(() => result.scrollIntoView({ behavior: "smooth", block: "nearest" }), 80);
 });
 
-function animateNumPercent(elm, target) {
-  const start = performance.now();
-  function step(t) {
-    const p = Math.min((t - start) / 700, 1);
-    elm.textContent = Math.round(target * p) + "%";
-    if (p < 1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
+function genInputs() {
+  return {
+    tier: state.tier,
+    deviceModel: getModelValue(),
+    refreshHz: document.getElementById("hzSel").value,
+    fps: document.getElementById("fpsSel").value,
+    dpiAtual: document.getElementById("dpiAtual").value,
+    style: selVal("styleOpts"),
+    level: selVal("levelOpts"),
+    aim: selVal("aimOpts")
+  };
 }
 
 function updateRemaining(r) {
-  const el = document.getElementById("freeRemaining");
-  if (r.unlimited) { el.textContent = "Gerações ilimitadas (VIP)"; el.style.color = "#d8b4fe"; return; }
+  const elm = document.getElementById("remaining");
+  if (r.unlimited) { elm.textContent = "Gerações ilimitadas (VIP)"; return; }
   if (typeof r.remaining === "number") {
-    el.textContent = "Restam " + r.remaining + " de " + r.limit + " gerações hoje";
-    el.style.color = "";
+    elm.textContent = "Restam " + r.remaining + " de " + r.limit + " gerações hoje (Sensi Normal)";
   }
 }
 
-document.getElementById("freeCopyBtn").addEventListener("click", () => {
-  if (state.lastFree) copyText(fmtResult(state.lastFree), "Config copiada!");
+document.getElementById("copyBtn").addEventListener("click", () => {
+  if (state.lastResult) copyText(fmtResult(state.lastResult), "Config copiada!");
 });
 
-/* ================== MODO VIP ================== */
+/* ================== extras VIP (histórico / perfis) ================== */
 
-document.getElementById("vipGenBtn").addEventListener("click", async () => {
-  if (!state.user.isVip) return openUpsell();
-  const btn = document.getElementById("vipGenBtn");
-  btn.disabled = true;
-  btn.innerHTML = "<span class='spinner'></span> Gerando...";
-  const r = await api("/api/generate/vip", { body: vipInputs() });
-  btn.disabled = false;
-  btn.innerHTML = "⚡ Gerar Sensi VIP";
-  if (r._status === 403) return openUpsell();
-  if (r.error) { toast(r.message || "Erro ao gerar.", true); return; }
-  state.lastVip = r;
-  renderGrid(document.getElementById("vipGenGrid"), r.values);
-  animateNum(document.getElementById("vipDpiVal"), r.dpi);
-  animateNumPercent(document.getElementById("vipBtnVal"), r.fireButton);
-  document.getElementById("vipCopyBtn").style.display = "inline-flex";
-  document.getElementById("vipResult").classList.add("visible");
-  document.getElementById("vipNote").innerHTML = "Configuração detalhada gerada com base no seu perfil de jogo.";
-  state.historyLoaded = false;
-  loadHistoryOnce();
-  toast("Sensi VIP gerada!");
-});
-
-function vipInputs() {
-  return {
-    brand: document.getElementById("vipBrand").value,
-    ram: document.getElementById("vipRam").value,
-    refreshHz: document.getElementById("vipHz").value,
-    fps: document.getElementById("vipFps").value,
-    style: selVal("vipStyleOpts"),
-    level: selVal("vipLevelOpts"),
-    aim: selVal("vipAimOpts")
-  };
-}
-
-document.getElementById("vipCopyBtn").addEventListener("click", () => {
-  if (state.lastVip) copyText(fmtResult(state.lastVip), "Config VIP copiada!");
-});
-
-document.getElementById("vipSaveProfileBtn").addEventListener("click", saveProfile);
-
-/* ================== MODO GERADO VIP ================== */
-
-document.getElementById("gGenBtn").addEventListener("click", async () => {
-  if (!state.user.isVip) return openUpsell();
-  const warn = document.getElementById("gWarn");
-  const model = getModelValue("gModel", "gModelCustom");
-  if (!model) {
-    warn.textContent = "Informe o modelo do seu celular para continuar.";
-    warn.classList.add("show");
-    if (document.getElementById("gModel").value === "__other") document.getElementById("gModelCustom").focus();
-    return;
-  }
-  warn.classList.remove("show");
-
-  const btn = document.getElementById("gGenBtn");
-  btn.disabled = true;
-  btn.innerHTML = "<span class='spinner'></span> Analisando dispositivo...";
-  const r = await api("/api/generate/gerado", { body: geradoInputs() });
-  btn.disabled = false;
-  btn.innerHTML = "🧠 Analisar e Gerar Config";
-  if (r._status === 403) return openUpsell();
-  if (r.error) {
-    warn.textContent = r.message;
-    warn.classList.add("show");
-    return;
-  }
-
-  state.lastGen = r;
-  renderGrid(document.getElementById("gGenGrid"), r.values);
-  animateNum(document.getElementById("gDpiVal"), r.dpi);
-  animateNumPercent(document.getElementById("gBtnVal"), r.fireButton);
-  document.getElementById("gCopyBtn").style.display = "inline-flex";
-  document.getElementById("gResult").classList.add("visible");
-
-  const note = document.getElementById("gNote");
-  if (r.knownDevice) {
-    note.innerHTML = "Dispositivo identificado: <b>" + r.deviceName + "</b>. " + r.summary;
-  } else {
-    note.innerHTML = r.unknownMessage;
-  }
-  state.historyLoaded = false;
-  loadHistoryOnce();
-  toast("Recomendação personalizada gerada!");
-});
-
-function geradoInputs() {
-  return {
-    deviceModel: getModelValue("gModel", "gModelCustom"),
-    brand: document.getElementById("gBrand").value,
-    ram: document.getElementById("gRam").value,
-    refreshHz: document.getElementById("gHz").value,
-    fps: document.getElementById("gFps").value,
-    dpiAtual: document.getElementById("gDpiAtual").value,
-    style: selVal("gStyleOpts"),
-    level: selVal("gLevelOpts"),
-    aim: selVal("gAimOpts")
-  };
-}
-
-document.getElementById("gCopyBtn").addEventListener("click", () => {
-  if (state.lastGen) copyText(fmtResult(state.lastGen), "Config copiada!");
-});
-
-/* ================== MODO IPHONE ================== */
-
-document.getElementById("ipGenBtn").addEventListener("click", async () => {
-  const warn = document.getElementById("ipWarn");
-  const model = document.getElementById("ipModel").value.trim();
-  if (!model) {
-    warn.classList.add("show");
-    document.getElementById("ipModel").focus();
-    return;
-  }
-  warn.classList.remove("show");
-
-  const btn = document.getElementById("ipGenBtn");
-  btn.disabled = true;
-  btn.innerHTML = "<span class='spinner'></span> Gerando...";
-  const r = await api("/api/generate/iphone", { body: {
-    deviceModel: model,
-    refreshHz: document.getElementById("ipHz").value,
-    style: selVal("ipStyleOpts"),
-    level: selVal("ipLevelOpts"),
-    aim: selVal("ipAimOpts")
-  }});
-  btn.disabled = false;
-  btn.innerHTML = "🍎 Gerar Sensi iPhone";
-
-  if (r._status === 429) {
-    toast(r.message, true);
-    document.getElementById("ipRemaining").textContent = "Limite diário atingido — vire VIP 👑";
-    openUpsell();
-    return;
-  }
-  if (r.error) { toast(r.message || "Erro ao gerar.", true); return; }
-
-  state.lastIphone = r;
-  renderGrid(document.getElementById("ipGenGrid"), r.values);
-  animateNum(document.getElementById("ipCicVal"), r.ciclos);
-  animateNumPercent(document.getElementById("ipBtnVal"), r.fireButton);
-  document.getElementById("ipCopyBtn").style.display = "inline-flex";
-  document.getElementById("ipResult").classList.add("visible");
-  document.getElementById("ipNote").innerHTML =
-    "<b>" + escapeHtml(r.deviceName) + "</b> — " + escapeHtml(r.summary);
-  updateRemaining(r);
-  state.historyLoaded = false;
-  loadHistoryOnce();
-  toast("Sensi iPhone gerada!");
-});
-
-document.getElementById("ipCopyBtn").addEventListener("click", () => {
-  if (state.lastIphone) copyText(fmtResult(state.lastIphone), "Config iPhone copiada!");
-});
-
-/* ================== histórico ================== */
-
-function loadHistoryOnce(force) {
+function loadExtrasOnce(force) {
   if (!state.user.isVip) return;
-  if (state.historyLoaded && !force) return;
-  state.historyLoaded = true;
-  api("/api/history").then(r => {
-    if (!r.history) return;
-    renderHistory(r.history);
-  });
+  document.getElementById("vipExtras").style.display = "";
+  if (!state.historyLoaded || force) {
+    state.historyLoaded = true;
+    api("/api/history").then(r => {
+      if (r.history) renderHistory(r.history);
+    });
+  }
+  loadProfiles();
 }
 
 function renderHistory(history) {
@@ -624,21 +542,18 @@ function renderHistory(history) {
     box.innerHTML = "<div class='empty-hint'>Suas gerações aparecem aqui.</div>";
     return;
   }
-  const modeNames = { free: "FREE", vip: "VIP", gerado: "GERADO VIP" };
   history.forEach(h => {
     const row = el("div", "row-item");
     row.appendChild(el("div", "row-main",
-      "<b>Sensi " + (modeNames[h.mode] || h.mode) + "</b>" +
+      "<b>Sensi " + escapeHtml(tierLabelOf(h.mode)) + "</b>" +
       "<span>" + new Date(h.at).toLocaleString("pt-BR") +
-      (h.deviceName ? " · " + h.deviceName : "") + "</span>"));
+      (h.deviceName ? " · " + escapeHtml(h.deviceName) : "") + "</span>"));
     const btn = el("button", "btn btn-ghost btn-sm", "Copiar");
     btn.onclick = () => copyText(fmtResult(h), "Copiada do histórico!");
     row.appendChild(btn);
     box.appendChild(row);
   });
 }
-
-/* ================== perfis salvos ================== */
 
 async function loadProfiles() {
   if (!state.user.isVip) return;
@@ -661,7 +576,7 @@ function renderProfiles(profiles) {
     const actions = el("div", null);
     actions.style.display = "flex";
     actions.style.gap = "8px";
-    const loadBtn = el("button", "btn btn-vip btn-sm", "Carregar");
+    const loadBtn = el("button", "btn btn-red btn-sm", "Carregar");
     loadBtn.onclick = () => applyProfile(p.inputs);
     const delBtn = el("button", "btn btn-ghost btn-sm", "Excluir");
     delBtn.onclick = async () => {
@@ -675,40 +590,71 @@ function renderProfiles(profiles) {
   });
 }
 
+function setOpt(id, v) {
+  const b = document.getElementById(id);
+  if (!b || !v) return;
+  b.querySelectorAll(".opt").forEach(o => o.classList.toggle("sel", o.dataset.v === v));
+}
+
 function applyProfile(inputs) {
   if (!inputs) return;
-  if (inputs.deviceModel !== undefined) {
-    switchMode("gerado");
-    setDeviceValue("gModel", "gModelCustom", inputs.deviceModel || "");
-    if (inputs.brand) document.getElementById("gBrand").value = inputs.brand;
-    if (inputs.ram) document.getElementById("gRam").value = inputs.ram;
-    if (inputs.refreshHz) document.getElementById("gHz").value = inputs.refreshHz;
-    if (inputs.fps) document.getElementById("gFps").value = inputs.fps;
-    if (inputs.dpiAtual) document.getElementById("gDpiAtual").value = inputs.dpiAtual;
-    if (inputs.style) setSel("gStyleOpts", inputs.style);
-    if (inputs.level) setSel("gLevelOpts", inputs.level);
-    if (inputs.aim) setSel("gAimOpts", inputs.aim);
-  } else {
-    switchMode("vip");
-    if (inputs.brand) document.getElementById("vipBrand").value = inputs.brand;
-    if (inputs.ram) document.getElementById("vipRam").value = inputs.ram;
-    if (inputs.refreshHz) document.getElementById("vipHz").value = inputs.refreshHz;
-    if (inputs.fps) document.getElementById("vipFps").value = inputs.fps;
-    if (inputs.style) setSel("vipStyleOpts", inputs.style);
-    if (inputs.level) setSel("vipLevelOpts", inputs.level);
-    if (inputs.aim) setSel("vipAimOpts", inputs.aim);
-  }
+  switchTier(inputs.tier || 'normal');
+  if (inputs.deviceModel !== undefined) setDeviceValue(inputs.deviceModel || "");
+  if (inputs.refreshHz) document.getElementById("hzSel").value = inputs.refreshHz;
+  if (inputs.fps) document.getElementById("fpsSel").value = inputs.fps;
+  if (inputs.dpiAtual) document.getElementById("dpiAtual").value = inputs.dpiAtual;
+  setOpt("styleOpts", inputs.style);
+  setOpt("levelOpts", inputs.level);
+  setOpt("aimOpts", inputs.aim);
   toast("Perfil carregado!");
+}
+
+function setDeviceValue(val) {
+  const sel = document.getElementById("modelSel");
+  const cust = document.getElementById("modelCustom");
+  const opts = [...sel.options].map(o => o.value);
+  if (val && opts.includes(val)) {
+    sel.value = val;
+    cust.style.display = 'none';
+    cust.value = '';
+  } else if (val) {
+    sel.value = '__other';
+    cust.style.display = 'block';
+    cust.value = val;
+  } else {
+    sel.value = '';
+    cust.style.display = 'none';
+    cust.value = '';
+  }
 }
 
 async function saveProfile() {
   if (!state.user.isVip) return openUpsell();
   const name = prompt("Nome do perfil:", "Meu perfil");
   if (!name) return;
-  const r = await api("/api/profiles", { body: { name, inputs: vipInputs() } });
+  const r = await api("/api/profiles", { body: { name, inputs: genInputs() } });
   if (r.profile) { loadProfiles(); toast("Perfil salvo!"); }
   else toast(r.message || "Não foi possível salvar.", true);
 }
+
+/* botão salvar perfil (aparece para VIPs via tecla de atalho? mantemos simples) */
+document.addEventListener("keydown", e => {
+  if (e.altKey && (e.key === 'p' || e.key === 'P')) saveProfile();
+});
+
+/* ================== vídeos: clique para carregar ================== */
+
+document.querySelectorAll(".video-card").forEach(card => {
+  card.addEventListener("click", () => {
+    const frame = card.querySelector(".video-frame");
+    if (frame.querySelector("iframe")) return;
+    const id = card.dataset.yt;
+    frame.innerHTML =
+      "<iframe src='https://www.youtube-nocookie.com/embed/" + encodeURIComponent(id) +
+      "?autoplay=1&rel=0' title='Vídeo de treino' loading='lazy' allowfullscreen " +
+      "allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'></iframe>";
+  });
+});
 
 /* ================== extras ================== */
 
@@ -743,16 +689,17 @@ document.querySelectorAll(".faq-item").forEach(item => {
 });
 
 (async function boot() {
+  const saved = localStorage.getItem(LS_TIER);
+  if (saved && TIER_INFO[saved]) state.tier = saved;
   try {
     await initSession();
   } catch (e) {
     toast("Falha ao conectar no servidor.", true);
   }
+  switchTier(state.tier);
   api("/api/devices/names").then(r => {
     if (!r.devices) return;
     window.__devices = r.devices;
-    fillDeviceSelect("freeModel");
-    fillDeviceSelect("gModel");
-    fillIphoneSelect();
+    fillDeviceSelect("modelSel");
   });
 })();

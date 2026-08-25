@@ -3,107 +3,99 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SENSI PRO â€” Gerador de Sensibilidade Free Fire</title>
+<title>SENSI PRO — Gerador de Sensibilidade Free Fire</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#000103;
+  --bg:#080404;
   --card:rgba(255,255,255,.04);
-  --card-border:rgba(255,255,255,.08);
-  --fire1:#2563eb;
-  --fire2:#38bdf8;
-  --violet:#8b5cf6;
-  --cyan:#22d3ee;
-  --text:#f3f4f6;
-  --muted:#9ca3af;
+  --card-border:rgba(255,255,255,.09);
+  --red1:#dc2626;
+  --red2:#ef4444;
+  --red3:#f87171;
+  --blood:#7f1d1d;
+  --gold:#f59e0b;
+  --text:#f5f0ee;
+  --muted:#a89f9c;
   --ok:#22c55e;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden}
-.orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:.14;z-index:-1;animation:float 14s ease-in-out infinite alternate}
-.orb.a{width:480px;height:480px;background:#1d4ed8;top:-140px;left:-120px}
-.orb.b{width:420px;height:420px;background:#8b5cf6;bottom:-120px;right:-100px;animation-delay:-6s;opacity:.10}
-.orb.c{width:300px;height:300px;background:#0ea5e9;top:40%;left:55%;opacity:.08;animation-delay:-3s}
+body{background:var(--bg);color:var(--text);font-family:'Chakra Petch',sans-serif;min-height:100vh;overflow-x:hidden}
+h1,h2,h3,.font-display{font-family:'Russo One',sans-serif;font-weight:400}
+
+.orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:.13;z-index:-1;animation:float 14s ease-in-out infinite alternate}
+.orb.a{width:480px;height:480px;background:#dc2626;top:-140px;left:-120px}
+.orb.b{width:420px;height:420px;background:#7f1d1d;bottom:-120px;right:-100px;animation-delay:-6s;opacity:.16}
+.orb.c{width:300px;height:300px;background:#ef4444;top:40%;left:55%;opacity:.07;animation-delay:-3s}
 #bgParticles{position:fixed;inset:0;z-index:-2;pointer-events:none}
 @keyframes float{from{transform:translate(0,0) scale(1)}to{transform:translate(60px,40px) scale(1.15)}}
 .wrap{max-width:1080px;margin:0 auto;padding:24px 18px 60px}
 
 header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:26px;flex-wrap:wrap}
 .logo{display:flex;align-items:center;gap:12px}
-.logo-mark{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--fire1),var(--fire2));box-shadow:0 0 26px rgba(37,99,235,.45)}
+.logo-mark{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blood),var(--red2));box-shadow:0 0 26px rgba(220,38,38,.5)}
 .logo-mark svg{width:26px;height:26px}
-.logo h1{font-family:'Orbitron',sans-serif;font-size:1.45rem;font-weight:900;letter-spacing:.06em;line-height:1}
-.logo h1 span{background:linear-gradient(90deg,var(--fire1),var(--fire2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo h1{font-size:1.45rem;letter-spacing:.06em;line-height:1}
+.logo h1 span{background:linear-gradient(90deg,var(--red1),var(--red3));-webkit-background-clip:text;background-clip:text;color:transparent}
 .logo p{font-size:.78rem;color:var(--muted);letter-spacing:.25em;text-transform:uppercase}
 .badges{display:flex;gap:8px;flex-wrap:wrap}
 .chip{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:999px;border:1px solid var(--card-border);background:var(--card);color:var(--muted);display:flex;align-items:center;gap:6px}
 .chip i{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);display:inline-block}
-.chip.vip-on{border-color:rgba(139,92,246,.6);color:#e9d5ff;background:rgba(139,92,246,.12)}
+.chip.vip-on{border-color:rgba(239,68,68,.6);color:#fecaca;background:rgba(239,68,68,.12)}
 
-/* ---------- seletor de modo ---------- */
-.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:28px}
+/* ---------- seletor de tier ---------- */
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:28px}
 .mode-card{
-  cursor:pointer;text-align:left;appearance:none;font-family:'Rajdhani',sans-serif;color:var(--text);
+  cursor:pointer;text-align:left;color:var(--text);
   border:1px solid var(--card-border);border-radius:20px;padding:20px 18px;background:var(--card);
   backdrop-filter:blur(10px);transition:.25s;position:relative;overflow:hidden;
+  font-family:'Chakra Petch',sans-serif;
 }
 .mode-card:hover{transform:translateY(-4px)}
-.mode-card.active{border-color:var(--fire2);box-shadow:0 0 30px rgba(56,189,248,.25)}
+.mode-card.active{border-color:var(--red2);box-shadow:0 0 30px rgba(239,68,68,.25)}
 .mode-card .emoji{font-size:1.7rem;display:block;margin-bottom:8px}
-.mode-card h3{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.08em;margin-bottom:5px}
+.mode-card h3{font-size:.98rem;letter-spacing:.08em;margin-bottom:5px;
+  background:linear-gradient(90deg,#fff,#fca5a5);-webkit-background-clip:text;background-clip:text;color:transparent}
 .mode-card p{color:var(--muted);font-size:.88rem;line-height:1.35}
-.mode-card.free h3{background:linear-gradient(90deg,var(--fire1),var(--fire2));-webkit-background-clip:text;background-clip:text;color:transparent}
-.mode-card.vipmode{
-  background:linear-gradient(160deg,rgba(139,92,246,.16),rgba(217,70,239,.05));border-color:rgba(139,92,246,.45);
-}
-.mode-card.vipmode:hover{box-shadow:0 14px 40px rgba(139,92,246,.3)}
-.mode-card.vipmode.active{border-color:var(--violet);box-shadow:0 0 34px rgba(139,92,246,.4)}
-.mode-card.vipmode h3{background:linear-gradient(90deg,var(--violet),#e879f9);-webkit-background-clip:text;background-clip:text;color:transparent}
-.mode-card.geradomode{
-  background:linear-gradient(160deg,rgba(34,211,238,.14),rgba(56,189,248,.07));border-color:rgba(34,211,238,.45);
-}
-.mode-card.geradomode:hover{box-shadow:0 14px 40px rgba(34,211,238,.28)}
-.mode-card.geradomode.active{border-color:var(--cyan);box-shadow:0 0 34px rgba(34,211,238,.38)}
-.mode-card.geradomode h3{background:linear-gradient(90deg,#0891b2,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
-.mode-card.iphonemode{
-  background:linear-gradient(160deg,rgba(148,197,255,.14),rgba(139,92,246,.06));border-color:rgba(148,197,255,.45);
-}
-.mode-card.iphonemode:hover{box-shadow:0 14px 40px rgba(148,197,255,.28)}
-.mode-card.iphonemode.active{border-color:#94c5ff;box-shadow:0 0 34px rgba(148,197,255,.38)}
-.mode-card.iphonemode h3{background:linear-gradient(90deg,#60a5fa,#e0f2fe);-webkit-background-clip:text;background-clip:text;color:transparent}
-.mb-ios{background:rgba(148,197,255,.16);color:#bfdbfe;border:1px solid rgba(148,197,255,.5)}
 .mode-badge{position:absolute;top:12px;right:12px;font-size:.58rem;font-weight:800;letter-spacing:.14em;padding:4px 8px;border-radius:99px;text-transform:uppercase}
-.mb-vip{background:rgba(139,92,246,.2);color:#d8b4fe;border:1px solid rgba(139,92,246,.5)}
-.mb-gen{background:rgba(250,204,21,.15);color:#fde047;border:1px solid rgba(250,204,21,.45)}
+.mb-free{background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.4)}
+.mb-key{background:rgba(239,68,68,.18);color:#fca5a5;border:1px solid rgba(239,68,68,.5)}
+.mode-card.premium.active{border-color:var(--gold);box-shadow:0 0 34px rgba(245,158,11,.35)}
+.mode-card.premium h3{background:linear-gradient(90deg,#fde68a,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.mode-card.proibida{background:linear-gradient(160deg,rgba(127,29,29,.25),rgba(0,0,0,.2))}
+.mode-card.proibida:hover{box-shadow:0 14px 40px rgba(220,38,38,.3)}
+.mode-card.proibida.active{border-color:var(--red1);box-shadow:0 0 36px rgba(220,38,38,.45)}
+.mode-card.proibida h3{background:linear-gradient(90deg,#ef4444,#fecaca);-webkit-background-clip:text;background-clip:text;color:transparent}
+.mb-proib{background:repeating-linear-gradient(45deg,rgba(220,38,38,.28),rgba(220,38,38,.28) 6px,rgba(0,0,0,.3) 6px,rgba(0,0,0,.3) 12px);color:#fecaca;border:1px solid rgba(220,38,38,.6)}
 
-.panel{display:none;animation:fadeUp .45s ease both}
-.panel.show{display:block}
+.panel{animation:fadeUp .45s ease both}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
-.hero{text-align:center;border:1px solid var(--card-border);border-radius:24px;background:linear-gradient(180deg,rgba(37,99,235,.12),rgba(255,255,255,.02));padding:36px 22px;margin-bottom:26px}
-.hero h2{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,4vw,2.2rem);font-weight:900}
-.hero h2 em{font-style:normal;background:linear-gradient(90deg,var(--fire1),var(--fire2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero{text-align:center;border:1px solid var(--card-border);border-radius:24px;background:linear-gradient(180deg,rgba(220,38,38,.14),rgba(255,255,255,.02));padding:36px 22px;margin-bottom:26px;transition:.3s}
+body[data-tier="premium"] .hero{background:linear-gradient(180deg,rgba(245,158,11,.13),rgba(220,38,38,.05))}
+body[data-tier="proibida"] .hero{background:linear-gradient(180deg,rgba(127,29,29,.3),rgba(220,38,38,.06))}
+.hero h2{font-size:clamp(1.4rem,4vw,2.2rem)}
+.hero h2 em{font-style:normal;background:linear-gradient(90deg,var(--red1),var(--red3));-webkit-background-clip:text;background-clip:text;color:transparent}
+body[data-tier="premium"] .hero h2 em{background:linear-gradient(90deg,#fbbf24,#f59e0b);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero p{color:var(--muted);max-width:540px;margin:10px auto 0;font-size:1.02rem}
 
-.section-title{display:flex;align-items:center;gap:10px;margin:0 0 16px;font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.section-title{display:flex;align-items:center;gap:10px;margin:0 0 16px;font-family:'Russo One',sans-serif;font-size:.95rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .section-title::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--card-border),transparent)}
 
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
 .sensi-card{border:1px solid var(--card-border);border-radius:18px;padding:18px 16px;background:var(--card);backdrop-filter:blur(10px);transition:.25s}
-.sensi-card:hover{transform:translateY(-4px);border-color:rgba(37,99,235,.45)}
+.sensi-card:hover{transform:translateY(-4px);border-color:rgba(239,68,68,.5)}
 .sensi-card .label{font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.sensi-card .value{font-family:'Orbitron',sans-serif;font-size:1.9rem;font-weight:900;margin:6px 0 10px;background:linear-gradient(90deg,#fff,#bfdbfe);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sensi-card .value{font-family:'Russo One',sans-serif;font-size:1.9rem;margin:6px 0 10px;background:linear-gradient(90deg,#fff,#fca5a5);-webkit-background-clip:text;background-clip:text;color:transparent}
 .bar{height:6px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
-.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--fire1),var(--fire2));width:0;transition:width 1s cubic-bezier(.22,1,.36,1)}
+.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--red1),var(--red3));width:0;transition:width 1s cubic-bezier(.22,1,.36,1)}
 
-.btn{appearance:none;border:none;cursor:pointer;font-family:'Orbitron',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:.85rem;padding:16px 26px;border-radius:14px;display:inline-flex;align-items:center;gap:10px;transition:.25s;color:#fff}
+.btn{appearance:none;border:none;cursor:pointer;font-family:'Russo One',sans-serif;letter-spacing:.1em;text-transform:uppercase;font-size:.85rem;padding:16px 26px;border-radius:14px;display:inline-flex;align-items:center;gap:10px;transition:.25s;color:#fff}
 .btn svg{width:15px;height:15px}
-.btn-fire{background:linear-gradient(135deg,var(--fire1),var(--fire2));box-shadow:0 8px 24px rgba(37,99,235,.35)}
-.btn-vip{background:linear-gradient(135deg,var(--violet),#d946ef);box-shadow:0 8px 24px rgba(139,92,246,.4)}
-.btn-cyan{background:linear-gradient(135deg,#0891b2,var(--cyan));box-shadow:0 8px 24px rgba(34,211,238,.3)}
+.btn-red{background:linear-gradient(135deg,var(--blood),var(--red2));box-shadow:0 8px 24px rgba(220,38,38,.4)}
 .btn-gold{background:linear-gradient(135deg,#b45309,#f59e0b);box-shadow:0 8px 24px rgba(245,158,11,.35)}
 .btn-ghost{background:rgba(255,255,255,.05);color:var(--text);border:1px solid var(--card-border)}
 .btn:hover{filter:brightness(1.15);transform:translateY(-2px)}
@@ -114,66 +106,80 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;ma
 .gen-box{border:1px solid var(--card-border);border-radius:24px;padding:26px 24px;background:var(--card);backdrop-filter:blur(10px);margin-bottom:26px}
 .field-label{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:18px 0 9px;display:block}
 .field-label:first-child{margin-top:0}
-.field-label b{color:#38bdf8}
+.field-label b{color:#f87171}
 .opts{display:flex;gap:10px;flex-wrap:wrap}
 .opt{cursor:pointer;user-select:none;border:1px solid var(--card-border);border-radius:13px;padding:10px 16px;font-weight:700;font-size:.88rem;background:rgba(0,0,0,.25);transition:.2s;color:var(--muted)}
-.opt:hover{border-color:rgba(34,211,238,.5);color:var(--text)}
-.opt.sel{background:linear-gradient(135deg,rgba(8,145,178,.25),rgba(34,211,238,.12));border-color:var(--cyan);color:#fff}
+.opt:hover{border-color:rgba(239,68,68,.55);color:var(--text)}
+.opt.sel{background:linear-gradient(135deg,rgba(185,28,28,.4),rgba(239,68,68,.15));border-color:var(--red2);color:#fff}
 .f-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
 select.inp,input.inp{
   width:100%;background:rgba(0,0,0,.35);border:1px solid var(--card-border);border-radius:12px;color:var(--text);
-  padding:12px 13px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:.95rem;outline:none;transition:.2s;
+  padding:12px 13px;font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:.95rem;outline:none;transition:.2s;
 }
-select.inp:focus,input.inp:focus{border-color:var(--cyan);box-shadow:0 0 14px rgba(34,211,238,.25)}
-select.inp option{background:#111827}
+select.inp:focus,input.inp:focus{border-color:var(--red2);box-shadow:0 0 14px rgba(239,68,68,.3)}
+select.inp option{background:#1a0d0d}
 .warn-msg{margin-top:12px;color:#fca5a5;font-weight:700;font-size:.95rem;display:none}
 .warn-msg.show{display:block}
-\.note-ok{margin-top:12px;color:#7dd3fc;font-weight:600;font-size:.92rem;display:none;line-height:1.4}
-.note-ok.show{display:block}
 .gen-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:22px}
 .remaining{color:var(--muted);font-size:.86rem;font-weight:700;letter-spacing:.04em}
-.remaining.vip{color:#d8b4fe}
 
-.result{border:1px solid rgba(37,99,235,.35);border-radius:24px;padding:26px 24px;margin-top:26px;background:linear-gradient(180deg,rgba(37,99,235,.1),rgba(255,255,255,.02));opacity:0;transform:translateY(18px);transition:.5s;pointer-events:none}
-.result.visible{opacity:1;transform:none;pointer-events:auto}
-.result.vipres{border-color:rgba(139,92,246,.45);background:linear-gradient(180deg,rgba(139,92,246,.12),rgba(255,255,255,.02))}
-.result.genres{border-color:rgba(245,158,11,.5);background:linear-gradient(180deg,rgba(245,158,11,.1),rgba(34,211,238,.04))}
-.result.iosres{border-color:rgba(148,197,255,.5);background:linear-gradient(180deg,rgba(96,165,250,.12),rgba(139,92,246,.05))}
+.result{border:1px solid rgba(220,38,38,.4);border-radius:24px;padding:26px 24px;margin-top:6px;background:linear-gradient(180deg,rgba(220,38,38,.1),rgba(255,255,255,.02));opacity:0;transform:translateY(18px);transition:.5s;pointer-events:none;display:none}
+.result.visible{opacity:1;transform:none;pointer-events:auto;display:block}
 .result-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px}
-.dpi-chip{display:flex;flex-direction:column;align-items:center;gap:2px;border:1px dashed rgba(56,189,248,.5);border-radius:18px;padding:12px 22px;background:rgba(56,189,248,.07)}
-.dpi-chip b{font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:900;color:var(--fire2);line-height:1}
-.dpi-chip span{font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:700}
-.btn-chip{display:flex;flex-direction:column;align-items:center;gap:2px;border:1px dashed rgba(34,211,238,.55);border-radius:18px;padding:12px 22px;background:rgba(34,211,238,.06)}
-.btn-chip b{font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;color:var(--cyan);line-height:1}
+.dpi-picker{display:flex;gap:8px;flex-wrap:wrap}
+.dp-opt{
+  cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;
+  border:1px dashed rgba(248,113,113,.5);border-radius:18px;padding:12px 20px;
+  background:rgba(239,68,68,.06);transition:.2s;font-family:'Chakra Petch',sans-serif;color:var(--muted);
+}
+.dp-opt b{font-family:'Russo One',sans-serif;font-size:1.4rem;color:#fca5a5;line-height:1}
+.dp-opt span{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;font-weight:800;text-align:center}
+.dp-opt:hover{border-color:var(--red2)}
+.dp-opt.sel{border-style:solid;border-color:var(--red2);background:rgba(239,68,68,.16);color:#fff;box-shadow:0 0 18px rgba(239,68,68,.25)}
+.dp-opt.sel b{color:#fff}
+.btn-chip{display:flex;flex-direction:column;align-items:center;gap:2px;border:1px dashed rgba(248,113,113,.5);border-radius:18px;padding:12px 22px;background:rgba(239,68,68,.06)}
+.btn-chip b{font-family:'Russo One',sans-serif;font-size:1.5rem;color:var(--red2);line-height:1}
 .btn-chip span{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700;text-align:center}
-.cic-chip{display:flex;flex-direction:column;align-items:center;gap:2px;border:1px dashed rgba(251,191,36,.55);border-radius:18px;padding:12px 22px;background:rgba(251,191,36,.06)}
-.cic-chip b{font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;color:#fbbf24;line-height:1}
+.cic-chip{display:flex;flex-direction:column;align-items:center;gap:2px;border:1px dashed rgba(148,197,255,.5);border-radius:18px;padding:12px 22px;background:rgba(96,165,250,.06)}
+.cic-chip b{font-family:'Russo One',sans-serif;font-size:1.5rem;color:#93c5fd;line-height:1}
 .cic-chip span{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700;text-align:center}
 .gen-note{margin-top:14px;color:var(--muted);font-size:.92rem;line-height:1.5}
-.gen-note b{color:#7dd3fc}
+.gen-note b{color:#fca5a5}
+
+/* ---------- aviso pós-geração ---------- */
+.train-warn{
+  margin-top:20px;display:flex;gap:14px;align-items:flex-start;
+  border:1px solid rgba(245,158,11,.45);border-left:5px solid var(--gold);border-radius:16px;
+  background:linear-gradient(90deg,rgba(245,158,11,.12),rgba(220,38,38,.08));
+  padding:16px 18px;
+}
+.tw-icon{font-size:1.6rem;line-height:1;flex-shrink:0}
+.train-warn b{color:#fcd34d;font-family:'Russo One',sans-serif;font-weight:400;letter-spacing:.04em;display:block;margin-bottom:6px;font-size:.92rem}
+.train-warn p{color:var(--muted);font-size:.92rem;line-height:1.55}
+.train-warn p b{display:inline;color:#fde68a;font-family:inherit}
 
 /* ---------- bloqueio VIP ---------- */
 .lock-zone{position:relative}
 .blur-lock{filter:blur(7px) saturate(.6);pointer-events:none;user-select:none}
 .lock-overlay{
   position:absolute;inset:-8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;z-index:5;
-  background:radial-gradient(circle at center,rgba(7,7,13,.6),rgba(7,7,13,.92));border-radius:24px;padding:18px;text-align:center;
+  background:radial-gradient(circle at center,rgba(15,5,5,.65),rgba(10,4,4,.95));border-radius:24px;padding:18px;text-align:center;
 }
-.lock-icon{width:60px;height:60px;border-radius:19px;display:grid;place-items:center;background:linear-gradient(135deg,var(--violet),#d946ef);box-shadow:0 0 40px rgba(139,92,246,.55);animation:pulseLock 2.2s ease-in-out infinite}
+.lock-icon{width:60px;height:60px;border-radius:19px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blood),var(--red2));box-shadow:0 0 40px rgba(220,38,38,.55);animation:pulseLock 2.2s ease-in-out infinite}
 .lock-icon.gold{background:linear-gradient(135deg,#b45309,#f59e0b);box-shadow:0 0 40px rgba(245,158,11,.5)}
 @keyframes pulseLock{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 .lock-icon svg{width:28px;height:28px}
 .lock-overlay.hide-lock{display:none}
-.lock-overlay h3{font-family:'Orbitron',sans-serif;font-size:1.05rem;letter-spacing:.06em}
+.lock-overlay h3{font-size:1.05rem;letter-spacing:.06em}
 .lock-overlay p{color:var(--muted);max-width:360px;font-size:.95rem;line-height:1.5}
 .lock-divider{width:min(340px,80%);height:1px;background:var(--card-border);margin:6px 0}
 .key-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-.key-input{background:rgba(0,0,0,.4);border:1px solid rgba(139,92,246,.4);border-radius:12px;color:var(--text);padding:12px 14px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.95rem;width:230px;outline:none;transition:.2s;letter-spacing:.05em}
-.key-input:focus{border-color:var(--violet);box-shadow:0 0 16px rgba(139,92,246,.35)}
+.key-input{background:rgba(0,0,0,.4);border:1px solid rgba(239,68,68,.4);border-radius:12px;color:var(--text);padding:12px 14px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:.95rem;width:230px;outline:none;transition:.2s;letter-spacing:.05em}
+.key-input:focus{border-color:var(--red2);box-shadow:0 0 16px rgba(239,68,68,.35)}
 .spinner{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ---------- histÃ³rico / perfis ---------- */
+/* ---------- histórico / perfis ---------- */
 .list-box{border:1px solid var(--card-border);border-radius:20px;background:var(--card);backdrop-filter:blur(10px);padding:8px}
 .row-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;border-bottom:1px solid rgba(255,255,255,.05);flex-wrap:wrap}
 .row-item:last-child{border-bottom:none}
@@ -182,48 +188,64 @@ select.inp option{background:#111827}
 .empty-hint{padding:22px;text-align:center;color:var(--muted);font-size:.92rem}
 
 /* ---------- modal upsell ---------- */
-.modal-back{position:fixed;inset:0;z-index:100;background:rgba(4,4,10,.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:18px}
+.modal-back{position:fixed;inset:0;z-index:100;background:rgba(8,3,3,.75);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:18px}
 .modal-back.show{display:flex}
-.modal{width:min(420px,100%);border:1px solid rgba(139,92,246,.5);border-radius:24px;padding:30px 26px;text-align:center;background:linear-gradient(180deg,#14101f,#0c0c16);box-shadow:0 30px 80px rgba(0,0,0,.6);animation:fadeUp .3s ease both}
+.modal{width:min(420px,100%);border:1px solid rgba(239,68,68,.5);border-radius:24px;padding:30px 26px;text-align:center;background:linear-gradient(180deg,#1c0c0c,#100707);box-shadow:0 30px 80px rgba(0,0,0,.6);animation:fadeUp .3s ease both}
 .modal .lock-icon{margin:0 auto 14px}
-.modal h3{font-family:'Orbitron',sans-serif;font-size:1.15rem;margin-bottom:8px}
+.modal h3{font-size:1.15rem;margin-bottom:8px}
 .modal p{color:var(--muted);margin-bottom:20px;line-height:1.5}
 .modal-actions{display:flex;flex-direction:column;gap:10px}
 
-.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,80px);z-index:120;background:#111827;border:1px solid rgba(34,197,94,.5);color:#bbf7d0;padding:12px 22px;border-radius:14px;font-weight:700;font-size:.92rem;box-shadow:0 12px 34px rgba(0,0,0,.5);transition:.35s cubic-bezier(.22,1,.36,1)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,80px);z-index:120;background:#1a0d0d;border:1px solid rgba(34,197,94,.5);color:#bbf7d0;padding:12px 22px;border-radius:14px;font-weight:700;font-size:.92rem;box-shadow:0 12px 34px rgba(0,0,0,.5);transition:.35s cubic-bezier(.22,1,.36,1)}
 .toast.show{transform:translate(-50%,0)}
 .toast.err{border-color:rgba(239,68,68,.55);color:#fecaca}
 
+/* ---------- tutoriais ---------- */
+.videos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.video-card{border:1px solid var(--card-border);border-radius:18px;overflow:hidden;background:var(--card);cursor:pointer;transition:.25s}
+.video-card:hover{transform:translateY(-4px);border-color:rgba(239,68,68,.5);box-shadow:0 14px 34px rgba(220,38,38,.18)}
+.video-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000}
+.video-frame img{width:100%;height:100%;object-fit:cover;display:block;opacity:.85}
+.video-frame iframe{width:100%;height:100%;display:block;border:0}
+.play-btn{position:absolute;inset:0;display:grid;place-items:center}
+.play-btn span{width:56px;height:56px;border-radius:50%;background:rgba(220,38,38,.92);display:grid;place-items:center;box-shadow:0 8px 30px rgba(220,38,38,.55);transition:.2s}
+.video-card:hover .play-btn span{transform:scale(1.1)}
+.play-btn svg{width:24px;height:24px;fill:#fff;margin-left:3px}
+.vc-body{padding:14px 16px 16px}
+.vc-cat{font-size:.6rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#f87171;border:1px solid rgba(239,68,68,.4);border-radius:99px;padding:3px 9px;display:inline-block;margin-bottom:8px;background:rgba(239,68,68,.08)}
+.vc-body h3{font-size:.82rem;letter-spacing:.03em;line-height:1.4;margin-bottom:5px}
+.vc-body p{color:var(--muted);font-size:.84rem;line-height:1.45}
+
 .tips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
 .tip-card{border:1px solid var(--card-border);border-radius:18px;padding:20px;background:var(--card);transition:.25s}
-.tip-card:hover{transform:translateY(-4px);border-color:rgba(34,211,238,.45)}
-.tip-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;margin-bottom:14px;background:linear-gradient(135deg,rgba(8,145,178,.3),rgba(34,211,238,.1));border:1px solid rgba(34,211,238,.35)}
-.tip-icon svg{width:20px;height:20px;color:var(--cyan)}
-.tip-card h3{font-family:'Orbitron',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.06em;margin-bottom:8px}
+.tip-card:hover{transform:translateY(-4px);border-color:rgba(239,68,68,.45)}
+.tip-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;margin-bottom:14px;background:linear-gradient(135deg,rgba(185,28,28,.35),rgba(239,68,68,.1));border:1px solid rgba(239,68,68,.4)}
+.tip-icon svg{width:20px;height:20px;color:#f87171}
+.tip-card h3{font-size:.82rem;letter-spacing:.06em;margin-bottom:8px}
 .tip-card p{color:var(--muted);font-size:.93rem;line-height:1.55}
 
 .faq-list{display:flex;flex-direction:column;gap:10px;max-width:760px;margin:0 auto}
 .faq-item{border:1px solid var(--card-border);border-radius:16px;background:var(--card)}
-.faq-q{width:100%;appearance:none;border:none;background:transparent;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:1.02rem;font-weight:700;text-align:left;padding:16px 18px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.faq-q svg{width:17px;height:17px;flex-shrink:0;color:var(--fire2);transition:.3s}
+.faq-q{width:100%;appearance:none;border:none;background:transparent;color:var(--text);font-family:'Chakra Petch',sans-serif;font-size:1.02rem;font-weight:700;text-align:left;padding:16px 18px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq-q svg{width:17px;height:17px;flex-shrink:0;color:var(--red3);transition:.3s}
 .faq-item.open .faq-q svg{transform:rotate(180deg)}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease}
 .faq-a-inner{padding:0 18px 16px;color:var(--muted);line-height:1.65;font-size:.96rem}
 
-.share-fab{position:fixed;right:20px;bottom:20px;z-index:90;width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;display:grid;place-items:center;background:linear-gradient(135deg,#16a34a,#22c55e);box-shadow:0 10px 30px rgba(34,197,94,.5);transition:.25s}
+.share-fab{position:fixed;right:20px;bottom:20px;z-index:90;width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;display:grid;place-items:center;background:linear-gradient(135deg,#b91c1c,#ef4444);box-shadow:0 10px 30px rgba(220,38,38,.5);transition:.25s}
 .share-fab:hover{transform:translateY(-3px) scale(1.06)}
 .share-fab svg{width:26px;height:26px}
 
-footer{text-align:center;margin-top:44px;color:#5b6270;font-size:.82rem;line-height:1.7}
+footer{text-align:center;margin-top:44px;color:#6b5f5c;font-size:.82rem;line-height:1.7}
 footer b{color:var(--muted)}
 
 @media(max-width:760px){
   .modes{grid-template-columns:1fr}
-  .dpi-chip,.btn-chip{flex-direction:row;gap:10px}
+  .dp-opt,.btn-chip,.cic-chip{flex-direction:row;gap:10px}
 }
 </style>
 </head>
-<body>
+<body data-tier="normal">
 <div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
 
 <div class="wrap">
@@ -240,351 +262,187 @@ footer b{color:var(--muted)}
   </div>
   <div class="badges">
     <span class="chip"><i></i>Servidor Online</span>
-    <span class="chip">Escala 200 Â· 2026</span>
-    <span class="chip" id="vipChip" style="display:none"><i style="background:#8b5cf6;box-shadow:0 0 8px #8b5cf6"></i><em id="vipChipTxt" style="font-style:normal">VIP Ativo</em></span>
+    <span class="chip">Escala 200 · 2026</span>
+    <span class="chip vip-on" id="vipChip" style="display:none"><i style="background:#ef4444;box-shadow:0 0 8px #ef4444"></i><em id="vipChipTxt" style="font-style:normal">VIP Ativo</em></span>
   </div>
 </header>
 
-<!-- SELETOR DE MODO -->
+<!-- SELETOR DE TIER -->
 <nav class="modes" id="modes">
-  <button class="mode-card free active" data-tab="free">
-    <span class="emoji">ðŸ†“</span>
-    <h3>FREE</h3>
-    <p>ConfiguraÃ§Ã£o bÃ¡sica para todos os jogadores.</p>
+  <button class="mode-card normal active" data-tier="normal">
+    <span class="mode-badge mb-free">Grátis</span>
+    <span class="emoji">🎯</span>
+    <h3>SENSI NORMAL</h3>
+    <p>Equilibrada e fácil de se adaptar. Para todos os jogadores.</p>
   </button>
-  <button class="mode-card vipmode" data-tab="vip">
-    <span class="mode-badge mb-vip">Key</span>
-    <span class="emoji">â­</span>
-    <h3>VIP</h3>
-    <p>ConfiguraÃ§Ã£o avanÃ§ada com mais personalizaÃ§Ã£o.</p>
+  <button class="mode-card premium" data-tier="premium">
+    <span class="mode-badge mb-key">Key VIP</span>
+    <span class="emoji">⭐</span>
+    <h3>SENSI PREMIUM</h3>
+    <p>Refinada com o perfil do seu aparelho e o seu estilo de jogo.</p>
   </button>
-  <button class="mode-card geradomode" data-tab="gerado">
-    <span class="mode-badge mb-gen">Topo de linha</span>
-    <span class="emoji">👑</span>
-    <h3>GERADO VIP</h3>
-    <p>Análise completa do seu dispositivo + IA.</p>
-  </button>
-  <button class="mode-card iphonemode" data-tab="iphone">
-    <span class="mode-badge mb-ios">Exclusivo</span>
-    <span class="emoji">📱</span>
-    <h3>IPHONE</h3>
-    <p>Gerador dedicado com ciclos e botão para Apple.</p>
+  <button class="mode-card proibida" data-tier="proibida">
+    <span class="mode-badge mb-proib">Key VIP</span>
+    <span class="emoji">☠️</span>
+    <h3>SENSI PROIBIDA</h3>
+    <p>AGRESSIVA. Drag insano pra quem já tem controle. Exige treino.</p>
   </button>
 </nav>
 
-<!-- ================= MODO FREE ================= -->
-<section class="panel show" id="panel-free">
+<!-- ================= GERADOR UNIFICADO ================= -->
+<section class="panel">
   <div class="hero">
-    <h2>MODO <em>FREE</em></h2>
-    <p>Gere uma configuraÃ§Ã£o bÃ¡sica na hora. Informe o modelo do seu celular para comeÃ§ar.</p>
+    <h2 id="heroTitle"><em>SENSI NORMAL</em></h2>
+    <p id="heroDesc">Configuração equilibrada gerada na hora. Informe o modelo do seu celular e comece.</p>
   </div>
-  <div class="gen-box">
-    <label class="field-label">Modelo do celular <b>*</b></label>
-    <select class="inp" id="freeModel"><option value="">Carregando modelos...</option></select>
-    <input class="inp" id="freeModelCustom" placeholder='Ex: Redmi Note 13 Pro' autocomplete="off" maxlength="60" style="display:none;margin-top:10px">
-    <label class="field-label">MemÃ³ria RAM do aparelho</label>
-    <div class="opts" id="freeRamOpts">
-      <div class="opt sel" data-v="2">2 GB</div>
-      <div class="opt" data-v="3">3 GB</div>
-      <div class="opt" data-v="4">4 GB</div>
-      <div class="opt" data-v="6">6 GB</div>
-      <div class="opt" data-v="8">8+ GB</div>
+
+  <div class="lock-zone">
+    <div class="lock-overlay hide-lock" id="tierLock">
+      <div class="lock-icon" id="lockIcon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+      </div>
+      <h3 id="lockTitle">🔒 Área VIP</h3>
+      <p id="lockDesc">Para conseguir acesso VIP, entre em contato com um administrador e solicite sua KEY.</p>
+      <div class="key-row">
+        <input type="password" class="key-input activate-key" placeholder="Digite sua KEY" autocomplete="off" maxlength="24">
+        <button class="btn btn-red btn-sm activate-btn">Ativar KEY</button>
+      </div>
+      <div class="lock-divider"></div>
+      <p>Quer acesso VIP?<br>Envie uma mensagem para um administrador solicitando sua KEY.</p>
+      <button class="btn btn-ghost btn-sm contact-btn">📩 Solicitar acesso VIP</button>
     </div>
-    <label class="field-label">Estilo de jogo</label>
-    <div class="opts" id="freeStyleOpts">
-      <div class="opt sel" data-v="eq">Equilibrado</div>
-      <div class="opt" data-v="ag">Agressivo</div>
-      <div class="opt" data-v="pr">PrecisÃ£o</div>
-    </div>
-    <div class="warn-msg" id="freeWarn">Informe o modelo do seu celular para continuar.</div>
-    <div class="gen-actions">
-      <button class="btn btn-fire" id="freeGenBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
-        Gerar Sensibilidade
-      </button>
-      <span class="remaining" id="freeRemaining"></span>
-      <button class="btn btn-ghost" id="freeCopyBtn" style="display:none">Copiar Config</button>
+
+    <div id="genBox">
+      <label class="field-label">Modelo do celular <b>*</b></label>
+      <select class="inp" id="modelSel"><option value="">Carregando modelos...</option></select>
+      <input class="inp" id="modelCustom" placeholder='Ex: Redmi Note 13 Pro' autocomplete="off" maxlength="60" style="display:none;margin-top:10px">
+      <div class="warn-msg" id="genWarn">Informe o modelo do seu celular para continuar.</div>
+
+      <div class="f-row" style="margin-top:4px">
+        <div>
+          <label class="field-label">Tela</label>
+          <select class="inp" id="hzSel">
+            <option value="60">60 Hz</option><option value="90">90 Hz</option>
+            <option value="120" selected>120 Hz</option><option value="144">144 Hz</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">FPS no jogo</label>
+          <select class="inp" id="fpsSel">
+            <option value="30">30 FPS</option><option value="60" selected>60 FPS</option>
+            <option value="90">90 FPS</option><option value="120">120 FPS</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">DPI atual (opcional)</label>
+          <input type="number" class="inp" id="dpiAtual" min="200" max="1200" placeholder="Ex: 480">
+        </div>
+      </div>
+
+      <label class="field-label">Estilo de jogo</label>
+      <div class="opts" id="styleOpts">
+        <div class="opt sel" data-v="eq">Equilibrado</div>
+        <div class="opt" data-v="ag">Agressivo</div>
+        <div class="opt" data-v="pr">Precisão</div>
+      </div>
+      <label class="field-label">Nível do jogador</label>
+      <div class="opts" id="levelOpts">
+        <div class="opt" data-v="iniciante">Iniciante</div>
+        <div class="opt sel" data-v="intermediario">Intermediário</div>
+        <div class="opt" data-v="avancado">Avançado</div>
+        <div class="opt" data-v="competitivo">Competitivo</div>
+      </div>
+      <label class="field-label">Preferência de mira</label>
+      <div class="opts" id="aimOpts">
+        <div class="opt sel" data-v="equilibrada">Equilibrada</div>
+        <div class="opt" data-v="cabeca">Headshot (drag)</div>
+        <div class="opt" data-v="precisao">Precisão / controle</div>
+      </div>
+
+      <div class="gen-actions">
+        <button class="btn btn-red" id="genBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+          <span id="genBtnLabel">Gerar Sensi</span>
+        </button>
+        <span class="remaining" id="remaining"></span>
+        <button class="btn btn-ghost" id="copyBtn" style="display:none">Copiar Config</button>
+      </div>
     </div>
   </div>
-  <div class="result" id="freeResult">
+
+  <div class="result" id="result">
     <div class="result-head">
-      <div class="section-title" style="margin:0">Sua config gerada</div>
+      <div class="section-title" style="margin:0" id="resTitle">Sua config gerada</div>
       <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <div class="dpi-chip"><b id="freeDpiVal">0</b><span>DPI recomendado</span></div>
-        <div class="btn-chip"><b id="freeBtnVal">0%</b><span>BotÃ£o de disparo</span></div>
+        <div class="dpi-picker" id="dpiPicker">
+          <button type="button" class="dp-opt" data-dpi="baixa"><b id="dpiB">0</b><span>DPI Baixa</span></button>
+          <button type="button" class="dp-opt sel" data-dpi="equilibrada"><b id="dpiEq">0</b><span>DPI Equilibrada</span></button>
+          <button type="button" class="dp-opt" data-dpi="alta"><b id="dpiA">0</b><span>DPI Alta</span></button>
+        </div>
+        <div class="btn-chip"><b id="resBtn">0%</b><span>Botão de disparo</span></div>
+        <div class="cic-chip" id="cicChip" style="display:none"><b id="resCic">0</b><span>Ciclos (iPhone)</span></div>
       </div>
     </div>
-    <div class="grid" id="freeGenGrid"></div>
-    <div class="gen-note" id="freeNote"></div>
-  </div>
-</section>
+    <div class="grid" id="resGrid"></div>
+    <p class="gen-note" id="resDpiNote" style="display:none"></p>
 
-<!-- ================= MODO VIP ================= -->
-<section class="panel" id="panel-vip">
-  <div class="hero" style="background:linear-gradient(180deg,rgba(139,92,246,.16),rgba(217,70,239,.05))">
-    <h2>SENSI <em>VIP PREMIUM</em></h2>
-    <p>Interface exclusiva, configuraÃ§Ã£o detalhada, perfis salvos e histÃ³rico ilimitado.</p>
-  </div>
-
-  <div class="lock-zone">
-    <div class="lock-overlay" id="vipLock">
-      <div class="lock-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
-      </div>
-      <h3>ðŸ”’ Ãrea VIP</h3>
-      <p>Para conseguir acesso VIP, entre em contato com um administrador e solicite sua KEY.</p>
-      <div class="key-row">
-        <input type="password" class="key-input activate-key" placeholder="Digite sua KEY" autocomplete="off" maxlength="24">
-        <button class="btn btn-vip btn-sm activate-btn">Ativar KEY</button>
-      </div>
-      <div class="lock-divider"></div>
-      <p>Quer acesso VIP?<br>Envie uma mensagem para um administrador solicitando sua KEY.</p>
-      <button class="btn btn-ghost btn-sm contact-btn">ðŸ“© Solicitar acesso VIP</button>
-    </div>
-
-    <div id="vipContent" class="blur-lock">
-      <div class="gen-box">
-        <label class="field-label">Marca do celular</label>
-        <div class="f-row">
-          <select class="inp" id="vipBrand">
-            <option value="xiaomi">Xiaomi / POCO</option>
-            <option value="samsung">Samsung</option>
-            <option value="motorola">Motorola</option>
-            <option value="apple">Apple / iPhone</option>
-            <option value="realme">Realme</option>
-            <option value="asus">Asus / ROG</option>
-            <option value="outro">Outro</option>
-          </select>
-          <select class="inp" id="vipRam">
-            <option value="2">2 GB</option><option value="3">3 GB</option>
-            <option value="4" selected>4 GB</option><option value="6">6 GB</option>
-            <option value="8">8+ GB</option>
-          </select>
-          <select class="inp" id="vipHz">
-            <option value="60">Tela 60 Hz</option><option value="90">Tela 90 Hz</option>
-            <option value="120">Tela 120 Hz</option><option value="144">Tela 144 Hz</option>
-          </select>
-          <select class="inp" id="vipFps">
-            <option value="30">FPS 30</option><option value="60" selected>FPS 60</option>
-            <option value="90">FPS 90</option><option value="120">FPS 120</option>
-          </select>
-        </div>
-        <label class="field-label">Estilo de jogo</label>
-        <div class="opts" id="vipStyleOpts">
-          <div class="opt sel" data-v="eq">Equilibrado</div>
-          <div class="opt" data-v="ag">Agressivo</div>
-          <div class="opt" data-v="pr">PrecisÃ£o</div>
-        </div>
-        <label class="field-label">NÃ­vel do jogador</label>
-        <div class="opts" id="vipLevelOpts">
-          <div class="opt" data-v="iniciante">Iniciante</div>
-          <div class="opt sel" data-v="intermediario">IntermediÃ¡rio</div>
-          <div class="opt" data-v="avancado">AvanÃ§ado</div>
-          <div class="opt" data-v="competitivo">Competitivo</div>
-        </div>
-        <label class="field-label">PreferÃªncia de mira</label>
-        <div class="opts" id="vipAimOpts">
-          <div class="opt sel" data-v="equilibrada">Equilibrada</div>
-          <div class="opt" data-v="cabeca">Headshot (drag)</div>
-          <div class="opt" data-v="precisao">PrecisÃ£o / controle</div>
-        </div>
-        <div class="gen-actions">
-          <button class="btn btn-vip" id="vipGenBtn">âš¡ Gerar Sensi VIP</button>
-          <button class="btn btn-ghost" id="vipSaveProfileBtn">ðŸ’¾ Salvar como perfil</button>
-          <button class="btn btn-ghost" id="vipCopyBtn" style="display:none">Copiar Config</button>
-        </div>
-      </div>
-      <div class="result vipres" id="vipResult">
-        <div class="result-head">
-          <div class="section-title" style="margin:0">Sua Sensi VIP</div>
-          <div style="display:flex;gap:12px;flex-wrap:wrap">
-            <div class="dpi-chip"><b id="vipDpiVal">0</b><span>DPI recomendado</span></div>
-            <div class="btn-chip"><b id="vipBtnVal">0%</b><span>BotÃ£o de disparo</span></div>
-          </div>
-        </div>
-        <div class="grid" id="vipGenGrid"></div>
-        <div class="gen-note" id="vipNote"></div>
-      </div>
-
-      <div class="section-title" style="margin-top:34px">Perfis Salvos</div>
-      <div class="list-box" id="profileList"><div class="empty-hint">Nenhum perfil salvo ainda.</div></div>
-
-      <div class="section-title" style="margin-top:30px">HistÃ³rico VIP</div>
-      <div class="list-box" id="historyList"><div class="empty-hint">Suas geraÃ§Ãµes aparecem aqui.</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= MODO GERADO VIP ================= -->
-<section class="panel" id="panel-gerado">
-  <div class="hero" style="background:linear-gradient(180deg,rgba(245,158,11,.14),rgba(34,211,238,.05))">
-    <h2><em>ðŸ‘‘ GERADO VIP</em></h2>
-    <p>O modo mais avanÃ§ado: anÃ¡lise do seu dispositivo + suas preferÃªncias para uma recomendaÃ§Ã£o personalizada.</p>
-  </div>
-
-  <div class="lock-zone">
-    <div class="lock-overlay" id="genLock">
-      <div class="lock-icon gold">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
-      </div>
-      <h3>ðŸ”’ Ãrea VIP</h3>
-      <p>Para conseguir acesso VIP, entre em contato com um administrador e solicite sua KEY.</p>
-      <div class="key-row">
-        <input type="password" class="key-input activate-key" placeholder="Digite sua KEY" autocomplete="off" maxlength="24">
-        <button class="btn btn-vip btn-sm activate-btn">Ativar KEY</button>
-      </div>
-      <div class="lock-divider"></div>
-      <p>Quer acesso VIP?<br>Envie uma mensagem para um administrador solicitando sua KEY.</p>
-      <button class="btn btn-ghost btn-sm contact-btn">ðŸ“© Solicitar acesso VIP</button>
-    </div>
-
-    <div id="genContent" class="blur-lock">
-      <div class="gen-box">
-        <label class="field-label">Modelo do celular <b>*</b></label>
-        <select class="inp" id="gModel"><option value="">Carregando modelos...</option></select>
-        <input class="inp" id="gModelCustom" placeholder='Digite o modelo do seu celular — Ex: Redmi Note 13 Pro' autocomplete="off" maxlength="60" style="display:none;margin-top:10px">
-        <div class="warn-msg" id="gWarn">Informe o modelo do seu celular para continuar.</div>
-
-        <div class="f-row" style="margin-top:18px">
-          <div>
-            <label class="field-label">Marca</label>
-            <select class="inp" id="gBrand">
-              <option value="xiaomi">Xiaomi / POCO</option>
-              <option value="samsung">Samsung</option>
-              <option value="motorola">Motorola</option>
-              <option value="apple">Apple / iPhone</option>
-              <option value="realme">Realme</option>
-              <option value="asus">Asus / ROG</option>
-              <option value="outro">Outro</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">RAM</label>
-            <select class="inp" id="gRam">
-              <option value="2">2 GB</option><option value="3">3 GB</option>
-              <option value="4" selected>4 GB</option><option value="6">6 GB</option>
-              <option value="8">8+ GB</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">Taxa de atualizaÃ§Ã£o da tela</label>
-            <select class="inp" id="gHz">
-              <option value="60">60 Hz</option><option value="90">90 Hz</option>
-              <option value="120" selected>120 Hz</option><option value="144">144 Hz</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">FPS no jogo</label>
-            <select class="inp" id="gFps">
-              <option value="30">30 FPS</option><option value="60" selected>60 FPS</option>
-              <option value="90">90 FPS</option><option value="120">120 FPS</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">DPI atual (opcional)</label>
-            <input type="number" class="inp" id="gDpiAtual" min="200" max="1200" placeholder="Ex: 480">
-          </div>
-        </div>
-
-        <label class="field-label">Estilo de jogo</label>
-        <div class="opts" id="gStyleOpts">
-          <div class="opt sel" data-v="eq">Equilibrado</div>
-          <div class="opt" data-v="ag">Agressivo</div>
-          <div class="opt" data-v="pr">PrecisÃ£o</div>
-        </div>
-        <label class="field-label">NÃ­vel do jogador</label>
-        <div class="opts" id="gLevelOpts">
-          <div class="opt" data-v="iniciante">Iniciante</div>
-          <div class="opt sel" data-v="intermediario">IntermediÃ¡rio</div>
-          <div class="opt" data-v="avancado">AvanÃ§ado</div>
-          <div class="opt" data-v="competitivo">Competitivo</div>
-        </div>
-        <label class="field-label">PreferÃªncia de mira</label>
-        <div class="opts" id="gAimOpts">
-          <div class="opt sel" data-v="equilibrada">Equilibrada</div>
-          <div class="opt" data-v="cabeca">Headshot (drag)</div>
-          <div class="opt" data-v="precisao">PrecisÃ£o / controle</div>
-        </div>
-
-        <div class="gen-actions">
-          <button class="btn btn-gold" id="gGenBtn">ðŸ§  Analisar e Gerar Config</button>
-          <button class="btn btn-ghost" id="gCopyBtn" style="display:none">Copiar Config</button>
-        </div>
-      </div>
-
-      <div class="result genres" id="gResult">
-        <div class="result-head">
-          <div class="section-title" style="margin:0">RecomendaÃ§Ã£o personalizada</div>
-          <div style="display:flex;gap:12px;flex-wrap:wrap">
-            <div class="dpi-chip"><b id="gDpiVal">0</b><span>DPI recomendado</span></div>
-            <div class="btn-chip"><b id="gBtnVal">0%</b><span>Tamanho do botÃ£o de disparo</span></div>
-          </div>
-        </div>
-        <div class="grid" id="gGenGrid"></div>
-        <div class="gen-note" id="gNote"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= MODO IPHONE ================= -->
-<section class="panel" id="panel-iphone">
-  <div class="hero" style="background:linear-gradient(180deg,rgba(148,197,255,.15),rgba(139,92,246,.05))">
-    <h2>📱 GERADOR <em>IPHONE</em></h2>
-    <p>Aba exclusiva para aparelhos Apple: sensi completa, ciclos recomendados e tamanho do botão de disparo.</p>
-  </div>
-
-  <div class="gen-box">
-    <label class="field-label">Modelo do iPhone <b>*</b></label>
-    <select class="inp" id="ipModel"><option value="">Carregando modelos...</option></select>
-    <div class="warn-msg" id="ipWarn">Escolha o modelo do seu iPhone para continuar.</div>
-
-    <div class="f-row" style="margin-top:18px">
+    <div class="train-warn">
+      <div class="tw-icon">⚠️</div>
       <div>
-        <label class="field-label">Taxa de atualização</label>
-        <select class="inp" id="ipHz">
-          <option value="60">60 Hz</option><option value="120" selected>120 Hz (ProMotion)</option>
-        </select>
+        <b>TREINE COM ESSA SENSI ANTES DE TROCAR!</b>
+        <p>Não fique trocando de sensibilidade toda hora — isso atrasa sua evolução. Dê pelo menos <b>3 dias</b> para o seu dedo e o seu cérebro se acostumarem com essa config. Faça <b>15 minutos de campo de treino por dia</b>, aqueça antes das ranqueadas e assista aos vídeos de treino aqui embaixo. Sensi boa é sensi que você domina.</p>
       </div>
     </div>
 
-    <label class="field-label">Estilo de jogo</label>
-    <div class="opts" id="ipStyleOpts">
-      <div class="opt sel" data-v="eq">Equilibrado</div>
-      <div class="opt" data-v="ag">Agressivo</div>
-      <div class="opt" data-v="pr">Precisão</div>
-    </div>
-    <label class="field-label">Nível do jogador</label>
-    <div class="opts" id="ipLevelOpts">
-      <div class="opt" data-v="iniciante">Iniciante</div>
-      <div class="opt sel" data-v="intermediario">Intermediário</div>
-      <div class="opt" data-v="avancado">Avançado</div>
-      <div class="opt" data-v="competitivo">Competitivo</div>
-    </div>
-    <label class="field-label">Preferência de mira</label>
-    <div class="opts" id="ipAimOpts">
-      <div class="opt sel" data-v="equilibrada">Equilibrada</div>
-      <div class="opt" data-v="cabeca">Headshot (drag)</div>
-      <div class="opt" data-v="precisao">Precisão / controle</div>
-    </div>
-
-    <div class="gen-actions">
-      <button class="btn btn-cyan" id="ipGenBtn">🍎 Gerar Sensi iPhone</button>
-      <span class="remaining" id="ipRemaining"></span>
-      <button class="btn btn-ghost" id="ipCopyBtn" style="display:none">Copiar Config</button>
-    </div>
+    <div class="gen-note" id="resNote"></div>
   </div>
+</section>
 
-  <div class="result iosres" id="ipResult">
-    <div class="result-head">
-      <div class="section-title" style="margin:0">Sua Sensi iPhone</div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <div class="cic-chip"><b id="ipCicVal">0</b><span>Ciclos</span></div>
-        <div class="btn-chip"><b id="ipBtnVal">0%</b><span>Botão de disparo</span></div>
-      </div>
+<!-- ================= EXTRAS VIP ================= -->
+<section id="vipExtras" style="display:none">
+  <div class="section-title" style="margin-top:40px">Perfis Salvos</div>
+  <div class="list-box" id="profileList"><div class="empty-hint">Nenhum perfil salvo ainda.</div></div>
+
+  <div class="section-title" style="margin-top:30px">Histórico de Gerações</div>
+  <div class="list-box" id="historyList"><div class="empty-hint">Suas gerações aparecem aqui.</div></div>
+</section>
+
+<!-- ================= TUTORIAIS ================= -->
+<section style="margin-top:48px">
+  <div class="section-title">Treino &amp; Evolução · Vídeos</div>
+  <p style="color:var(--muted);margin:-6px 0 18px;font-size:.95rem;max-width:640px;line-height:1.5">
+    Gerou a sensi? Agora treine! Assista esses vídeos para aprender a se acostumar com a sua config,
+    treinar mira e subir de capa/rank mais rápido.
+  </p>
+  <div class="videos-grid" id="videosGrid">
+    <div class="video-card" data-yt="mlRV_XjTpN8">
+      <div class="video-frame"><img loading="lazy" src="https://i.ytimg.com/vi/mlRV_XjTpN8/hqdefault.jpg" alt=""><div class="play-btn"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div></div>
+      <div class="vc-body"><span class="vc-cat">Adaptação</span><h3>Aprenda criar uma sensibilidade PERFEITA para VOCÊ</h3><p>O passo a passo completo para regular a própria sensi, DPI e botão de disparo.</p></div>
     </div>
-    <div class="grid" id="ipGenGrid"></div>
-    <div class="gen-note" id="ipNote"></div>
+    <div class="video-card" data-yt="Is7WoMkCkKw">
+      <div class="video-frame"><img loading="lazy" src="https://i.ytimg.com/vi/Is7WoMkCkKw/hqdefault.jpg" alt=""><div class="play-btn"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div></div>
+      <div class="vc-body"><span class="vc-cat">Subir Capa</span><h3>Como treinar sua sensi para dar FULL CAPA em poucos dias</h3><p>Treino rápido e direto para dominar a sensi e subir capa no mobile.</p></div>
+    </div>
+    <div class="video-card" data-yt="RyT_HJ0LzP8">
+      <div class="video-frame"><img loading="lazy" src="https://i.ytimg.com/vi/RyT_HJ0LzP8/hqdefault.jpg" alt=""><div class="play-btn"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div></div>
+      <div class="vc-body"><span class="vc-cat">Treino</span><h3>Treinamento 100% focado em melhorar a sensi</h3><p>Melhor treino para melhorar a sensi com UMP, Desert ou qualquer arma.</p></div>
+    </div>
+    <div class="video-card" data-yt="2K9HuD5OGrQ">
+      <div class="video-frame"><img loading="lazy" src="https://i.ytimg.com/vi/2K9HuD5OGrQ/hqdefault.jpg" alt=""><div class="play-btn"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div></div>
+      <div class="vc-body"><span class="vc-cat">Adaptação</span><h3>ACHE A SENSI PERFEITA! Como ajustar sua sensibilidade</h3><p>Aprenda a ajustar cada barra de sensibilidade no passo a passo.</p></div>
+    </div>
+    <div class="video-card" data-yt="UEO0Ji7RMSU">
+      <div class="video-frame"><img loading="lazy" src="https://i.ytimg.com/vi/UEO0Ji7RMSU/hqdefault.jpg" alt=""><div class="play-btn"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div></div>
+      <div class="vc-body"><span class="vc-cat">Headshot</span><h3>Melhor sensibilidade e DPI para dar HEADSHOT</h3><p>Sensi e DPI para acertar muito headshot, funciona até em celular fraco.</p></div>
+    </div>
+    <div class="video-card" data-yt="qbZV6Jf8QwE">
+      <div class="video-frame"><img loading="lazy" src="https://i.ytimg.com/vi/qbZV6Jf8QwE/hqdefault.jpg" alt=""><div class="play-btn"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div></div>
+      <div class="vc-body"><span class="vc-cat">Rank</span><h3>SEGREDOS para SUBIR de RANK RÁPIDO no Free Fire</h3><p>Estratégias, dicas avançadas e os erros que você deve evitar para evoluir rápido.</p></div>
+    </div>
+    <div class="video-card" data-yt="Ink_X09uRY0">
+      <div class="video-frame"><img loading="lazy" src="https://i.ytimg.com/vi/Ink_X09uRY0/hqdefault.jpg" alt=""><div class="play-btn"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div></div>
+      <div class="vc-body"><span class="vc-cat">Rank</span><h3>10 DICAS DE ESTRATÉGIA para subir de rank rápido</h3><p>Dicas essenciais para subir de rank de maneira rápida e inteligente.</p></div>
+    </div>
   </div>
 </section>
 
@@ -594,22 +452,22 @@ footer b{color:var(--muted)}
     <div class="tip-card">
       <div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg></div>
       <h3>Campo de Treinamento</h3>
-      <p>Passe 15 minutos por dia mirando em bots. Foque em acertar a cabeÃ§a sem mover o dedo rÃ¡pido demais.</p>
+      <p>Passe 15 minutos por dia mirando em bots. Foque em acertar a cabeça sem mover o dedo rápido demais.</p>
     </div>
     <div class="tip-card">
       <div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
       <h3>Ajuste Gradual</h3>
-      <p>Mude apenas 2 ou 3 pontos por vez. MudanÃ§as bruscas atrapalham sua memÃ³ria muscular.</p>
+      <p>Mude apenas 2 ou 3 pontos por vez. Mudanças bruscas atrapalham sua memória muscular.</p>
     </div>
     <div class="tip-card">
       <div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
-      <h3>Mira na Altura da CabeÃ§a</h3>
-      <p>Ande pelo mapa sempre com a mira na altura da cabeÃ§a do inimigo.</p>
+      <h3>Mira na Altura da Cabeça</h3>
+      <p>Ande pelo mapa sempre com a mira na altura da cabeça do inimigo.</p>
     </div>
     <div class="tip-card">
       <div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-      <h3>ConstÃ¢ncia</h3>
-      <p>NÃ£o troque de sensi toda hora. DÃª pelo menos 3 dias de adaptaÃ§Ã£o antes de mudar.</p>
+      <h3>Constância</h3>
+      <p>Não troque de sensi toda hora. Dê pelo menos 3 dias de adaptação antes de mudar.</p>
     </div>
   </div>
 </section>
@@ -618,42 +476,48 @@ footer b{color:var(--muted)}
   <div class="section-title">Perguntas Frequentes</div>
   <div class="faq-list">
     <div class="faq-item">
-      <button class="faq-q">Essas configuraÃ§Ãµes funcionam em qualquer celular?
+      <button class="faq-q">Qual a diferença entre Sensi Normal, Premium e Proibida?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
-      <div class="faq-a"><div class="faq-a-inner">As configs servem para Android e iOS. Cada aparelho tem seu toque: use os valores como base e ajuste 2 ou 3 pontos atÃ© ficar confortÃ¡vel para vocÃª.</div></div>
+      <div class="faq-a"><div class="faq-a-inner">A <b>Normal</b> é equilibrada, grátis e ideal para começar. A <b>Premium</b> analisa seu aparelho e preferências para uma config refinada. A <b>Proibida</b> é a mais agressiva: mira alta e drag insano — recomendada para quem já tem bom controle e vai treinar bastante.</div></div>
     </div>
     <div class="faq-item">
-      <button class="faq-q">Como funciona o limite do modo FREE?
+      <button class="faq-q">Como funciona o limite de gerações?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
-      <div class="faq-a"><div class="faq-a-inner">No modo FREE vocÃª pode gerar algumas configuraÃ§Ãµes por dia. Com uma KEY VIP ativa, as geraÃ§Ãµes se tornam ilimitadas e vocÃª libera os modos VIP e GERADO VIP.</div></div>
+      <div class="faq-a"><div class="faq-a-inner">A Sensi Normal tem algumas gerações por dia. Com uma KEY VIP ativa, você libera também a Premium e a Proibida, com gerações ilimitadas.</div></div>
     </div>
     <div class="faq-item">
-      <button class="faq-q">O que Ã© DPI e como configurar?
+      <button class="faq-q">Quanto tempo leva para me acostumar com a sensi?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
-      <div class="faq-a"><div class="faq-a-inner">DPI Ã© a sensibilidade da tela do aparelho. O gerador sugere um DPI recomendado conforme as caracterÃ­sticas que vocÃª informou.</div></div>
+      <div class="faq-a"><div class="faq-a-inner">Dê pelo menos 3 dias com a mesma config, treinando 15 minutos por dia no campo de treinamento. Trocar de sensi toda hora reinicia sua adaptação do zero — escolha uma e evolua nela.</div></div>
     </div>
     <div class="faq-item">
       <button class="faq-q">Como consigo uma KEY VIP?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
-      <div class="faq-a"><div class="faq-a-inner">Nas Ã¡reas VIP, toque em "ðŸ“© Solicitar acesso VIP" para falar com um administrador. Ele vai te enviar uma KEY Ãºnica. Depois Ã© sÃ³ digitar no campo "Digite sua KEY" e ativar.</div></div>
+      <div class="faq-a"><div class="faq-a-inner">Nas áreas Premium/Proibida, toque em "📩 Solicitar acesso VIP" para falar com um administrador. Ele vai te enviar uma KEY única. Depois é só digitar no campo "Digite sua KEY" e ativar.</div></div>
     </div>
     <div class="faq-item">
       <button class="faq-q">Minha mira treme com sensibilidade alta. E agora?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
-      <div class="faq-a"><div class="faq-a-inner">Reduza a Olhadinha e a Luneta AWM primeiro. Mantenha Geral e Red Dot altas para o drag continuar rÃ¡pido.</div></div>
+      <div class="faq-a"><div class="faq-a-inner">Reduza a Olhadinha e a Mira AWM primeiro. Mantenha Geral e Red Dot altas para o drag continuar rápido. Ajuste 2 ou 3 pontos por vez até ficar confortável.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Funciona no iPhone?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">Sim! Ao escolher um modelo Apple, o gerador inclui automaticamente os <b>ciclos recomendados</b> junto com a sensi completa, DPI e botão de disparo.</div></div>
     </div>
   </div>
 </section>
 
 <footer>
-  <b>SENSIPRO</b> â€” Ferramenta feita pela comunidade. NÃ£o afiliado Ã  Garena / Free Fire.<br>
-  As configuraÃ§Ãµes apresentadas sÃ£o <b>recomendaÃ§Ãµes personalizadas</b> baseadas nas informaÃ§Ãµes que vocÃª informou.<br>
-  Resultados variam conforme aparelho, toque e prÃ¡tica. Sem promessas de desempenho garantido.
+  <b>SENSIPRO</b> — Ferramenta feita pela comunidade. Não afiliado à Garena / Free Fire.<br>
+  As configurações apresentadas são <b>recomendações personalizadas</b> baseadas nas informações que você informou.<br>
+  Resultados variam conforme aparelho, toque e prática. Sem promessas de desempenho garantido.
 </footer>
 
 </div>
@@ -667,10 +531,10 @@ footer b{color:var(--muted)}
   <div class="modal">
     <div class="lock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></div>
     <h3>Recurso VIP</h3>
-    <p>Desbloqueie configuraÃ§Ãµes avanÃ§adas e mais personalizaÃ§Ã£o.</p>
+    <p>Desbloqueie a Sensi Premium e Proibida com gerações ilimitadas.</p>
     <div class="modal-actions">
-      <button class="btn btn-vip" id="upsellGo">CONHECER VIP</button>
-      <button class="btn btn-ghost btn-sm" id="upsellClose">Agora nÃ£o</button>
+      <button class="btn btn-red" id="upsellGo">DESBLOQUEAR VIP</button>
+      <button class="btn btn-ghost btn-sm" id="upsellClose">Agora não</button>
     </div>
   </div>
 </div>

@@ -3,145 +3,304 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SENSI PRO â€” Painel Administrativo</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>SENSI PRO — Painel Administrativo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#08080f;--card:rgba(255,255,255,.04);--card-border:rgba(255,255,255,.09);
-  --violet:#8b5cf6;--text:#f3f4f6;--muted:#9ca3af;--ok:#22c55e;
+  --bg:#0a0505;--panel:#120909;--card:rgba(255,255,255,.04);--card-border:rgba(255,255,255,.09);
+  --red1:#dc2626;--red2:#ef4444;--red3:#f87171;--blood:#7f1d1d;
+  --text:#f5f0ee;--muted:#a89f9c;--ok:#22c55e;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;padding:26px 16px 60px}
-.wrap{max-width:1060px;margin:0 auto}
-h1{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:900;letter-spacing:.06em;margin-bottom:4px}
-h1 span{color:#38bdf8}
-.sub{color:var(--muted);margin-bottom:24px;font-size:.9rem;letter-spacing:.06em}
-.card{border:1px solid var(--card-border);border-radius:18px;background:var(--card);padding:20px;margin-bottom:20px}
-.card h2{font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:10px}
-.card h2::after{content:"";flex:1;height:1px;background:var(--card-border)}
+body{background:var(--bg);color:var(--text);font-family:'Chakra Petch',sans-serif;min-height:100vh}
+h1,h2,h3,.font-display{font-family:'Russo One',sans-serif;font-weight:400}
+
+.layout{display:flex;min-height:100vh}
+
+/* ---------- sidebar ---------- */
+.sidebar{width:230px;background:var(--panel);border-right:1px solid var(--card-border);display:flex;flex-direction:column;padding:22px 14px;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 20px;border-bottom:1px solid var(--card-border);margin-bottom:16px}
+.brand-mark{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blood),var(--red2));box-shadow:0 0 20px rgba(220,38,38,.5);flex-shrink:0}
+.brand-mark svg{width:21px;height:21px}
+.brand h1{font-size:.95rem;line-height:1.1}
+.brand h1 span{background:linear-gradient(90deg,var(--red1),var(--red3));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand p{font-size:.58rem;color:var(--muted);letter-spacing:.22em;text-transform:uppercase}
+.nav{display:flex;flex-direction:column;gap:4px;flex:1}
+.nav button{
+  appearance:none;border:none;cursor:pointer;text-align:left;font-family:'Chakra Petch',sans-serif;font-weight:600;
+  background:transparent;color:var(--muted);font-size:.92rem;padding:11px 13px;border-radius:12px;display:flex;align-items:center;gap:11px;transition:.18s;letter-spacing:.02em;text-transform:none;
+}
+.nav button svg{width:17px;height:17px;flex-shrink:0}
+.nav button:hover{color:var(--text);background:rgba(239,68,68,.08)}
+.nav button.on{color:#fff;background:linear-gradient(135deg,rgba(185,28,28,.55),rgba(239,68,68,.25));box-shadow:inset 3px 0 0 var(--red2)}
+.side-foot{border-top:1px solid var(--card-border);padding-top:12px}
+.badge-role{font-size:.58rem;font-weight:800;letter-spacing:.12em;padding:3px 9px;border-radius:99px;text-transform:uppercase}
+.bg-owner{background:rgba(56,189,248,.14);color:#7dd3fc;border:1px solid rgba(56,189,248,.45)}
+.bg-mod{background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.4)}
+
+/* ---------- conteúdo ---------- */
+.content{flex:1;padding:26px 26px 70px;max-width:1100px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px;flex-wrap:wrap}
+.topbar h2{font-size:1.15rem;letter-spacing:.04em}
+.topbar .sub{color:var(--muted);font-size:.85rem;margin-top:3px}
+
+.card{border:1px solid var(--card-border);border-radius:18px;background:var(--card);padding:20px;margin-bottom:18px}
+.card h3.sec{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.card h3.sec::after{content:"";flex:1;height:1px;background:var(--card-border)}
+
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.stat{border:1px solid var(--card-border);border-radius:14px;padding:16px;text-align:center}
-.stat b{font-family:'Orbitron',sans-serif;font-size:1.7rem;font-weight:900;display:block}
-.stat span{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
-label{display:block;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
-input{background:rgba(0,0,0,.35);border:1px solid var(--card-border);border-radius:10px;color:var(--text);padding:11px 12px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:.95rem;outline:none}
-input:focus{border-color:#38bdf8}
-button{appearance:none;border:none;cursor:pointer;font-family:'Orbitron',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.72rem;padding:12px 18px;border-radius:10px;color:#fff;transition:.2s}
-button:hover{filter:brightness(1.15)}
-button:disabled{opacity:.6;cursor:wait}
-.b-blue{background:linear-gradient(135deg,#2563eb,#38bdf8)}
-.b-red{background:linear-gradient(135deg,#b91c1c,#ef4444)}
+.stat{border:1px solid var(--card-border);border-radius:14px;padding:16px;position:relative;overflow:hidden;background:linear-gradient(160deg,rgba(220,38,38,.07),transparent)}
+.stat b{font-family:'Russo One',sans-serif;font-size:1.7rem;display:block;line-height:1}
+.stat span{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;display:block;margin-top:7px}
+.stat::after{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--red1),transparent)}
+
+label{display:block;font-size:.68rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
+input{background:rgba(0,0,0,.35);border:1px solid var(--card-border);border-radius:10px;color:var(--text);padding:11px 12px;font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:.95rem;outline:none;transition:.2s}
+input:focus{border-color:var(--red2);box-shadow:0 0 12px rgba(239,68,68,.25)}
+button.act{appearance:none;border:none;cursor:pointer;font-family:'Russo One',sans-serif;letter-spacing:.08em;text-transform:uppercase;font-size:.68rem;padding:12px 16px;border-radius:10px;color:#fff;transition:.2s}
+button.act:hover{filter:brightness(1.15)}
+button.act:disabled{opacity:.6;cursor:wait}
+.b-red{background:linear-gradient(135deg,var(--blood),var(--red2))}
 .b-gray{background:rgba(255,255,255,.07);border:1px solid var(--card-border)}
 .b-green{background:linear-gradient(135deg,#15803d,#22c55e)}
+.b-gold{background:linear-gradient(135deg,#b45309,#f59e0b)}
+
 table{width:100%;border-collapse:collapse;font-size:.92rem}
-th{text-align:left;color:var(--muted);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:9px 8px;border-bottom:1px solid var(--card-border)}
+th{text-align:left;color:var(--muted);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;padding:9px 8px;border-bottom:1px solid var(--card-border)}
 td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle}
 tr:last-child td{border-bottom:none}
 .badge{font-size:.62rem;font-weight:800;letter-spacing:.1em;padding:4px 9px;border-radius:99px;text-transform:uppercase}
 .bg-ok{background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.4)}
 .bg-off{background:rgba(239,68,68,.13);color:#fca5a5;border:1px solid rgba(239,68,68,.35)}
 .bg-warn{background:rgba(250,204,21,.12);color:#fde047;border:1px solid rgba(250,204,21,.4)}
-.bg-owner{background:rgba(56,189,248,.14);color:#7dd3fc;border:1px solid rgba(56,189,248,.45)}
-.code{font-family:'Orbitron',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.05em}
+.code{font-family:'Russo One',sans-serif;font-size:.74rem;letter-spacing:.05em;color:#fca5a5}
 .actions{display:flex;gap:6px;flex-wrap:wrap}
-.actions button{padding:8px 11px;font-size:.62rem}
+.actions button.act{padding:8px 11px;font-size:.6rem}
 .mini-inp{width:110px;padding:8px 9px;font-size:.85rem;border-radius:8px}
 .msg{margin-top:10px;font-weight:700;font-size:.92rem;display:none}
 .msg.show{display:block}
 .msg.ok{color:#86efac}.msg.err{color:#fca5a5}
-.topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:8px}
-@media(max-width:720px){table{display:block;overflow-x:auto}}
+.hint{color:var(--muted);font-size:.82rem;margin-top:8px;line-height:1.5}
+.search-row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
+.search-row input{max-width:280px;width:100%}
+.presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.presets button{appearance:none;cursor:pointer;border:1px solid rgba(239,68,68,.35);background:rgba(239,68,68,.08);color:#fca5a5;border-radius:99px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:.72rem;padding:5px 12px;transition:.15s}
+.presets button:hover{background:rgba(239,68,68,.2)}
+
+/* ---------- toast ---------- */
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,80px);z-index:200;background:#1c0d0d;border:1px solid rgba(34,197,94,.5);color:#bbf7d0;padding:12px 22px;border-radius:13px;font-weight:700;font-size:.9rem;box-shadow:0 12px 34px rgba(0,0,0,.55);transition:.32s cubic-bezier(.22,1,.36,1);max-width:min(480px,90vw)}
+#toast.show{transform:translate(-50%,0)}
+#toast.err{border-color:rgba(239,68,68,.55);color:#fecaca}
+
+.section{display:none}
+.section.on{display:block;animation:fadeUp .3s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+@media(max-width:900px){
+  .layout{flex-direction:column}
+  .sidebar{width:100%;height:auto;position:static;flex-direction:row;align-items:center;padding:10px 12px;gap:10px;overflow-x:auto;border-right:none;border-bottom:1px solid var(--card-border)}
+  .brand{border:none;margin:0;padding:0;flex-shrink:0}
+  .brand p{display:none}
+  .nav{flex-direction:row;gap:6px}
+  .nav button{white-space:nowrap;padding:9px 12px;font-size:.85rem}
+  .nav button.on{box-shadow:inset 0 -3px 0 var(--red2)}
+  .side-foot{border:none;padding:0;margin-left:auto;flex-shrink:0}
+  .content{padding:18px 14px 60px}
+  table{display:block;overflow-x:auto}
+}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="layout">
 
-  <div class="topbar">
-    <div>
-      <h1>SENSI<span>PRO</span> Â· PAINEL ADMIN</h1>
-      <p class="sub" id="admWho"></p>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
+      </div>
+      <div>
+        <h1>SENSI<span>PRO</span></h1>
+        <p>Admin</p>
+      </div>
     </div>
-    <button class="b-gray" id="logoutBtn">Sair</button>
-  </div>
 
-  <div class="card">
-    <h2>Dashboard</h2>
-    <div class="stats" id="statsBox"></div>
-  </div>
+    <nav class="nav" id="nav">
+      <button data-sec="dash" class="on">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Dashboard</button>
+      <button data-sec="keys">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 2l-2 2m-7.6 7.6a5.5 5.5 0 11-7.8 7.8 5.5 5.5 0 017.8-7.8zm0 0L15 8m-4 4l3-3m4-4l2-2m-2 2l3 3"/></svg>
+        Keys VIP</button>
+      <button data-sec="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Usuários</button>
+      <button data-sec="mods" id="navMods" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Moderadores</button>
+      <button data-sec="cfg" id="navCfg" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 008 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H2a2 2 0 110-4h.09A1.65 1.65 0 004.6 8a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V2a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Configurações</button>
+      <button data-sec="sec" id="navSec" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+        Segurança</button>
+    </nav>
 
-  <div class="card">
-    <h2>Gerenciar Keys</h2>
-    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
-      <div><label>Dias atÃ© expirar</label><input type="number" class="mini-inp" id="nkDays" min="0" placeholder="ex: 30"></div>
-      <div><label>+ Horas</label><input type="number" class="mini-inp" id="nkHours" min="0" placeholder="ex: 12"></div>
-      <div><label>+ Minutos</label><input type="number" class="mini-inp" id="nkMin" min="0" placeholder="ex: 30"></div>
-      <div><label>+ Segundos</label><input type="number" class="mini-inp" id="nkSec" min="0" placeholder="ex: 45"></div>
-      <div><label>Usos permitidos</label><input type="number" class="mini-inp" id="nkUses" min="1" value="1"></div>
-      <button class="b-blue" id="genKeyBtn">+ Gerar nova KEY</button>
-      <button class="b-gray" id="reloadKeysBtn">Recarregar</button>
+    <div class="side-foot">
+      <div id="admWho" style="margin-bottom:10px;font-size:.85rem"></div>
+      <button class="b-gray act" id="logoutBtn" style="width:100%">Sair</button>
     </div>
-    <div style="margin-top:14px">
-      <table>
-        <thead><tr><th>CÃ³digo</th><th>Status</th><th>Usos</th><th>Expira</th><th>Ativada por</th><th>AÃ§Ãµes</th></tr></thead>
-        <tbody id="keysBody"></tbody>
-      </table>
-    </div>
-  </div>
+  </aside>
 
-  <div class="card">
-    <h2>UsuÃ¡rios</h2>
-    <table>
-      <thead><tr><th>Jogador</th><th>VIP</th><th>Origem</th><th>Visto por Ãºltimo</th><th>AÃ§Ãµes</th></tr></thead>
-      <tbody id="usersBody"></tbody>
-    </table>
-  </div>
+  <main class="content">
 
-  <div class="card" id="modsCard" style="display:none">
-    <h2>Moderadores Â· sÃ³ o dono</h2>
-    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
-      <div><label>UsuÃ¡rio do moderador</label><input class="mini-inp" id="modUser" style="width:170px" placeholder="ex: moderador1"></div>
-      <div><label>Senha (min. 8)</label><input class="mini-inp" id="modPass" style="width:170px" placeholder="senha forte"></div>
-      <button class="b-green" id="addModBtn">+ Criar moderador</button>
-    </div>
-    <div style="margin-top:14px">
-      <table>
-        <thead><tr><th>UsuÃ¡rio</th><th>Cargo</th><th>Criado em</th><th>AÃ§Ãµes</th></tr></thead>
-        <tbody id="modsBody"></tbody>
-      </table>
-    </div>
-  </div>
+    <!-- DASHBOARD -->
+    <section class="section on" id="sec-dash">
+      <div class="topbar">
+        <div><h2 class="font-display">Dashboard</h2><p class="sub">Visão geral do SENSI PRO em tempo real.</p></div>
+        <button class="b-gray act" id="refreshBtn">↻ Atualizar</button>
+      </div>
+      <div class="stats" id="statsBox"></div>
 
-  <div class="card" id="settingsCard" style="display:none">
-    <h2>ConfiguraÃ§Ãµes Â· sÃ³ o dono</h2>
-    <label>Link de contato para solicitaÃ§Ã£o de KEY (WhatsApp, Telegram...)</label>
-    <input id="cfgContact" style="width:100%" placeholder="https://wa.me/55DDDNÃšMERO?text=...">
-    <label>EndereÃ§o secreto do painel (mude e guarde bem!)</label>
-    <input id="cfgPath" style="width:100%" placeholder="/painel-xxxx">
-    <label>Limite diÃ¡rio de geraÃ§Ãµes no modo FREE</label>
-    <input type="number" class="mini-inp" id="cfgLimit" min="0">
-    <div style="margin-top:14px"><button class="b-green" id="saveCfgBtn">Salvar configuraÃ§Ãµes</button></div>
+      <div class="card" style="margin-top:18px">
+        <h3 class="sec">Atalhos rápidos</h3>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="b-red act" data-go="keys">+ Criar KEY VIP</button>
+          <button class="b-gray act" data-go="users">Ver usuários</button>
+          <button class="b-gold act" data-go="cfg" id="goCfgQuick" style="display:none">Configurações</button>
+        </div>
+      </div>
+    </section>
 
-    <h2 style="margin-top:26px">Alterar minha senha</h2>
-    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
-      <div><label>Senha atual</label><input type="password" class="mini-inp" id="pwOld" style="width:170px" autocomplete="current-password"></div>
-      <div><label>Nova senha (min. 8)</label><input type="password" class="mini-inp" id="pwNew" style="width:170px" autocomplete="new-password"></div>
-      <button class="b-blue" id="changePwBtn">Trocar senha</button>
-    </div>
-    <div class="msg" id="cfgMsg"></div>
-  </div>
-  <div class="card" id="secCard" style="display:none">
-    <h2>SeguranÃ§a Â· sÃ³ o dono</h2>
-    <div class="stats" style="margin-bottom:14px">
-      <div class="stat"><b id="fail24">0</b><span>logins falhos (24h)</span></div>
-      <div class="stat"><b id="lock24">0</b><span>bloqueios (24h)</span></div>
-    </div>
-    <table>
-      <thead><tr><th>Quando</th><th>Evento</th><th>Detalhe</th><th>IP</th></tr></thead>
-      <tbody id="auditBody"></tbody>
-    </table>
-  </div>
+    <!-- KEYS -->
+    <section class="section" id="sec-keys">
+      <div class="topbar">
+        <div><h2 class="font-display">Keys VIP</h2><p class="sub">Gere e gerencie as chaves de acesso dos jogadores.</p></div>
+      </div>
 
+      <div class="card">
+        <h3 class="sec">Nova KEY</h3>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
+          <div><label>Dias até expirar</label><input type="number" class="mini-inp" id="nkDays" min="0" placeholder="ex: 30"></div>
+          <div><label>+ Horas</label><input type="number" class="mini-inp" id="nkHours" min="0" placeholder="ex: 12"></div>
+          <div><label>+ Minutos</label><input type="number" class="mini-inp" id="nkMin" min="0" placeholder="ex: 30"></div>
+          <div><label>+ Segundos</label><input type="number" class="mini-inp" id="nkSec" min="0" placeholder="ex: 45"></div>
+          <div><label>Usos permitidos</label><input type="number" class="mini-inp" id="nkUses" min="1" value="1"></div>
+          <button class="b-red act" id="genKeyBtn">+ Gerar nova KEY</button>
+        </div>
+        <div class="presets" id="presets">
+          <button data-d="0" data-h="1" data-m="0" data-s="0">Teste · 1 hora</button>
+          <button data-d="1" data-h="0" data-m="0" data-s="0">1 dia</button>
+          <button data-d="7" data-h="0" data-m="0" data-s="0">7 dias</button>
+          <button data-d="30" data-h="0" data-m="0" data-s="0">30 dias</button>
+          <button data-d="90" data-h="0" data-m="0" data-s="0">90 dias</button>
+          <button data-d="0" data-h="0" data-m="0" data-s="0">Sem expiração</button>
+        </div>
+        <p class="hint">Dica: "Usos permitidos" = quantos dispositivos podem ativar essa KEY. Deixe 1 para uso exclusivo.</p>
+      </div>
+
+      <div class="card">
+        <h3 class="sec">Todas as keys</h3>
+        <div class="search-row">
+          <input id="keySearch" placeholder="🔎 Filtrar keys por código ou jogador...">
+          <button class="b-gray act" id="reloadKeysBtn">Recarregar</button>
+        </div>
+        <table>
+          <thead><tr><th>Código</th><th>Status</th><th>Usos</th><th>Expira</th><th>Ativada por</th><th>Ações</th></tr></thead>
+          <tbody id="keysBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- USUÁRIOS -->
+    <section class="section" id="sec-users">
+      <div class="topbar">
+        <div><h2 class="font-display">Usuários</h2><p class="sub">Jogadores registrados no site.</p></div>
+      </div>
+      <div class="card">
+        <div class="search-row">
+          <input id="userSearch" placeholder="🔎 Buscar jogador...">
+          <button class="b-gray act" id="reloadUsersBtn">Recarregar</button>
+        </div>
+        <table>
+          <thead><tr><th>Jogador</th><th>VIP</th><th>Origem</th><th>Visto por último</th><th>Ações</th></tr></thead>
+          <tbody id="usersBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- MODERADORES -->
+    <section class="section" id="sec-mods">
+      <div class="topbar">
+        <div><h2 class="font-display">Moderadores</h2><p class="sub">Somente o dono pode gerenciar a equipe.</p></div>
+      </div>
+      <div class="card">
+        <h3 class="sec">Criar moderador</h3>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
+          <div><label>Usuário do moderador</label><input class="mini-inp" id="modUser" style="width:170px" placeholder="ex: moderador1"></div>
+          <div><label>Senha (min. 8)</label><input class="mini-inp" id="modPass" style="width:170px" type="password" placeholder="senha forte"></div>
+          <button class="b-green act" id="addModBtn">+ Criar moderador</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3 class="sec">Equipe</h3>
+        <table>
+          <thead><tr><th>Usuário</th><th>Cargo</th><th>Criado em</th><th>Ações</th></tr></thead>
+          <tbody id="modsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CONFIGURAÇÕES -->
+    <section class="section" id="sec-cfg">
+      <div class="topbar">
+        <div><h2 class="font-display">Configurações</h2><p class="sub">Somente o dono pode alterar.</p></div>
+      </div>
+      <div class="card">
+        <h3 class="sec">Site</h3>
+        <label>Link de contato para solicitação de KEY (WhatsApp, Telegram...)</label>
+        <input id="cfgContact" style="width:100%" placeholder="https://wa.me/55DDDNÚMERO?text=...">
+        <label>Endereço secreto do painel (mude e guarde bem!)</label>
+        <input id="cfgPath" style="width:100%" placeholder="/painel-xxxx">
+        <label>Limite diário de gerações da Sensi Normal</label>
+        <input type="number" class="mini-inp" id="cfgLimit" min="0">
+        <div style="margin-top:14px"><button class="b-green act" id="saveCfgBtn">Salvar configurações</button></div>
+        <div class="msg" id="cfgMsg"></div>
+      </div>
+
+      <div class="card">
+        <h3 class="sec">Alterar minha senha</h3>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
+          <div><label>Senha atual</label><input type="password" class="mini-inp" id="pwOld" style="width:170px" autocomplete="current-password"></div>
+          <div><label>Nova senha (min. 8)</label><input type="password" class="mini-inp" id="pwNew" style="width:170px" autocomplete="new-password"></div>
+          <button class="b-red act" id="changePwBtn">Trocar senha</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEGURANÇA -->
+    <section class="section" id="sec-sec">
+      <div class="topbar">
+        <div><h2 class="font-display">Segurança</h2><p class="sub">Auditoria de acessos e eventos sensíveis.</p></div>
+      </div>
+      <div class="stats" style="margin-bottom:18px">
+        <div class="stat"><b id="fail24" style="color:#fca5a5">0</b><span>logins falhos (24h)</span></div>
+        <div class="stat"><b id="lock24" style="color:#fde047">0</b><span>bloqueios (24h)</span></div>
+      </div>
+      <div class="card">
+        <h3 class="sec">Eventos recentes</h3>
+        <table>
+          <thead><tr><th>Quando</th><th>Evento</th><th>Detalhe</th><th>IP</th></tr></thead>
+          <tbody id="auditBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
 </div>
+
+<div id="toast"><span id="toastMsg"></span></div>
 
 <script src="/admin.js"></script>
 </body>

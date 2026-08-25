@@ -26,8 +26,8 @@ app.use((req, res, next) => {
   res.setHeader(
     'Content-Security-Policy',
     "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
-    "font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; " +
-    "frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
+    "font-src https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com; connect-src 'self'; " +
+    "frame-src https://www.youtube-nocookie.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
   );
   // painel e APIs de admin nunca ficam em cache
   const panelPath = store.getSettings().adminPanelPath || '/admin';
@@ -266,80 +266,35 @@ function recordGen(user, mode, inputs, result) {
   });
 }
 
-app.post('/api/generate/free', requireUser, (req, res) => {
+app.post('/api/generate', requireUser, (req, res) => {
   const b = req.body || {};
+  const tier = engine.TIERS.includes(b.tier) ? b.tier : 'normal';
   const deviceModel = cleanStr(b.deviceModel, 60);
   if (!deviceModel) {
     return res.status(400).json({ error: 'missing_model', message: 'Informe o modelo do seu celular para continuar.' });
   }
-  const limit = store.getSettings().freeDailyLimit;
-  if (req.user.isVip) {
-    const result = engine.generateFree({ deviceModel, ram: b.ram, style: b.style });
-    recordGen(req.user, 'free', { deviceModel, ram: b.ram, style: b.style }, result);
-    return res.json({ ...result, remaining: null, unlimited: true });
-  }
-  const used = store.countFreeToday(req.user.id);
-  if (limit > 0 && used >= limit) {
-    return res.status(429).json({
-      error: 'daily_limit',
-      message: `Você atingiu o limite de ${limit} gerações de hoje no modo FREE. Ative uma KEY VIP para gerar sem limites.`,
-      used,
-      limit
+  const inputs = {
+    tier,
+    deviceModel,
+    refreshHz: b.refreshHz, fps: b.fps, dpiAtual: b.dpiAtual,
+    style: b.style, level: b.level, aim: b.aim
+  };
+
+  // Sensi Premium e Sensi Proibida exigem KEY VIP ativa
+  if (tier !== 'normal' && !req.user.isVip) {
+    return res.status(403).json({
+      error: 'vip_required',
+      upsell: true,
+      title: 'Sensi ' + (tier === 'premium' ? 'Premium' : 'Proibida'),
+      message: 'Ative uma KEY VIP para gerar a Sensi ' + (tier === 'premium' ? 'Premium' : 'Proibida') + '.'
     });
   }
-  const result = engine.generateFree({ deviceModel, ram: b.ram, style: b.style });
-  recordGen(req.user, 'free', { deviceModel, ram: b.ram, style: b.style }, result);
-  const remaining = Math.max(0, limit - (used + 1));
-  res.json({ ...result, remaining, limit });
-});
 
-app.post('/api/generate/vip', requireVip, (req, res) => {
-  const b = req.body || {};
-  const inputs = {
-    brand: cleanStr(b.brand, 30),
-    ram: b.ram, refreshHz: b.refreshHz, fps: b.fps,
-    style: b.style, level: b.level, aim: b.aim,
-    dpiAtual: b.dpiAtual
-  };
-  const result = engine.generateVip(inputs);
-  recordGen(req.user, 'vip', inputs, result);
-  res.json(result);
-});
-
-app.post('/api/generate/gerado', requireVip, (req, res) => {
-  const b = req.body || {};
-  const deviceModel = cleanStr(b.deviceModel, 60);
-  if (!deviceModel) {
-    return res.status(400).json({ error: 'missing_model', message: 'Informe o modelo do seu celular para continuar.' });
-  }
-  const inputs = {
-    deviceModel,
-    brand: cleanStr(b.brand, 30),
-    ram: b.ram, refreshHz: b.refreshHz, fps: b.fps,
-    dpiAtual: b.dpiAtual, style: b.style, level: b.level, aim: b.aim
-  };
-  const result = engine.generateGerado(inputs);
-  if (result.error) return res.status(400).json({ error: 'missing_model', message: result.message });
-  recordGen(req.user, 'gerado', inputs, result);
-  res.json(result);
-});
-
-app.post('/api/generate/iphone', requireUser, (req, res) => {
-  const b = req.body || {};
-  const deviceModel = cleanStr(b.deviceModel, 60);
-  if (!deviceModel) {
-    return res.status(400).json({ error: 'missing_model', message: 'Escolha o modelo do seu iPhone para continuar.' });
-  }
-  const result = engine.generateIphone({
-    deviceModel,
-    style: b.style, level: b.level, aim: b.aim, refreshHz: b.refreshHz
-  });
-  if (result.error) {
-    return res.status(400).json({ error: 'bad_model', message: result.message });
-  }
-  const inputs = { deviceModel, style: b.style, level: b.level, aim: b.aim, refreshHz: b.refreshHz };
-  if (!req.user.isVip) {
-    const limit = store.getSettings().freeDailyLimit;
+  // Sensi Normal respeita o limite diário de quem não é VIP
+  let remaining = null;
+  let limit = null;
+  if (tier === 'normal' && !req.user.isVip) {
+    limit = store.getSettings().freeDailyLimit;
     const used = store.countFreeToday(req.user.id);
     if (limit > 0 && used >= limit) {
       return res.status(429).json({
@@ -349,11 +304,20 @@ app.post('/api/generate/iphone', requireUser, (req, res) => {
         limit
       });
     }
-    recordGen(req.user, 'iphone', inputs, result);
-    return res.json({ ...result, remaining: Math.max(0, limit - (used + 1)), limit });
+    remaining = Math.max(0, limit - (used + 1));
   }
-  recordGen(req.user, 'iphone', inputs, result);
-  res.json({ ...result, remaining: null, unlimited: true });
+
+  const result = engine.generate(inputs);
+  if (result.error) {
+    return res.status(400).json({ error: 'missing_model', message: result.message });
+  }
+  recordGen(req.user, tier, inputs, result);
+
+  if (tier === 'normal') {
+    if (req.user.isVip) return res.json({ ...result, remaining: null, unlimited: true });
+    return res.json({ ...result, remaining, limit });
+  }
+  res.json(result);
 });
 
 /* ================= histórico (VIP) ================= */
@@ -733,7 +697,7 @@ app.use((req, res, next) => {
   if (req.path.startsWith('/api/')) {
     return res.status(404).json({ error: 'not_found' });
   }
-  res.status(404).send('<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>404</title></head><body style="background:#000103;color:#9ca3af;font-family:sans-serif;text-align:center;padding-top:18vh"><h1 style="color:#f3f4f6">404</h1><p>Página não encontrada.</p><p><a href="/" style="color:#38bdf8">Voltar ao início</a></p></body></html>');
+  res.status(404).send('<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>404</title></head><body style="background:#000103;color:#9ca3af;font-family:sans-serif;text-align:center;padding-top:18vh"><h1 style="color:#f3f4f6">404</h1><p>Página não encontrada.</p><p><a href="/" style="color:#ef4444">Voltar ao início</a></p></body></html>');
 });
 
 app.use((err, req, res, next) => {

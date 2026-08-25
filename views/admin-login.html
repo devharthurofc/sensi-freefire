@@ -4,27 +4,37 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SENSI PRO</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#04070f;color:#f3f4f6;font-family:'Rajdhani',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.box{width:min(380px,100%);border:1px solid rgba(255,255,255,.09);border-radius:20px;background:rgba(255,255,255,.04);padding:30px 26px;text-align:center}
-h1{font-family:'Orbitron',sans-serif;font-size:1.25rem;font-weight:900}
-h1 span{color:#38bdf8}
-p{color:#9ca3af;font-size:.9rem;margin:6px 0 22px}
-label{display:block;text-align:left;font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af;margin:12px 0 6px}
-input{width:100%;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:#f3f4f6;padding:12px 13px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:.98rem;outline:none}
-input:focus{border-color:#38bdf8}
-button{margin-top:18px;width:100%;appearance:none;border:none;cursor:pointer;font-family:'Orbitron',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.8rem;padding:14px;border-radius:11px;color:#fff;background:linear-gradient(135deg,#2563eb,#38bdf8)}
+body{background:#080404;color:#f5f0ee;font-family:'Chakra Petch',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+body::before{content:"";position:fixed;width:420px;height:420px;border-radius:50%;background:#dc2626;filter:blur(160px);opacity:.14;top:-120px;left:-100px;z-index:-1}
+body::after{content:"";position:fixed;width:380px;height:380px;border-radius:50%;background:#7f1d1d;filter:blur(150px);opacity:.18;bottom:-110px;right:-90px;z-index:-1}
+.box{width:min(390px,100%);border:1px solid rgba(255,255,255,.09);border-radius:22px;background:rgba(255,255,255,.04);padding:32px 28px;text-align:center;backdrop-filter:blur(10px)}
+.mark{width:52px;height:52px;border-radius:15px;margin:0 auto 12px;display:grid;place-items:center;background:linear-gradient(135deg,#7f1d1d,#ef4444);box-shadow:0 0 30px rgba(220,38,38,.5)}
+.mark svg{width:27px;height:27px}
+h1{font-family:'Russo One',sans-serif;font-size:1.25rem;font-weight:400}
+h1 span{background:linear-gradient(90deg,#dc2626,#f87171);-webkit-background-clip:text;background-clip:text;color:transparent}
+p{color:#a89f9c;font-size:.9rem;margin:6px 0 22px}
+label{display:block;text-align:left;font-size:.68rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#a89f9c;margin:12px 0 6px}
+input{width:100%;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);border-radius:11px;color:#f5f0ee;padding:12px 13px;font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:.98rem;outline:none;transition:.2s}
+input:focus{border-color:#ef4444;box-shadow:0 0 14px rgba(239,68,68,.3)}
+button{margin-top:20px;width:100%;appearance:none;border:none;cursor:pointer;font-family:'Russo One',sans-serif;letter-spacing:.1em;text-transform:uppercase;font-size:.8rem;padding:14px;border-radius:12px;color:#fff;background:linear-gradient(135deg,#7f1d1d,#dc2626);box-shadow:0 8px 24px rgba(220,38,38,.35);transition:.2s}
 button:hover{filter:brightness(1.15)}
 button:disabled{opacity:.6;cursor:wait}
 .msg{margin-top:12px;font-weight:700;font-size:.9rem;color:#fca5a5;display:none}
 .msg.show{display:block}
-.home{display:inline-block;margin-top:18px;color:#60a5fa;text-decoration:none;font-weight:700}
+.home{display:inline-block;margin-top:18px;color:#f87171;text-decoration:none;font-weight:700}
+.home:hover{text-decoration:underline}
 </style>
 </head>
 <body>
 <div class="box">
+  <div class="mark">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
+  </div>
   <h1>SENSI<span>PRO</span></h1>
   <p>Acesso restrito à equipe autorizada.</p>
   <label>Usuário</label>

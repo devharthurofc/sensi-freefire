@@ -118,7 +118,7 @@
         const d2 = dx * dx + dy * dy;
         if (d2 < LINK_DIST * LINK_DIST) {
           const al = (1 - Math.sqrt(d2) / LINK_DIST) * 0.16;
-          ctx.strokeStyle = 'rgba(56,189,248,' + al.toFixed(3) + ')';
+          ctx.strokeStyle = 'rgba(239,68,68,' + al.toFixed(3) + ')';
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
@@ -134,7 +134,7 @@
         const d2 = dx * dx + dy * dy;
         if (d2 < MOUSE_RADIUS * MOUSE_RADIUS) {
           const al = (1 - Math.sqrt(d2) / MOUSE_RADIUS) * 0.35;
-          ctx.strokeStyle = 'rgba(125,211,252,' + al.toFixed(3) + ')';
+          ctx.strokeStyle = 'rgba(252,165,165,' + al.toFixed(3) + ')';
           ctx.beginPath();
           ctx.moveTo(mouse.x, mouse.y);
           ctx.lineTo(p.x, p.y);
@@ -146,7 +146,7 @@
     // pontos
     for (const p of parts) {
       const glow = Math.sin(p.tw) * 0.5 + 0.5;
-      ctx.fillStyle = 'rgba(148,197,255,' + (0.35 + glow * 0.45).toFixed(3) + ')';
+      ctx.fillStyle = 'rgba(255,110,110,' + (0.35 + glow * 0.45).toFixed(3) + ')';
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fill();

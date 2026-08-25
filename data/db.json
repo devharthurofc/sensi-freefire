@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "createdAt": "2026-08-25T22:26:43.026Z"
+  },
+  "admins": [
+    {
+      "id": "adm_11b249b977fc3a7171",
+      "username": "admin",
+      "passwordHash": "574684fa9529218339905783fb542c08:f052064d812820d24b4927c3ff3212ab7385943ab92c4dd0da094aee7f6e9b1fc154003445925a84aa84d3af4f3583d4d48f956f527bc7eaaf237a239c1323b3",
+      "role": "owner",
+      "createdAt": "2026-08-25T22:26:43.106Z",
+      "mustChange": true
+    }
+  ],
+  "users": [
+    {
+      "id": "usr_c40fde66fee98e2249",
+      "deviceId": "testdevice1234",
+      "label": "Jogador #0001",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-25T22:26:45.348Z",
+      "lastSeenAt": "2026-08-25T22:26:45.661Z"
+    },
+    {
+      "id": "usr_ed6b15b9dcb954e67c",
+      "deviceId": "testdevice5678",
+      "label": "Jogador #0002",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-25T22:30:39.243Z",
+      "lastSeenAt": "2026-08-25T22:30:39.243Z"
+    }
+  ],
+  "keys": [],
+  "sessions": [
+    {
+      "token": "b981651fed33476887cf9cdfeba08653a7bc3227bbf806b62a113964c7817231",
+      "userId": "usr_c40fde66fee98e2249",
+      "isAdmin": false,
+      "createdAt": "2026-08-25T22:26:45.348Z",
+      "expiresAt": "2026-09-24T22:26:45.348Z"
+    },
+    {
+      "token": "3db2dbaf8f40d2b273115c217183078f3320391d55ed79ed9365277b90e86e22",
+      "userId": "usr_ed6b15b9dcb954e67c",
+      "isAdmin": false,
+      "createdAt": "2026-08-25T22:30:39.244Z",
+      "expiresAt": "2026-09-24T22:30:39.244Z"
+    }
+  ],
+  "generations": [
+    {
+      "id": "gen_080ddd8e96da1aaa2b",
+      "at": "2026-08-25T22:26:45.649Z",
+      "userId": "usr_c40fde66fee98e2249",
+      "mode": "normal",
+      "inputs": {
+        "tier": "normal",
+        "deviceModel": "Redmi Note 13",
+        "refreshHz": "120",
+        "fps": "60",
+        "style": "eq",
+        "level": "intermediario",
+        "aim": "equilibrada"
+      },
+      "values": {
+        "geral": 171,
+        "redDot": 163,
+        "mira2x": 158,
+        "mira4x": 146,
+        "miraAwm": 121,
+        "olhadinha": 113
+      },
+      "dpi": 520,
+      "fireButton": 63,
+      "deviceName": "Redmi Note 13",
+      "knownDevice": true
+    }
+  ],
+  "profiles": [],
+  "auditLog": [],
+  "settings": {
+    "contactLink": "",
+    "freeDailyLimit": 3,
+    "adminPanelPath": "/painel-69588985"
+  }
+}
