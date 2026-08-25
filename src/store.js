@@ -4,7 +4,9 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const DATA_DIR = path.join(__dirname, '..', 'data');
+const DATA_DIR = process.env.DATA_DIR
+  ? path.resolve(process.env.DATA_DIR)
+  : path.join(__dirname, '..', 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
 
 const DEFAULT_DB = {
@@ -102,7 +104,7 @@ function setUserVip(user, isVip, source, keyId) {
   user.vipSource = isVip ? (source || 'admin') : null;
   user.vipKeyId = isVip ? (keyId || null) : null;
   user.vipSince = isVip ? new Date().toISOString() : null;
-  scheduleSave();
+  persistNow();
 }
 
 /* ---------- sessões ---------- */
@@ -200,7 +202,7 @@ function createKey({ expiresAt = null, maxUses = 1 }) {
     activatedAt: null
   };
   getDb().keys.push(key);
-  scheduleSave();
+  persistNow();
   return key;
 }
 function generateKeyCode() {
@@ -217,12 +219,12 @@ function saveKey(key) {
   const d = getDb();
   const i = d.keys.findIndex(k => k.id === key.id);
   if (i >= 0) d.keys[i] = key;
-  scheduleSave();
+  persistNow();
 }
 function deleteKey(keyId) {
   const d = getDb();
   const i = d.keys.findIndex(k => k.id === keyId);
-  if (i >= 0) { d.keys.splice(i, 1); scheduleSave(); return true; }
+  if (i >= 0) { d.keys.splice(i, 1); persistNow(); return true; }
   return false;
 }
 function isKeyExpired(key) {
@@ -288,7 +290,7 @@ function updateSettings(patch) {
       s.adminPanelPath = v || '/admin';
     }
   }
-  scheduleSave();
+  persistNow();
   return s;
 }
 

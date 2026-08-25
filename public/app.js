@@ -128,7 +128,7 @@ function fmtResult(r) {
   NAMES.forEach(([k, label]) => { s += label + ": " + r.values[k] + "\n"; });
   s += "Botão de disparo: " + r.fireButton + "%\n";
   if (r.ciclos) s += "Ciclos: " + r.ciclos + "\n";
-  s += "DPI recomendado: " + r.dpi + "\n";
+  if (r.mode !== "iphone") s += "DPI recomendado: " + r.dpi + "\n";
   return s;
 }
 
@@ -589,7 +589,6 @@ document.getElementById("ipGenBtn").addEventListener("click", async () => {
 
   state.lastIphone = r;
   renderGrid(document.getElementById("ipGenGrid"), r.values);
-  animateNum(document.getElementById("ipDpiVal"), r.dpi);
   animateNum(document.getElementById("ipCicVal"), r.ciclos);
   animateNumPercent(document.getElementById("ipBtnVal"), r.fireButton);
   document.getElementById("ipCopyBtn").style.display = "inline-flex";

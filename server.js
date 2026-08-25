@@ -747,6 +747,15 @@ store.load();
 ensureDefaultAdmin();
 const PANEL_PATH = ensurePanelPath();
 
+/* Garante que nada se perca quando o servidor é fechado/reiniciado */
+function gracefulShutdown() {
+  try { store.persistNow(); } catch (_) {}
+  process.exit(0);
+}
+process.on('SIGINT', gracefulShutdown);
+process.on('SIGTERM', gracefulShutdown);
+process.on('beforeExit', gracefulShutdown);
+
 // limpeza periódica de sessões vencidas
 store.pruneSessions();
 setInterval(() => store.pruneSessions(), 3600 * 1000).unref();

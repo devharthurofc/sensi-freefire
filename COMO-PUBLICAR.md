@@ -24,7 +24,11 @@ Hospede de graça em um serviço de Node.js — assim o site fica com um link qu
 3. Configurações:
    - Build command: `npm install`
    - Start command: `npm start`
-4. Pronto: você recebe um link tipo `https://sensi-pro.onrender.com`
+4. **IMPORTANTE — não perder as keys/configurações:** no plano grátis o Render apaga os arquivos do servidor toda vez que ele dorme ou reinicia (o link do WhatsApp, as KEYs e usuários voltariam ao zero). Para salvar de verdade:
+   - No painel do serviço: **Disks → Create Disk**, monte em `/data`
+   - Em **Environment → Add**: nome `DATA_DIR`, valor `/data`
+   - Salve e faça o deploy novamente. Pronto: tudo passa a ser gravado nesse disco e não se perde mais.
+5. Pronto: você recebe um link tipo `https://sensi-pro.onrender.com`
 
 ### Opção B — Railway.app
 1. https://railway.app → **New Project** → **Deploy from GitHub repo**

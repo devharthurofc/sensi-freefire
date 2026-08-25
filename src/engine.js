@@ -229,12 +229,12 @@ function generateIphone({ deviceModel, style, level, aim, refreshHz }) {
   const values = buildValues(st, combined, { globalAdj });
   const dpi = computeDpi(device, null, null);
 
-  // ciclos recomendados: aparelhos mais fortes aguentam ciclagem maior
-  const baseCiclos = { 1: 55, 2: 68, 3: 82 }[device.tier] || 60;
+  // ciclos recomendados (0 a 10): aparelhos mais fortes aguentam ciclagem maior
+  const baseCiclos = { 1: 4, 2: 7, 3: 9 }[device.tier] || 5;
   const ciclos = clamp(
-    baseCiclos + (aim === 'cabeca' ? 6 : 0) + (style === 'ag' ? 4 : 0) - (style === 'pr' ? 5 : 0) + rand(-3, 3),
-    40,
-    95
+    baseCiclos + (aim === 'cabeca' ? 1 : 0) + (style === 'ag' ? 1 : 0) - (style === 'pr' ? 1 : 0) + rand(-1, 1),
+    0,
+    10
   );
 
   const fireButton = clamp(rand(device.btn[0], device.btn[1]) + (style === 'ag' ? 4 : 0), 45, 78);
