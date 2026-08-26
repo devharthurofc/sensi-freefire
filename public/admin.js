@@ -3,6 +3,7 @@
 let myRole = 'mod';
 const allKeys = [];
 const allUsers = [];
+const allSales = [];
 
 function $(id){ return document.getElementById(id); }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -51,7 +52,7 @@ function showSection(sec) {
 
 async function boot() {
   const me = await api('/api/admin/me');
-  if (me._status !== 200) { location.reload(); return; } // sem sessão -> servidor mostra a tela de login no mesmo endereço secreto
+  if (me._status !== 200) { location.reload(); return; }
   myRole = me.admin.role || 'mod';
   const cargo = myRole === 'owner' ? '<span class="badge-role bg-owner">DONO</span>' : '<span class="badge-role bg-mod">MODERADOR</span>';
   $('admWho').innerHTML = '<b>' + esc(me.admin.username) + '</b><br>' + cargo +
@@ -63,10 +64,10 @@ async function boot() {
     loadSettings();
   }
   refreshAll();
-  setInterval(refreshAll, 30000); // auto-refresh: usuários logados aparecem sozinhos
+  setInterval(refreshAll, 30000);
 }
 
-function refreshAll(){ loadDashboard(); loadKeys(); loadUsers(); }
+function refreshAll(){ loadDashboard(); loadKeys(); loadUsers(); loadSales(); }
 
 $('logoutBtn').addEventListener('click', async () => {
   await api('/api/admin/logout', { method: 'POST' });
@@ -75,20 +76,26 @@ $('logoutBtn').addEventListener('click', async () => {
 $('refreshBtn').addEventListener('click', () => { refreshAll(); toast('Dados atualizados!'); });
 $('reloadKeysBtn').addEventListener('click', loadKeys);
 $('reloadUsersBtn').addEventListener('click', loadUsers);
+$('reloadSalesBtn').addEventListener('click', loadSales);
 
 /* ---------- dashboard ---------- */
 async function loadDashboard() {
   const r = await api('/api/admin/dashboard');
   if (r._status !== 200) return;
+
+  const salesStats = await api('/api/admin/sales/stats');
+  const revenue = salesStats._status === 200 ? salesStats.totalRevenue : 0;
+  const salesCount = salesStats._status === 200 ? salesStats.totalSales : 0;
+
   const items = [
     ['Online agora', r.onlineCount || 0, true], ['Logados (sessão)', r.loggedNow || 0, true],
     ['Total de usuários', r.users], ['Usuários VIP', r.vipUsers],
-    ['Keys ativas', r.activeKeys], ['Gerações hoje', r.generationsToday]
+    ['Keys ativas', r.activeKeys], ['Gerações hoje', r.generationsToday],
+    ['Total de vendas', salesCount], ['Receita total', 'R$ ' + revenue.toFixed(2), false, true]
   ];
-  $('statsBox').innerHTML = items.map(([l, v, hot]) =>
-    '<div class="stat"><b style="' + (hot && v > 0 ? 'color:#86efac' : '') + '">' + v + '</b><span>' + l + '</span></div>').join('');
+  $('statsBox').innerHTML = items.map(([l, v, hot, isRevenue]) =>
+    '<div class="stat' + (isRevenue ? ' revenue' : '') + '"><b style="' + (hot && v > 0 ? 'color:#86efac' : '') + '">' + v + '</b><span>' + l + '</span></div>').join('');
 
-  // lista de quem está online agora
   const box = $('onlineList');
   if (!r.onlineList || !r.onlineList.length) {
     box.innerHTML = '<p class="hint" style="margin:0">Nenhum jogador ativo nos últimos 5 minutos.</p>';
@@ -200,6 +207,103 @@ function renderKeys() {
   });
 }
 $('keySearch').addEventListener('input', renderKeys);
+
+/* ---------- vendas ---------- */
+$('addSaleBtn').addEventListener('click', async () => {
+  const key = $('saleKey').value.trim();
+  const price = $('salePrice').value;
+  const buyer = $('saleBuyer').value.trim();
+  const contact = $('saleContact').value.trim();
+  const status = $('saleStatus').value;
+  const notes = $('saleNotes').value.trim();
+
+  if (!key) { toast('Informe o código da KEY.', true); return; }
+  if (!buyer) { toast('Informe o nome do comprador.', true); return; }
+
+  const btn = $('addSaleBtn'); btn.disabled = true;
+  const r = await api('/api/admin/sales', { body: {
+    keyCode: key, price: parseFloat(price) || 0, buyerLabel: buyer,
+    buyerContact: contact, status, notes
+  }});
+  btn.disabled = false;
+
+  if (r._status === 200) {
+    toast('Venda registrada! R$ ' + (parseFloat(price) || 0).toFixed(2));
+    $('saleKey').value = ''; $('salePrice').value = ''; $('saleBuyer').value = '';
+    $('saleContact').value = ''; $('saleNotes').value = '';
+    loadSales(); loadDashboard();
+  } else {
+    toast(r.message || 'Erro ao registrar venda.', true);
+  }
+});
+
+async function loadSales() {
+  const r = await api('/api/admin/sales');
+  allSales.length = 0;
+  if (r._status === 200 && r.sales) allSales.push(...r.sales);
+
+  if (r._status === 200 && r.stats) {
+    const s = r.stats;
+    $('salesStatsBox').innerHTML =
+      '<div class="stat"><b>' + s.totalSales + '</b><span>Total de vendas</span></div>' +
+      '<div class="stat revenue"><b>R$ ' + s.totalRevenue.toFixed(2) + '</b><span>Receita total</span></div>' +
+      '<div class="stat"><b>' + s.salesToday + '</b><span>Vendas hoje</span></div>' +
+      '<div class="stat revenue"><b>R$ ' + s.revenueToday.toFixed(2) + '</b><span>Receita hoje</span></div>';
+  }
+
+  renderSales();
+}
+
+function renderSales() {
+  const tb = $('salesBody');
+  const q = ($('saleSearch').value || '').toLowerCase().trim();
+  const list = allSales.filter(s =>
+    !q || s.keyCode.toLowerCase().includes(q) || (s.buyerLabel || '').toLowerCase().includes(q));
+
+  if (!list.length) {
+    tb.innerHTML = '<tr><td colspan="7" style="color:var(--muted)">' +
+      (q ? 'Nenhuma venda encontrada.' : 'Nenhuma venda registrada ainda.') + '</td></tr>';
+    return;
+  }
+  tb.innerHTML = '';
+  list.forEach(s => {
+    const tr = document.createElement('tr');
+    const statusBadge = s.status === 'pago'
+      ? '<span class="badge bg-ok">pago</span>'
+      : '<span class="badge bg-warn">pendente</span>';
+    const date = s.soldAt ? new Date(s.soldAt).toLocaleString('pt-BR') : '—';
+    tr.innerHTML =
+      '<td><span class="code">' + esc(s.keyCode) + '</span></td>' +
+      '<td><b>' + esc(s.buyerLabel) + '</b></td>' +
+      '<td style="color:#86efac;font-weight:700">R$ ' + (s.price || 0).toFixed(2) + '</td>' +
+      '<td>' + statusBadge + '</td>' +
+      '<td style="color:var(--muted)">' + esc(s.sellerAdminName || '—') + '</td>' +
+      '<td style="color:var(--muted)">' + date + '</td>' +
+      '<td><div class="actions">' +
+        '<button class="b-gray act cp">Copiar KEY</button>' +
+        (s.status === 'pendente' ? '<button class="b-green act pg">Marcar pago</button>' : '') +
+        '<button class="b-red act del">Excluir</button>' +
+      '</div></td>';
+    tr.querySelector('.cp').onclick = async () => {
+      try { await navigator.clipboard.writeText(s.keyCode); toast('KEY copiada!'); }
+      catch(_) { prompt('Copie a KEY:', s.keyCode); }
+    };
+    const pgBtn = tr.querySelector('.pg');
+    if (pgBtn) pgBtn.onclick = async () => {
+      await api('/api/admin/sales/' + s.id, { method: 'PATCH', body: { status: 'pago' } });
+      toast('Venda marcada como paga!');
+      loadSales(); loadDashboard();
+    };
+    tr.querySelector('.del').onclick = async () => {
+      if (!confirm('Excluir registro de venda?')) return;
+      await api('/api/admin/sales/' + s.id, { method: 'DELETE' });
+      toast('Venda excluída.');
+      loadSales(); loadDashboard();
+    };
+    tb.appendChild(tr);
+  });
+}
+$('saleSearch').addEventListener('input', renderSales);
 
 /* ---------- usuários ---------- */
 async function loadUsers() {
@@ -348,7 +452,9 @@ async function loadSecurity() {
     mod_created: ['Moderador criado', 'bg-owner'],
     mod_deleted: ['Moderador removido', 'bg-off'],
     password_changed: ['Senha alterada', 'bg-warn'],
-    panel_path_changed: ['Endereço do painel mudou', 'bg-warn']
+    panel_path_changed: ['Endereço do painel mudou', 'bg-warn'],
+    sale_created: ['Venda registrada', 'bg-purple'],
+    sale_deleted: ['Venda excluída', 'bg-off']
   };
   const badgeOwner = 'background:rgba(56,189,248,.14);color:#7dd3fc;border:1px solid rgba(56,189,248,.45)';
   r.events.forEach(e => {

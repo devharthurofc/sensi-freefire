@@ -1,6 +1,6 @@
 {
   "meta": {
-    "createdAt": "2026-08-26T15:22:15.830Z"
+    "createdAt": "2026-08-26T22:31:49.357Z"
   },
   "admins": [
     {
@@ -14,26 +14,103 @@
   ],
   "users": [
     {
-      "id": "usr_c40fde66fee98e2249",
-      "deviceId": "testdevice1234",
-      "label": "Jogador #0001",
+      "id": "usr_0807201bf5d887f41d",
+      "deviceId": "3debff90ec2b0aa8e5c7b3612a2ced38",
+      "label": "Jogador #0015",
       "isVip": false,
       "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-25T22:26:45.348+00:00",
-      "lastSeenAt": "2026-08-25T22:26:45.661+00:00"
+      "createdAt": "2026-08-26T19:09:09.53+00:00",
+      "lastSeenAt": "2026-08-26T19:09:09.53+00:00"
     },
     {
-      "id": "usr_ed6b15b9dcb954e67c",
-      "deviceId": "testdevice5678",
-      "label": "Jogador #0002",
+      "id": "usr_8a59ae6918c80dbdca",
+      "deviceId": "84731a51ffb4d985772212476f138461",
+      "label": "Mnr_ale",
       "isVip": false,
       "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-25T22:30:39.243+00:00",
-      "lastSeenAt": "2026-08-25T22:30:39.243+00:00"
+      "createdAt": "2026-08-26T20:31:52.928+00:00",
+      "lastSeenAt": "2026-08-26T20:33:49.858+00:00"
+    },
+    {
+      "id": "usr_c9b5a313f5c6e01138",
+      "deviceId": "1f75d1f76cae01c09978cf39820b48fe",
+      "label": "Neguin",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T22:05:58.616+00:00",
+      "lastSeenAt": "2026-08-26T22:06:03.925+00:00"
+    },
+    {
+      "id": "usr_280487d7d08a0d3c68",
+      "deviceId": "0ae89974ff232d118d9a05af793c2cec",
+      "label": "Jogador #0018",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T22:07:05.134+00:00",
+      "lastSeenAt": "2026-08-26T22:07:05.134+00:00"
+    },
+    {
+      "id": "usr_dad3e4a549e70eb82b",
+      "deviceId": "a962eee45cbfac743e007bed738561a7",
+      "label": "Murilo",
+      "isVip": true,
+      "vipSource": "key",
+      "vipKeyId": "key_5c8a000087583bb160",
+      "vipSince": "2026-08-26T22:07:32.862+00:00",
+      "createdAt": "2026-08-26T22:07:06.68+00:00",
+      "lastSeenAt": "2026-08-26T22:12:34.573+00:00"
+    },
+    {
+      "id": "usr_03f19f712bde26dac3",
+      "deviceId": "e4d676c0819e419ac2596e28ad8c3c10",
+      "label": "Murilo",
+      "isVip": true,
+      "vipSource": "key",
+      "vipKeyId": "key_1ec4d8dec361b83578",
+      "vipSince": "2026-08-26T22:17:35.563+00:00",
+      "createdAt": "2026-08-26T22:09:47.443+00:00",
+      "lastSeenAt": "2026-08-26T22:18:23.185+00:00"
+    },
+    {
+      "id": "usr_2f0cd6460ebaf28c24",
+      "deviceId": "fe27a2cd4fc4d3142b36f278d800be3e",
+      "label": "Jogador #0021",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T22:11:50.058+00:00",
+      "lastSeenAt": "2026-08-26T22:11:50.058+00:00"
+    },
+    {
+      "id": "usr_8de8e268bf066a0988",
+      "deviceId": "262436be44526eac83d89814b6afec21",
+      "label": "Jogador #0022",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T22:12:40.572+00:00",
+      "lastSeenAt": "2026-08-26T22:12:40.572+00:00"
+    },
+    {
+      "id": "usr_616556ff0ce8680426",
+      "deviceId": "68f7e2b93fec0c046adf36e8d01a18d2",
+      "label": "Bn",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T22:24:33.166+00:00",
+      "lastSeenAt": "2026-08-26T22:25:38.512+00:00"
     },
     {
       "id": "usr_eb9f18b71a9f544e3e",
@@ -66,10 +143,167 @@
       "vipKeyId": null,
       "vipSince": null,
       "createdAt": "2026-08-26T14:27:53.919+00:00",
-      "lastSeenAt": "2026-08-26T14:27:53.919+00:00"
+      "lastSeenAt": "2026-08-26T15:30:52.776+00:00"
+    },
+    {
+      "id": "usr_540e157d0269cc44eb",
+      "deviceId": "725e8a4620836d92b9b24a5c405c99af",
+      "label": "harthur",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T15:37:35.389+00:00",
+      "lastSeenAt": "2026-08-26T17:49:59.933+00:00"
+    },
+    {
+      "id": "usr_4d0213ae24b3227015",
+      "deviceId": "9fa717fae9da257f1e568f4f98bd7395",
+      "label": "Pedro",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T15:48:03.345+00:00",
+      "lastSeenAt": "2026-08-26T15:48:07.139+00:00"
+    },
+    {
+      "id": "usr_717998fa09c4a81b2c",
+      "deviceId": "9ceb93d16a82694b8df998ba382e7cf7",
+      "label": "Jogador #0008",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T15:53:29.449+00:00",
+      "lastSeenAt": "2026-08-26T15:53:29.449+00:00"
+    },
+    {
+      "id": "usr_523740489ebdaf57f9",
+      "deviceId": "13511395944dd158dc8208442d9a1c03",
+      "label": "Neguin",
+      "isVip": true,
+      "vipSource": "admin",
+      "vipKeyId": null,
+      "vipSince": "2026-08-26T15:59:06.639+00:00",
+      "createdAt": "2026-08-26T15:53:37.421+00:00",
+      "lastSeenAt": "2026-08-26T22:30:58.61+00:00"
+    },
+    {
+      "id": "usr_0d806a3448de394584",
+      "deviceId": "2016ef98ab75c1aa3d4c09c913bc03dd",
+      "label": "Neguin",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T16:02:30.384+00:00",
+      "lastSeenAt": "2026-08-26T16:02:36.682+00:00"
+    },
+    {
+      "id": "usr_09e2f9c6963e73c5f5",
+      "deviceId": "6cbc88d53c55737061afe26448a29edf",
+      "label": "Jogador #0011",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T16:39:40.878+00:00",
+      "lastSeenAt": "2026-08-26T16:39:40.878+00:00"
+    },
+    {
+      "id": "usr_a36eea8096918f1c0b",
+      "deviceId": "718d2b2fd4c266c54162a133a7198c8a",
+      "label": "pedro",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T17:03:27.086+00:00",
+      "lastSeenAt": "2026-08-26T17:03:41.387+00:00"
+    },
+    {
+      "id": "usr_c40fde66fee98e2249",
+      "deviceId": "testdevice1234",
+      "label": "Jogador #0001",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-25T22:26:45.348+00:00",
+      "lastSeenAt": "2026-08-25T22:26:45.661+00:00"
+    },
+    {
+      "id": "usr_ed6b15b9dcb954e67c",
+      "deviceId": "testdevice5678",
+      "label": "Jogador #0002",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-25T22:30:39.243+00:00",
+      "lastSeenAt": "2026-08-25T22:30:39.243+00:00"
+    },
+    {
+      "id": "usr_cddcdcb72fb0e47259",
+      "deviceId": "ff9efcb783934fa4751539982c9362bf",
+      "label": "Jogador #0013",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T17:38:43.793+00:00",
+      "lastSeenAt": "2026-08-26T17:38:43.793+00:00"
+    },
+    {
+      "id": "usr_b8c7279ce287936d4d",
+      "deviceId": "f0fc94acbd8a632e6a17478e5dcc6d89",
+      "label": "Jogador #0014",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T17:43:25.171+00:00",
+      "lastSeenAt": "2026-08-26T17:43:25.171+00:00"
     }
   ],
   "keys": [
+    {
+      "id": "key_4d7975b91b4df02ee1",
+      "code": "SENSI-J53D-4L6U-9PNE",
+      "status": "ativa",
+      "createdAt": "2026-08-26T17:49:50.405+00:00",
+      "expiresAt": "2026-08-26T18:49:50.404+00:00",
+      "maxUses": 1,
+      "uses": 0,
+      "activatedByUserId": null,
+      "activatedByLabel": null,
+      "activatedAt": null
+    },
+    {
+      "id": "key_51c6ce207c021b6319",
+      "code": "SENSI-5AH8-VHRD-FZUB",
+      "status": "ativa",
+      "createdAt": "2026-08-26T15:39:11.61+00:00",
+      "expiresAt": "2026-11-24T15:39:11.609+00:00",
+      "maxUses": 1,
+      "uses": 2,
+      "activatedByUserId": "usr_540e157d0269cc44eb",
+      "activatedByLabel": "harthur",
+      "activatedAt": "2026-08-26T15:46:11.447+00:00"
+    },
+    {
+      "id": "key_73e138c22b7ef6301b",
+      "code": "SENSI-ATHZ-KP5F-6X4B",
+      "status": "inativa",
+      "createdAt": "2026-08-26T14:28:31.919+00:00",
+      "expiresAt": "2026-11-24T14:28:31.919+00:00",
+      "maxUses": 1,
+      "uses": 0,
+      "activatedByUserId": null,
+      "activatedByLabel": null,
+      "activatedAt": null
+    },
     {
       "id": "key_682f0e4c9166c952e7",
       "code": "SENSI-UNAS-XHCY-9KHZ",
@@ -83,27 +317,31 @@
       "activatedAt": null
     },
     {
-      "id": "key_73e138c22b7ef6301b",
-      "code": "SENSI-ATHZ-KP5F-6X4B",
-      "status": "inativa",
-      "createdAt": "2026-08-26T14:28:31.919+00:00",
-      "expiresAt": "2026-11-24T14:28:31.919+00:00",
+      "id": "key_5c8a000087583bb160",
+      "code": "SENSI-L7J7-BFCG-8Y6J",
+      "status": "ativa",
+      "createdAt": "2026-08-26T22:05:40.583+00:00",
+      "expiresAt": "2026-08-28T01:05:40.583+00:00",
       "maxUses": 1,
-      "uses": 0,
-      "activatedByUserId": null,
-      "activatedByLabel": null,
-      "activatedAt": null
+      "uses": 1,
+      "activatedByUserId": "usr_dad3e4a549e70eb82b",
+      "activatedByLabel": "Murilo",
+      "activatedAt": "2026-08-26T22:07:32.861+00:00"
+    },
+    {
+      "id": "key_1ec4d8dec361b83578",
+      "code": "SENSI-G2AZ-YMR8-KXGN",
+      "status": "ativa",
+      "createdAt": "2026-08-26T22:17:05.954+00:00",
+      "expiresAt": "2026-09-22T01:17:05.954+00:00",
+      "maxUses": 5,
+      "uses": 1,
+      "activatedByUserId": "usr_03f19f712bde26dac3",
+      "activatedByLabel": "Murilo",
+      "activatedAt": "2026-08-26T22:17:35.562+00:00"
     }
   ],
   "sessions": [
-    {
-      "token": "b981651fed33476887cf9cdfeba08653a7bc3227bbf806b62a113964c7817231",
-      "userId": "usr_c40fde66fee98e2249",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-25T22:26:45.348+00:00",
-      "expiresAt": "2026-09-24T22:26:45.348+00:00"
-    },
     {
       "token": "3db2dbaf8f40d2b273115c217183078f3320391d55ed79ed9365277b90e86e22",
       "userId": "usr_ed6b15b9dcb954e67c",
@@ -199,9 +437,608 @@
       "isAdmin": false,
       "createdAt": "2026-08-26T14:36:36.569+00:00",
       "expiresAt": "2026-09-25T14:36:36.569+00:00"
+    },
+    {
+      "token": "b981651fed33476887cf9cdfeba08653a7bc3227bbf806b62a113964c7817231",
+      "userId": "usr_c40fde66fee98e2249",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-25T22:26:45.348+00:00",
+      "expiresAt": "2026-09-24T22:26:45.348+00:00"
+    },
+    {
+      "token": "216d24575a46ea0bcfd2bd53699f562ba1fdf08d4f534591a4f3183b6f31a7e1",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:23:38.475+00:00",
+      "expiresAt": "2026-09-25T15:23:38.475+00:00"
+    },
+    {
+      "token": "9b93bec7186fe62b5d4ebd299609f357d3c48530bf83a7143250c6ca578f8f1a",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:30:07.681+00:00",
+      "expiresAt": "2026-09-25T15:30:07.681+00:00"
+    },
+    {
+      "token": "99fda8cf98fb7e410b385cf60de06fd21bfdec4df83cf21099d2d03c5bddc380",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:29:49.905+00:00",
+      "expiresAt": "2026-09-25T15:29:49.905+00:00"
+    },
+    {
+      "token": "95adeaadf5cf00394be0a3fd31660d37c61bb527b57d4f954312b057cfee8d0a",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:30:23.96+00:00",
+      "expiresAt": "2026-09-25T15:30:23.96+00:00"
+    },
+    {
+      "token": "fa6932d22cb1992a1d2e6e7ffe1624a8ffe59ece22b5191c303cfdb9e47f2e9b",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:30:41.974+00:00",
+      "expiresAt": "2026-09-25T15:30:41.974+00:00"
+    },
+    {
+      "token": "87c841ecd2c0957fa52f2513fbf900fb4247ff4274360cbf649beb16ebeb1cca",
+      "userId": "usr_540e157d0269cc44eb",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:37:35.389+00:00",
+      "expiresAt": "2026-09-25T15:37:35.389+00:00"
+    },
+    {
+      "token": "04e738efbaeef743175bf907554dc24676075a14d763cec983c305b39ea8423a",
+      "userId": null,
+      "adminId": "adm_e99cb1994501ae197d",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T15:38:40.34+00:00",
+      "expiresAt": "2026-08-27T03:38:40.34+00:00"
+    },
+    {
+      "token": "c741a1bcedb38b8efc26e2212da943f458735247f2eaa0ae8aad802364375060",
+      "userId": "usr_540e157d0269cc44eb",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:39:17.638+00:00",
+      "expiresAt": "2026-09-25T15:39:17.638+00:00"
+    },
+    {
+      "token": "f1174ca6e582ae75462c41e23fc33f97e1fab87220d5b4542d1f118f61f63985",
+      "userId": "usr_540e157d0269cc44eb",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:45:57.135+00:00",
+      "expiresAt": "2026-09-25T15:45:57.135+00:00"
+    },
+    {
+      "token": "caca855a4f4c428a98dfa51e6e46ea4c0f07490e36bd4f71482cbc27323c6969",
+      "userId": "usr_4d0213ae24b3227015",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:48:03.345+00:00",
+      "expiresAt": "2026-09-25T15:48:03.345+00:00"
+    },
+    {
+      "token": "1e4a5f329146b3f3bbb68bdb38ee98effb52e2fa8d8f95ff4ebd9f9bc4a7ab88",
+      "userId": "usr_540e157d0269cc44eb",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:50:11.527+00:00",
+      "expiresAt": "2026-09-25T15:50:11.527+00:00"
+    },
+    {
+      "token": "399eea621188166c6349a0e21a457c4eb3df16051b3b29e6bcabd492e11bfcd4",
+      "userId": "usr_717998fa09c4a81b2c",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:53:29.449+00:00",
+      "expiresAt": "2026-09-25T15:53:29.449+00:00"
+    },
+    {
+      "token": "0abcc2a250ed8b11e9fbe94207e4db301271b722c44d97b5a2ff3c4c3ae3afdc",
+      "userId": "usr_523740489ebdaf57f9",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:53:37.421+00:00",
+      "expiresAt": "2026-09-25T15:53:37.421+00:00"
+    },
+    {
+      "token": "c1b57e570cfad222b6fd215bcbb9fe31998c82ef9a9f1bf567f810a5be8345d7",
+      "userId": null,
+      "adminId": "adm_e99cb1994501ae197d",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T15:58:46.145+00:00",
+      "expiresAt": "2026-08-27T03:58:46.145+00:00"
+    },
+    {
+      "token": "54fe8bae224c93530dba118669c29e9d66d20254e143cb5cf75c1e4c58d8b823",
+      "userId": "usr_4d0213ae24b3227015",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:56:48.54+00:00",
+      "expiresAt": "2026-09-25T15:56:48.54+00:00"
+    },
+    {
+      "token": "ce289001a25c72e38deb31cea231dbfff7349dbdd62e3fafcc75b8d824ff3330",
+      "userId": "usr_523740489ebdaf57f9",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:59:54.748+00:00",
+      "expiresAt": "2026-09-25T15:59:54.748+00:00"
+    },
+    {
+      "token": "ec34f54a9decbcdeff84a73c465ad01476488728bdf4aaaff573a0e5b98a5d76",
+      "userId": "usr_523740489ebdaf57f9",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T16:01:09.074+00:00",
+      "expiresAt": "2026-09-25T16:01:09.074+00:00"
+    },
+    {
+      "token": "76ef907536b7d501fdc16fab6d9b40c2cb5f37d8714a5ce6a85d82995750c6d5",
+      "userId": "usr_0d806a3448de394584",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T16:02:30.384+00:00",
+      "expiresAt": "2026-09-25T16:02:30.384+00:00"
+    },
+    {
+      "token": "ae088800464abd61911a523bda223b39ab61d2d118b4bcb90f0f4a94acbda797",
+      "userId": "usr_523740489ebdaf57f9",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T16:03:11.679+00:00",
+      "expiresAt": "2026-09-25T16:03:11.679+00:00"
+    },
+    {
+      "token": "bb6bdc6d306ee80258025cdae9b7f49e2746644475d635d274ca252cf9deb8ce",
+      "userId": "usr_4d0213ae24b3227015",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T16:04:00.315+00:00",
+      "expiresAt": "2026-09-25T16:04:00.315+00:00"
+    },
+    {
+      "token": "f52cf085411b6ba078d5414b08105a8275aee7d3b9d37c2e2b38dfe422790538",
+      "userId": "usr_4d0213ae24b3227015",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T16:11:32.307+00:00",
+      "expiresAt": "2026-09-25T16:11:32.307+00:00"
+    },
+    {
+      "token": "b4e83624a392ef94f3f8194d1fcfb6f7c16ffc415668556a4f9994f8d3dd61fd",
+      "userId": null,
+      "adminId": "adm_e99cb1994501ae197d",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T16:12:29.143+00:00",
+      "expiresAt": "2026-08-27T04:12:29.143+00:00"
+    },
+    {
+      "token": "3d436adfb32f0cbac831793d8cee562540e68548eaed1df35c7f4aa2b47a65b7",
+      "userId": null,
+      "adminId": "adm_e99cb1994501ae197d",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T16:18:57.347+00:00",
+      "expiresAt": "2026-08-27T04:18:57.347+00:00"
+    },
+    {
+      "token": "7b4cc6b684c40e65a86fc233d74ed7fa2243cb8ea975f413fea4be718c9c074a",
+      "userId": "usr_523740489ebdaf57f9",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T16:39:39.074+00:00",
+      "expiresAt": "2026-09-25T16:39:39.074+00:00"
+    },
+    {
+      "token": "ee1873953c6f07b92736aaef0fa38eac64ca35e2a6d999fb9a36fee7052cc102",
+      "userId": "usr_09e2f9c6963e73c5f5",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T16:39:40.878+00:00",
+      "expiresAt": "2026-09-25T16:39:40.878+00:00"
+    },
+    {
+      "token": "fb54f3246577e2cbc086cf3e5c34e940c09fe497c6c12735df8ad4c833a0ec93",
+      "userId": "usr_523740489ebdaf57f9",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T16:48:32.648+00:00",
+      "expiresAt": "2026-09-25T16:48:32.648+00:00"
+    },
+    {
+      "token": "21a7a941ca56e0408829a1fc81d97d3db950a1b4cbfd9b7d3a11b2b25316e39a",
+      "userId": "usr_a36eea8096918f1c0b",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T17:03:27.086+00:00",
+      "expiresAt": "2026-09-25T17:03:27.086+00:00"
+    },
+    {
+      "token": "c18a7a01abab27829d364de8911d72a8071dba96f4b9cbe0c3e03f08ec69f44b",
+      "userId": "usr_a36eea8096918f1c0b",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T17:04:07.831+00:00",
+      "expiresAt": "2026-09-25T17:04:07.831+00:00"
+    },
+    {
+      "token": "8b8a25feb7fe196958e7f6c34a2b41db904033091a06591bc8a67c8bdf2732fd",
+      "userId": "usr_a36eea8096918f1c0b",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T17:04:25.252+00:00",
+      "expiresAt": "2026-09-25T17:04:25.252+00:00"
+    },
+    {
+      "token": "e7e0d852206573052e37253df6da624a3119979e733b62c362670a484f6dbc51",
+      "userId": "usr_4d0213ae24b3227015",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T17:06:22.242+00:00",
+      "expiresAt": "2026-09-25T17:06:22.242+00:00"
+    },
+    {
+      "token": "cc904a112758c965f2de54f1e5242d09d9fdacb7184bd2a1d72e8b26d642ddf4",
+      "userId": "usr_a36eea8096918f1c0b",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T17:06:50.69+00:00",
+      "expiresAt": "2026-09-25T17:06:50.69+00:00"
+    },
+    {
+      "token": "52c375395e2b13e53f48a2a04362105eccfb0f8af719dcd54f1670cb68a99ecd",
+      "userId": "usr_4d0213ae24b3227015",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T17:38:27.883+00:00",
+      "expiresAt": "2026-09-25T17:38:27.883+00:00"
+    },
+    {
+      "token": "b159bc0b8d7b4c2bfe20df2b079d9405f96c565b0c65bec718a93194c79e89f2",
+      "userId": "usr_523740489ebdaf57f9",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T17:38:30.553+00:00",
+      "expiresAt": "2026-09-25T17:38:30.553+00:00"
+    },
+    {
+      "token": "9ebe4c2f4bcb637d0e9647fec73d94332d1e25b01117ea5973b7daaefd864f94",
+      "userId": "usr_cddcdcb72fb0e47259",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T17:38:43.793+00:00",
+      "expiresAt": "2026-09-25T17:38:43.793+00:00"
+    },
+    {
+      "token": "16170ce1d58492f59167c45f23afbbbf23ddd55cc3a3eedd8c5684a70b2bd55b",
+      "userId": "usr_523740489ebdaf57f9",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T17:43:22.131+00:00",
+      "expiresAt": "2026-09-25T17:43:22.131+00:00"
+    },
+    {
+      "token": "4c9b361de6d365ca04d3fd8d0aa68965829d9d18d17d7157f74ea2a66d1c1190",
+      "userId": "usr_b8c7279ce287936d4d",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T17:43:25.171+00:00",
+      "expiresAt": "2026-09-25T17:43:25.171+00:00"
+    },
+    {
+      "token": "bab2f50bb055951030cc6d37d75d1b25810ee807d68ac137847e602041896616",
+      "userId": "usr_540e157d0269cc44eb",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T17:45:04.483+00:00",
+      "expiresAt": "2026-09-25T17:45:04.483+00:00"
+    },
+    {
+      "token": "3641457839eab238552714b4e438122f2246c3716af62e00216e21b664fbd208",
+      "userId": "usr_540e157d0269cc44eb",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T17:48:59.275+00:00",
+      "expiresAt": "2026-09-25T17:48:59.275+00:00"
+    },
+    {
+      "token": "3a01f074d3875dae3590e0757aefd127568707b001356a25da5fc6e13c6861a4",
+      "userId": "usr_540e157d0269cc44eb",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T17:51:00.177+00:00",
+      "expiresAt": "2026-09-25T17:51:00.177+00:00"
+    },
+    {
+      "token": "c8f4e87e2093dfd7b57c683958de84d4a1e5b797452ee0b3287deeacadcd52a5",
+      "userId": "usr_4d0213ae24b3227015",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T18:49:43.544+00:00",
+      "expiresAt": "2026-09-25T18:49:43.544+00:00"
+    },
+    {
+      "token": "cf1139a10497d4517d0aeed1c2fbb595165a3fc597905813eee75402cc4eec09",
+      "userId": "usr_4d0213ae24b3227015",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T18:49:47.56+00:00",
+      "expiresAt": "2026-09-25T18:49:47.56+00:00"
+    },
+    {
+      "token": "3e5abaad442719e9212d3d38dc3dd9c2e5caa6495ffc5f50bf94f2284117664e",
+      "userId": "usr_523740489ebdaf57f9",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T19:09:07.363+00:00",
+      "expiresAt": "2026-09-25T19:09:07.363+00:00"
+    },
+    {
+      "token": "3790aad1190c7a6cbdc4c705174a00f307d5d06765da509fda329ab8371bcf53",
+      "userId": "usr_0807201bf5d887f41d",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T19:09:09.53+00:00",
+      "expiresAt": "2026-09-25T19:09:09.53+00:00"
+    },
+    {
+      "token": "750a0697cafae0e78a695cba34adafb21bed76f8e7424eed29acd82e4374cd5e",
+      "userId": "usr_4d0213ae24b3227015",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T19:18:34.671+00:00",
+      "expiresAt": "2026-09-25T19:18:34.671+00:00"
+    },
+    {
+      "token": "1e32ce414d9f7b32a74148e820a9bb6e1ff4cbd9af11ba8c455ffc04cf5ac307",
+      "userId": "usr_a36eea8096918f1c0b",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T19:45:46.725+00:00",
+      "expiresAt": "2026-09-25T19:45:46.725+00:00"
+    },
+    {
+      "token": "1a2ef8b8f696cc693204dbe82c4d3b6ae0f0cf5ab2747a0275362a7c08b5a53a",
+      "userId": "usr_8a59ae6918c80dbdca",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T20:31:52.928+00:00",
+      "expiresAt": "2026-09-25T20:31:52.928+00:00"
+    },
+    {
+      "token": "1bc50d1fa391cab5a5f338e473ac18d98b3ffe0f943e14b8852e4f66a657892c",
+      "userId": "usr_523740489ebdaf57f9",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T22:04:13.234+00:00",
+      "expiresAt": "2026-09-25T22:04:13.234+00:00"
+    },
+    {
+      "token": "79697ec67013eb7a2ec5097e1ea12ddd28b72cf851fe61d9a59142c6786d7d3c",
+      "userId": null,
+      "adminId": "adm_e99cb1994501ae197d",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T22:04:43.024+00:00",
+      "expiresAt": "2026-08-27T10:04:43.024+00:00"
+    },
+    {
+      "token": "dfdf92845f37d240f8c235ac00a79239e93a243b0f8d92b0844e1974847ccb27",
+      "userId": "usr_c9b5a313f5c6e01138",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T22:05:58.616+00:00",
+      "expiresAt": "2026-09-25T22:05:58.616+00:00"
+    },
+    {
+      "token": "dc26d0b91dcf0cde84f86b5ff600d4a85a3734eba719920eded8378679b3becd",
+      "userId": "usr_280487d7d08a0d3c68",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T22:07:05.134+00:00",
+      "expiresAt": "2026-09-25T22:07:05.134+00:00"
+    },
+    {
+      "token": "c2825af1a5ecde3f1433e46e3e034e0a62da67e52d5f7bc0bd4fab0de6785aab",
+      "userId": "usr_dad3e4a549e70eb82b",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T22:07:06.68+00:00",
+      "expiresAt": "2026-09-25T22:07:06.68+00:00"
+    },
+    {
+      "token": "14ca5a7078bba778be3a3fe05409631cfb527f2ef1e1888bffe1b4c393191555",
+      "userId": "usr_03f19f712bde26dac3",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T22:09:47.443+00:00",
+      "expiresAt": "2026-09-25T22:09:47.443+00:00"
+    },
+    {
+      "token": "41b6ff1794eb28b32600e6baedf71ad8362b6ad6a94f17d1e0e230f0586878f0",
+      "userId": "usr_03f19f712bde26dac3",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T22:11:32.205+00:00",
+      "expiresAt": "2026-09-25T22:11:32.205+00:00"
+    },
+    {
+      "token": "117d3ee860ec7a67d204828984f108ae0c744cfa958690d2ad35d3f691e8735b",
+      "userId": "usr_03f19f712bde26dac3",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T22:11:40.276+00:00",
+      "expiresAt": "2026-09-25T22:11:40.276+00:00"
+    },
+    {
+      "token": "4ced585ee5f9ef94956535b906c6d1e72990f991bffea6908f39180429224a35",
+      "userId": "usr_2f0cd6460ebaf28c24",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T22:11:50.058+00:00",
+      "expiresAt": "2026-09-25T22:11:50.058+00:00"
+    },
+    {
+      "token": "8d0145e2600f1a08839249c20268287eed7fe7eb42c944ff78c6b5c774430e49",
+      "userId": "usr_8de8e268bf066a0988",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T22:12:40.572+00:00",
+      "expiresAt": "2026-09-25T22:12:40.572+00:00"
+    },
+    {
+      "token": "f9e721faadb71dc2867d14c633c74b662f1ab627aadff1b29f9705f032d23dbd",
+      "userId": "usr_03f19f712bde26dac3",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T22:13:09.931+00:00",
+      "expiresAt": "2026-09-25T22:13:09.931+00:00"
+    },
+    {
+      "token": "d25958abad127ff6793e9287383db4d65be4d3df3692941050e698637c4eedb5",
+      "userId": "usr_03f19f712bde26dac3",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T22:14:31.003+00:00",
+      "expiresAt": "2026-09-25T22:14:31.003+00:00"
+    },
+    {
+      "token": "658463192c686b7c89cbb862b9e7f7ae92fa553f8ae181a25b70235779f9bf3b",
+      "userId": "usr_03f19f712bde26dac3",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T22:17:22.85+00:00",
+      "expiresAt": "2026-09-25T22:17:22.85+00:00"
+    },
+    {
+      "token": "a9fd0edfd180918b28aa47832a2e0772c8309e9723cdadb6a9a9db422d9205bf",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T22:22:31.076+00:00",
+      "expiresAt": "2026-09-25T22:22:31.076+00:00"
+    },
+    {
+      "token": "8aaf29a9865e0a1cabd788a90e5042088ac9def57922cdde9a6e81a6a528184e",
+      "userId": "usr_616556ff0ce8680426",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T22:24:33.166+00:00",
+      "expiresAt": "2026-09-25T22:24:33.166+00:00"
     }
   ],
   "generations": [
+    {
+      "id": "gen_6b3e54529e04936b4c",
+      "at": "2026-08-26T15:30:52.777+00:00",
+      "userId": "usr_b673199148f864fb95",
+      "mode": "normal",
+      "inputs": {
+        "aim": "equilibrada",
+        "tier": "normal",
+        "level": "intermediario",
+        "style": "eq",
+        "dpiAtual": "",
+        "deviceModel": "Samsung Galaxy A54"
+      },
+      "values": {
+        "geral": 169,
+        "mira2x": 153,
+        "mira4x": 144,
+        "redDot": 162,
+        "miraAwm": 121,
+        "olhadinha": 105
+      },
+      "dpi": 476,
+      "fireButton": 58,
+      "deviceName": "Samsung Galaxy A54",
+      "knownDevice": true
+    },
+    {
+      "id": "gen_2513a641bbec18e641",
+      "at": "2026-08-26T20:33:49.861+00:00",
+      "userId": "usr_8a59ae6918c80dbdca",
+      "mode": "normal",
+      "inputs": {
+        "aim": "cabeca",
+        "tier": "normal",
+        "level": "avancado",
+        "style": "ag",
+        "dpiAtual": "",
+        "deviceModel": "iPhone XR"
+      },
+      "values": {
+        "geral": 193,
+        "mira2x": 177,
+        "mira4x": 159,
+        "redDot": 190,
+        "miraAwm": 131,
+        "olhadinha": 141
+      },
+      "dpi": 501,
+      "fireButton": 68,
+      "deviceName": "iPhone XR",
+      "knownDevice": true
+    },
+    {
+      "id": "gen_51e1a749f4b1bd462f",
+      "at": "2026-08-26T15:39:40.707+00:00",
+      "userId": "usr_540e157d0269cc44eb",
+      "mode": "premium",
+      "inputs": {
+        "aim": "equilibrada",
+        "tier": "premium",
+        "level": "iniciante",
+        "style": "eq",
+        "dpiAtual": "",
+        "deviceModel": "Samsung Galaxy A55"
+      },
+      "values": {
+        "geral": 171,
+        "mira2x": 155,
+        "mira4x": 144,
+        "redDot": 165,
+        "miraAwm": 120,
+        "olhadinha": 108
+      },
+      "dpi": 531,
+      "fireButton": 61,
+      "deviceName": "Samsung Galaxy A55",
+      "knownDevice": true
+    },
+    {
+      "id": "gen_e79cebd01903bb2ae1",
+      "at": "2026-08-26T14:04:17.74+00:00",
+      "userId": "usr_827773347d5c0ab50d",
+      "mode": "normal",
+      "inputs": {
+        "aim": "equilibrada",
+        "tier": "normal",
+        "level": "intermediario",
+        "style": "eq",
+        "deviceModel": "Samsung Galaxy A55"
+      },
+      "values": {
+        "geral": 165,
+        "mira2x": 154,
+        "mira4x": 142,
+        "redDot": 161,
+        "miraAwm": 121,
+        "olhadinha": 110
+      },
+      "dpi": 483,
+      "fireButton": 61,
+      "deviceName": "Samsung Galaxy A55",
+      "knownDevice": true
+    },
     {
       "id": "gen_080ddd8e96da1aaa2b",
       "at": "2026-08-25T22:26:45.649+00:00",
@@ -230,28 +1067,107 @@
       "knownDevice": true
     },
     {
-      "id": "gen_e79cebd01903bb2ae1",
-      "at": "2026-08-26T14:04:17.74+00:00",
-      "userId": "usr_827773347d5c0ab50d",
-      "mode": "normal",
+      "id": "gen_32add6fd13e5134d3b",
+      "at": "2026-08-26T22:08:41.538+00:00",
+      "userId": "usr_dad3e4a549e70eb82b",
+      "mode": "proibida",
       "inputs": {
-        "aim": "equilibrada",
-        "tier": "normal",
-        "level": "intermediario",
-        "style": "eq",
-        "deviceModel": "Samsung Galaxy A55"
+        "aim": "cabeca",
+        "tier": "proibida",
+        "level": "competitivo",
+        "style": "ag",
+        "dpiAtual": "480",
+        "deviceModel": "Samsung a05s"
       },
       "values": {
-        "geral": 165,
-        "mira2x": 154,
-        "mira4x": 142,
-        "redDot": 161,
-        "miraAwm": 121,
-        "olhadinha": 110
+        "geral": 200,
+        "mira2x": 199,
+        "mira4x": 176,
+        "redDot": 200,
+        "miraAwm": 138,
+        "olhadinha": 165
       },
-      "dpi": 483,
-      "fireButton": 61,
-      "deviceName": "Samsung Galaxy A55",
+      "dpi": 512,
+      "fireButton": 58,
+      "deviceName": null,
+      "knownDevice": false
+    },
+    {
+      "id": "gen_286a5dfd90dbaae6ca",
+      "at": "2026-08-26T22:10:55.592+00:00",
+      "userId": "usr_03f19f712bde26dac3",
+      "mode": "normal",
+      "inputs": {
+        "aim": "cabeca",
+        "tier": "normal",
+        "level": "competitivo",
+        "style": "ag",
+        "dpiAtual": "480",
+        "deviceModel": "Samsung a05s"
+      },
+      "values": {
+        "geral": 198,
+        "mira2x": 177,
+        "mira4x": 161,
+        "redDot": 193,
+        "miraAwm": 138,
+        "olhadinha": 137
+      },
+      "dpi": 453,
+      "fireButton": 65,
+      "deviceName": null,
+      "knownDevice": false
+    },
+    {
+      "id": "gen_6d5c0e0d1cbca6183c",
+      "at": "2026-08-26T22:18:06.809+00:00",
+      "userId": "usr_03f19f712bde26dac3",
+      "mode": "proibida",
+      "inputs": {
+        "aim": "cabeca",
+        "tier": "proibida",
+        "level": "competitivo",
+        "style": "ag",
+        "dpiAtual": "480",
+        "deviceModel": "Samsung a05s"
+      },
+      "values": {
+        "geral": 200,
+        "mira2x": 198,
+        "mira4x": 170,
+        "redDot": 200,
+        "miraAwm": 138,
+        "olhadinha": 168
+      },
+      "dpi": 517,
+      "fireButton": 59,
+      "deviceName": null,
+      "knownDevice": false
+    },
+    {
+      "id": "gen_15c049d86658e689d4",
+      "at": "2026-08-26T22:25:38.512+00:00",
+      "userId": "usr_616556ff0ce8680426",
+      "mode": "normal",
+      "inputs": {
+        "aim": "precisao",
+        "tier": "normal",
+        "level": "competitivo",
+        "style": "pr",
+        "dpiAtual": "",
+        "deviceModel": "iPhone 11"
+      },
+      "values": {
+        "geral": 169,
+        "mira2x": 151,
+        "mira4x": 147,
+        "redDot": 165,
+        "miraAwm": 128,
+        "olhadinha": 103
+      },
+      "dpi": 494,
+      "fireButton": 58,
+      "deviceName": "iPhone 11",
       "knownDevice": true
     }
   ],

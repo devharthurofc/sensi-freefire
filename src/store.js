@@ -30,6 +30,7 @@ const DEFAULT_DB = {
   sessions: [],
   generations: [],
   profiles: [],
+  sales: [],
   auditLog: [],
   settings: {
     contactLink: '',
@@ -167,6 +168,24 @@ async function fetchRemoteSettings() {
   };
 }
 
+async function fetchRemoteSales() {
+  const { data, error } = await supabase.from('sales').select('*');
+  if (error) throw error;
+  return (data || []).map(s => ({
+    id: s.id,
+    keyId: s.key_id,
+    keyCode: s.key_code,
+    price: s.price || 0,
+    buyerLabel: s.buyer_label || '',
+    buyerContact: s.buyer_contact || '',
+    sellerAdminId: s.seller_admin_id || '',
+    sellerAdminName: s.seller_admin_name || '',
+    soldAt: s.sold_at,
+    notes: s.notes || '',
+    status: s.status || 'pago'
+  }));
+}
+
 /* ============ salvar no Supabase (tabelas individuais) ============ */
 
 function toUserRow(u) {
@@ -247,6 +266,22 @@ function toProfileRow(p) {
   };
 }
 
+function toSalesRow(s) {
+  return {
+    id: s.id,
+    key_id: s.keyId,
+    key_code: s.keyCode,
+    price: s.price || 0,
+    buyer_label: s.buyerLabel || '',
+    buyer_contact: s.buyerContact || '',
+    seller_admin_id: s.sellerAdminId || '',
+    seller_admin_name: s.sellerAdminName || '',
+    sold_at: s.soldAt,
+    notes: s.notes || '',
+    status: s.status || 'pago'
+  };
+}
+
 async function pushAllRemote() {
   const d = getDb();
 
@@ -256,6 +291,7 @@ async function pushAllRemote() {
     supabase.from('sessions').upsert(d.sessions.map(toSessionRow), { onConflict: 'token' }),
     supabase.from('generations').upsert(d.generations.map(toGenerationRow), { onConflict: 'id' }),
     supabase.from('profiles').upsert(d.profiles.map(toProfileRow), { onConflict: 'id' }),
+    supabase.from('sales').upsert(d.sales.map(toSalesRow), { onConflict: 'id' }),
     supabase.from('audit_log').upsert(
       d.auditLog.map((a, i) => ({ id: 'log_' + i, at: a.at, action: a.action, detail: a.detail, ip: a.ip })),
       { onConflict: 'id' }
@@ -320,7 +356,7 @@ async function init() {
   let online = true;
 
   try {
-    const [users, admins, keys, sessions, generations, profiles, auditLog, settings] = await Promise.all([
+    const [users, admins, keys, sessions, generations, profiles, auditLog, settings, sales] = await Promise.all([
       fetchRemoteUsers(),
       fetchRemoteAdmins(),
       fetchRemoteKeys(),
@@ -328,10 +364,11 @@ async function init() {
       fetchRemoteGenerations(),
       fetchRemoteProfiles(),
       fetchRemoteAudit(),
-      fetchRemoteSettings()
+      fetchRemoteSettings(),
+      fetchRemoteSales()
     ]);
 
-    remote = { users, admins, keys, sessions, generations, profiles, auditLog, settings };
+    remote = { users, admins, keys, sessions, generations, profiles, auditLog, settings, sales };
   } catch (e) {
     online = false;
     console.error('[store] Supabase indisponível no boot:', e.message);
@@ -658,6 +695,64 @@ function updateSettings(patch) {
   return s;
 }
 
+/* ============ vendas ============ */
+
+function addSale({ keyId, keyCode, price, buyerLabel, buyerContact, sellerAdminId, sellerAdminName, notes, status }) {
+  const sale = {
+    id: id('sale'),
+    keyId: keyId || null,
+    keyCode: keyCode || '',
+    price: Number(price) || 0,
+    buyerLabel: buyerLabel || '',
+    buyerContact: buyerContact || '',
+    sellerAdminId: sellerAdminId || '',
+    sellerAdminName: sellerAdminName || '',
+    soldAt: new Date().toISOString(),
+    notes: notes || '',
+    status: status || 'pago'
+  };
+  getDb().sales.push(sale);
+  persistNow();
+  return sale;
+}
+
+function listSales(limit = 200) {
+  return [...getDb().sales].sort((a, b) => b.soldAt.localeCompare(a.soldAt)).slice(0, limit);
+}
+
+function getSalesStats() {
+  const sales = getDb().sales;
+  const totalRevenue = sales.reduce((sum, s) => sum + (s.price || 0), 0);
+  const totalSales = sales.length;
+  const paidSales = sales.filter(s => s.status === 'pago').length;
+  const pendingSales = sales.filter(s => s.status === 'pendente').length;
+  const today = new Date().toISOString().slice(0, 10);
+  const salesToday = sales.filter(s => s.soldAt && s.soldAt.slice(0, 10) === today);
+  const revenueToday = salesToday.reduce((sum, s) => sum + (s.price || 0), 0);
+  return { totalRevenue, totalSales, paidSales, pendingSales, salesToday: salesToday.length, revenueToday };
+}
+
+function updateSale(saleId, patch) {
+  const d = getDb();
+  const i = d.sales.findIndex(s => s.id === saleId);
+  if (i < 0) return null;
+  const sale = d.sales[i];
+  if (patch.price !== undefined) sale.price = Number(patch.price) || 0;
+  if (patch.buyerLabel !== undefined) sale.buyerLabel = patch.buyerLabel;
+  if (patch.buyerContact !== undefined) sale.buyerContact = patch.buyerContact;
+  if (patch.notes !== undefined) sale.notes = patch.notes;
+  if (patch.status !== undefined) sale.status = patch.status;
+  persistNow();
+  return sale;
+}
+
+function deleteSale(saleId) {
+  const d = getDb();
+  const i = d.sales.findIndex(s => s.id === saleId);
+  if (i >= 0) { d.sales.splice(i, 1); persistNow(); return true; }
+  return false;
+}
+
 /* ============ exports ============ */
 
 module.exports = {
@@ -699,6 +794,12 @@ module.exports = {
 
   getSettings,
   updateSettings,
+
+  addSale,
+  listSales,
+  getSalesStats,
+  updateSale,
+  deleteSale,
 
   addAudit,
   listAudit

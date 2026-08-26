@@ -2218,6 +2218,94 @@ app.put(
   }
 );
 
+/* ================= vendas ================= */
+
+app.get(
+  '/api/admin/sales',
+  requireAdmin,
+  (req, res) => {
+    const sales = store.listSales(200);
+    const stats = store.getSalesStats();
+    res.json({ sales, stats });
+  }
+);
+
+app.post(
+  '/api/admin/sales',
+  requireAdmin,
+  (req, res) => {
+    const body = req.body || {};
+    const keyCode = store.clean(body.keyCode, 32);
+    const buyerLabel = store.clean(body.buyerLabel, 60);
+    const buyerContact = store.clean(body.buyerContact, 120);
+    const price = parseFloat(body.price) || 0;
+    const notes = store.clean(body.notes, 200);
+    const status = body.status === 'pendente' ? 'pendente' : 'pago';
+
+    if (!keyCode) {
+      return res.status(400).json({
+        error: 'bad_request',
+        message: 'Informe o código da KEY.'
+      });
+    }
+
+    const admin = store.getDb().admins.find(a => a.id === req.adminId);
+
+    const sale = store.addSale({
+      keyId: null,
+      keyCode,
+      price,
+      buyerLabel,
+      buyerContact,
+      sellerAdminId: req.adminId,
+      sellerAdminName: admin ? admin.username : '',
+      notes,
+      status
+    });
+
+    store.addAudit(
+      'sale_created',
+      buyerLabel + ' - R$ ' + price.toFixed(2),
+      req.ip
+    );
+
+    res.json({ sale });
+  }
+);
+
+app.patch(
+  '/api/admin/sales/:id',
+  requireAdmin,
+  (req, res) => {
+    const sale = store.updateSale(req.params.id, req.body || {});
+    if (!sale) {
+      return res.status(404).json({ error: 'not_found' });
+    }
+    res.json({ sale });
+  }
+);
+
+app.delete(
+  '/api/admin/sales/:id',
+  requireAdmin,
+  (req, res) => {
+    const ok = store.deleteSale(req.params.id);
+    if (!ok) {
+      return res.status(404).json({ error: 'not_found' });
+    }
+    store.addAudit('sale_deleted', req.params.id, req.ip);
+    res.json({ ok: true });
+  }
+);
+
+app.get(
+  '/api/admin/sales/stats',
+  requireAdmin,
+  (req, res) => {
+    res.json(store.getSalesStats());
+  }
+);
+
 /* ================= estáticos ================= */
 
 function ensurePanelPath() {

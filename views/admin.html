@@ -14,15 +14,24 @@
   --text:#f5f0ee;--muted:#a89f9c;--ok:#22c55e;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:'Chakra Petch',sans-serif;min-height:100vh}
+body{background:var(--bg);color:var(--text);font-family:'Chakra Petch',sans-serif;min-height:100vh;overflow-x:hidden}
 h1,h2,h3,.font-display{font-family:'Russo One',sans-serif;font-weight:400}
 
-.layout{display:flex;min-height:100vh}
+/* ---------- animações globais ---------- */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes glow{0%,100%{box-shadow:0 0 5px rgba(239,68,68,.3)}50%{box-shadow:0 0 20px rgba(239,68,68,.6)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+.layout{display:flex;min-height:100vh;animation:fadeIn .5s ease}
 
 /* ---------- sidebar ---------- */
-.sidebar{width:230px;background:var(--panel);border-right:1px solid var(--card-border);display:flex;flex-direction:column;padding:22px 14px;position:sticky;top:0;height:100vh}
+.sidebar{width:230px;background:var(--panel);border-right:1px solid var(--card-border);display:flex;flex-direction:column;padding:22px 14px;position:sticky;top:0;height:100vh;animation:slideIn .4s ease}
 .brand{display:flex;align-items:center;gap:10px;padding:4px 8px 20px;border-bottom:1px solid var(--card-border);margin-bottom:16px}
-.brand-mark{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blood),var(--red2));box-shadow:0 0 20px rgba(220,38,38,.5);flex-shrink:0}
+.brand-mark{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blood),var(--red2));box-shadow:0 0 20px rgba(220,38,38,.5);flex-shrink:0;animation:glow 2s infinite}
 .brand-mark svg{width:21px;height:21px}
 .brand h1{font-size:.95rem;line-height:1.1}
 .brand h1 span{background:linear-gradient(90deg,var(--red1),var(--red3));-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -30,10 +39,12 @@ h1,h2,h3,.font-display{font-family:'Russo One',sans-serif;font-weight:400}
 .nav{display:flex;flex-direction:column;gap:4px;flex:1}
 .nav button{
   appearance:none;border:none;cursor:pointer;text-align:left;font-family:'Chakra Petch',sans-serif;font-weight:600;
-  background:transparent;color:var(--muted);font-size:.92rem;padding:11px 13px;border-radius:12px;display:flex;align-items:center;gap:11px;transition:.18s;letter-spacing:.02em;text-transform:none;
+  background:transparent;color:var(--muted);font-size:.92rem;padding:11px 13px;border-radius:12px;display:flex;align-items:center;gap:11px;transition:all .2s ease;letter-spacing:.02em;text-transform:none;position:relative;overflow:hidden
 }
+.nav button::before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(239,68,68,.1),transparent);transition:left .4s ease}
+.nav button:hover::before{left:100%}
 .nav button svg{width:17px;height:17px;flex-shrink:0}
-.nav button:hover{color:var(--text);background:rgba(239,68,68,.08)}
+.nav button:hover{color:var(--text);background:rgba(239,68,68,.08);transform:translateX(3px)}
 .nav button.on{color:#fff;background:linear-gradient(135deg,rgba(185,28,28,.55),rgba(239,68,68,.25));box-shadow:inset 3px 0 0 var(--red2)}
 .side-foot{border-top:1px solid var(--card-border);padding-top:12px}
 .badge-role{font-size:.58rem;font-weight:800;letter-spacing:.12em;padding:3px 9px;border-radius:99px;text-transform:uppercase}
@@ -41,53 +52,66 @@ h1,h2,h3,.font-display{font-family:'Russo One',sans-serif;font-weight:400}
 .bg-mod{background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.4)}
 
 /* ---------- conteúdo ---------- */
-.content{flex:1;padding:26px 26px 70px;max-width:1100px}
+.content{flex:1;padding:26px 26px 70px;max-width:1100px;animation:slideUp .5s ease}
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px;flex-wrap:wrap}
 .topbar h2{font-size:1.15rem;letter-spacing:.04em}
 .topbar .sub{color:var(--muted);font-size:.85rem;margin-top:3px}
 
-.card{border:1px solid var(--card-border);border-radius:18px;background:var(--card);padding:20px;margin-bottom:18px}
+.card{border:1px solid var(--card-border);border-radius:18px;background:var(--card);padding:20px;margin-bottom:18px;transition:all .3s ease;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--red1),transparent);opacity:0;transition:opacity .3s ease}
+.card:hover::before{opacity:1}
+.card:hover{border-color:rgba(239,68,68,.2);transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,.3)}
 .card h3.sec{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:10px}
 .card h3.sec::after{content:"";flex:1;height:1px;background:var(--card-border)}
 
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.stat{border:1px solid var(--card-border);border-radius:14px;padding:16px;position:relative;overflow:hidden;background:linear-gradient(160deg,rgba(220,38,38,.07),transparent)}
+.stat{border:1px solid var(--card-border);border-radius:14px;padding:16px;position:relative;overflow:hidden;background:linear-gradient(160deg,rgba(220,38,38,.07),transparent);transition:all .3s ease}
+.stat:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
 .stat b{font-family:'Russo One',sans-serif;font-size:1.7rem;display:block;line-height:1}
 .stat span{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;display:block;margin-top:7px}
 .stat::after{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--red1),transparent)}
+.stat.revenue{background:linear-gradient(160deg,rgba(34,197,94,.08),transparent)}
+.stat.revenue::after{background:linear-gradient(90deg,#22c55e,transparent)}
+.stat.revenue b{color:#86efac}
 
 label{display:block;font-size:.68rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
-input{background:rgba(0,0,0,.35);border:1px solid var(--card-border);border-radius:10px;color:var(--text);padding:11px 12px;font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:.95rem;outline:none;transition:.2s}
-input:focus{border-color:var(--red2);box-shadow:0 0 12px rgba(239,68,68,.25)}
-button.act{appearance:none;border:none;cursor:pointer;font-family:'Russo One',sans-serif;letter-spacing:.08em;text-transform:uppercase;font-size:.68rem;padding:12px 16px;border-radius:10px;color:#fff;transition:.2s}
-button.act:hover{filter:brightness(1.15)}
-button.act:disabled{opacity:.6;cursor:wait}
+input,select{background:rgba(0,0,0,.35);border:1px solid var(--card-border);border-radius:10px;color:var(--text);padding:11px 12px;font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:.95rem;outline:none;transition:all .2s ease}
+input:focus,select:focus{border-color:var(--red2);box-shadow:0 0 12px rgba(239,68,68,.25);transform:scale(1.01)}
+button.act{appearance:none;border:none;cursor:pointer;font-family:'Russo One',sans-serif;letter-spacing:.08em;text-transform:uppercase;font-size:.68rem;padding:12px 16px;border-radius:10px;color:#fff;transition:all .2s ease;position:relative;overflow:hidden}
+button.act::after{content:"";position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(255,255,255,.2);border-radius:50%;transform:translate(-50%,-50%);transition:width .3s ease,height .3s ease}
+button.act:active::after{width:200px;height:200px}
+button.act:hover{filter:brightness(1.15);transform:translateY(-1px)}
+button.act:disabled{opacity:.6;cursor:wait;transform:none}
 .b-red{background:linear-gradient(135deg,var(--blood),var(--red2))}
 .b-gray{background:rgba(255,255,255,.07);border:1px solid var(--card-border)}
 .b-green{background:linear-gradient(135deg,#15803d,#22c55e)}
 .b-gold{background:linear-gradient(135deg,#b45309,#f59e0b)}
+.b-purple{background:linear-gradient(135deg,#6b21a8,#a855f7)}
 
 table{width:100%;border-collapse:collapse;font-size:.92rem}
 th{text-align:left;color:var(--muted);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;padding:9px 8px;border-bottom:1px solid var(--card-border)}
 td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle}
 tr:last-child td{border-bottom:none}
+tr{transition:background .2s ease}
+tr:hover{background:rgba(239,68,68,.03)}
 .badge{font-size:.62rem;font-weight:800;letter-spacing:.1em;padding:4px 9px;border-radius:99px;text-transform:uppercase}
 .bg-ok{background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.4)}
 .bg-off{background:rgba(239,68,68,.13);color:#fca5a5;border:1px solid rgba(239,68,68,.35)}
 .bg-warn{background:rgba(250,204,21,.12);color:#fde047;border:1px solid rgba(250,204,21,.4)}
+.bg-purple{background:rgba(168,85,247,.15);color:#d8b4fe;border:1px solid rgba(168,85,247,.4)}
 .code{font-family:'Russo One',sans-serif;font-size:.74rem;letter-spacing:.05em;color:#fca5a5}
 .actions{display:flex;gap:6px;flex-wrap:wrap}
 .actions button.act{padding:8px 11px;font-size:.6rem}
 .mini-inp{width:110px;padding:8px 9px;font-size:.85rem;border-radius:8px}
 .msg{margin-top:10px;font-weight:700;font-size:.92rem;display:none}
-.msg.show{display:block}
+.msg.show{display:block;animation:slideUp .3s ease}
 .msg.ok{color:#86efac}.msg.err{color:#fca5a5}
 .hint{color:var(--muted);font-size:.82rem;margin-top:8px;line-height:1.5}
 .search-row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
 .search-row input{max-width:280px;width:100%}
 .presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.presets button{appearance:none;cursor:pointer;border:1px solid rgba(239,68,68,.35);background:rgba(239,68,68,.08);color:#fca5a5;border-radius:99px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:.72rem;padding:5px 12px;transition:.15s}
-.presets button:hover{background:rgba(239,68,68,.2)}
+.presets button{appearance:none;cursor:pointer;border:1px solid rgba(239,68,68,.35);background:rgba(239,68,68,.08);color:#fca5a5;border-radius:99px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:.72rem;padding:5px 12px;transition:all .2s ease}
+.presets button:hover{background:rgba(239,68,68,.2);transform:scale(1.05)}
 
 /* ---------- toast ---------- */
 #toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,80px);z-index:200;background:#1c0d0d;border:1px solid rgba(34,197,94,.5);color:#bbf7d0;padding:12px 22px;border-radius:13px;font-weight:700;font-size:.9rem;box-shadow:0 12px 34px rgba(0,0,0,.55);transition:.32s cubic-bezier(.22,1,.36,1);max-width:min(480px,90vw)}
@@ -97,6 +121,12 @@ tr:last-child td{border-bottom:none}
 .section{display:none}
 .section.on{display:block;animation:fadeUp .3s ease both}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ---------- scrollbar ---------- */
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--blood);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--red1)}
 
 @media(max-width:900px){
   .layout{flex-direction:column}
@@ -133,6 +163,9 @@ tr:last-child td{border-bottom:none}
       <button data-sec="keys">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 2l-2 2m-7.6 7.6a5.5 5.5 0 11-7.8 7.8 5.5 5.5 0 017.8-7.8zm0 0L15 8m-4 4l3-3m4-4l2-2m-2 2l3 3"/></svg>
         Keys VIP</button>
+      <button data-sec="sales">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Vendas</button>
       <button data-sec="users">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
         Usuários</button>
@@ -172,6 +205,7 @@ tr:last-child td{border-bottom:none}
         <h3 class="sec">Atalhos rápidos</h3>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button class="b-red act" data-go="keys">+ Criar KEY VIP</button>
+          <button class="b-purple act" data-go="sales">+ Registrar Venda</button>
           <button class="b-gray act" data-go="users">Ver usuários</button>
           <button class="b-gold act" data-go="cfg" id="goCfgQuick" style="display:none">Configurações</button>
         </div>
@@ -214,6 +248,48 @@ tr:last-child td{border-bottom:none}
         <table>
           <thead><tr><th>Código</th><th>Status</th><th>Usos</th><th>Expira</th><th>Ativada por</th><th>Ações</th></tr></thead>
           <tbody id="keysBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- VENDAS -->
+    <section class="section" id="sec-sales">
+      <div class="topbar">
+        <div><h2 class="font-display">Vendas</h2><p class="sub">Registre e acompanhe as vendas de keys VIP.</p></div>
+      </div>
+
+      <div class="stats" id="salesStatsBox" style="margin-bottom:18px"></div>
+
+      <div class="card">
+        <h3 class="sec">Nova Venda</h3>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
+          <div><label>Código da KEY</label><input class="mini-inp" id="saleKey" style="width:200px" placeholder="SENSI-XXXX-XXXX-XXXX"></div>
+          <div><label>Valor (R$)</label><input type="number" class="mini-inp" id="salePrice" step="0.01" min="0" placeholder="ex: 25.00"></div>
+          <div><label>Nome do comprador</label><input class="mini-inp" id="saleBuyer" style="width:170px" placeholder="ex: João"></div>
+          <div><label>Contato</label><input class="mini-inp" id="saleContact" style="width:170px" placeholder="ex: @joao"></div>
+          <div><label>Status</label>
+            <select class="mini-inp" id="saleStatus" style="width:auto;padding:9px 10px">
+              <option value="pago">Pago</option>
+              <option value="pendente">Pendente</option>
+            </select>
+          </div>
+          <button class="b-purple act" id="addSaleBtn">+ Registrar venda</button>
+        </div>
+        <div style="margin-top:10px">
+          <label>Observações (opcional)</label>
+          <input id="saleNotes" style="width:100%" placeholder="Ex: Venda via WhatsApp, cliente pediu 30 dias...">
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="sec">Histórico de vendas</h3>
+        <div class="search-row">
+          <input id="saleSearch" placeholder="🔎 Filtrar por comprador ou KEY...">
+          <button class="b-gray act" id="reloadSalesBtn">Recarregar</button>
+        </div>
+        <table>
+          <thead><tr><th>KEY</th><th>Comprador</th><th>Valor</th><th>Status</th><th>Vendedor</th><th>Data</th><th>Ações</th></tr></thead>
+          <tbody id="salesBody"></tbody>
         </table>
       </div>
     </section>
