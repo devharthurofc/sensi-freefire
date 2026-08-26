@@ -164,6 +164,11 @@ tr:last-child td{border-bottom:none}
       <div class="stats" id="statsBox"></div>
 
       <div class="card" style="margin-top:18px">
+        <h3 class="sec">🟢 Online agora · ativos nos últimos 5 minutos</h3>
+        <div id="onlineList"></div>
+      </div>
+
+      <div class="card" style="margin-top:18px">
         <h3 class="sec">Atalhos rápidos</h3>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button class="b-red act" data-go="keys">+ Criar KEY VIP</button>
@@ -221,10 +226,17 @@ tr:last-child td{border-bottom:none}
       <div class="card">
         <div class="search-row">
           <input id="userSearch" placeholder="🔎 Buscar jogador...">
+          <select class="mini-inp" id="userFilter" style="width:auto;padding:9px 10px">
+            <option value="">Todos</option>
+            <option value="online">🟢 Online agora</option>
+            <option value="logado">Sessão aberta</option>
+            <option value="vip">VIP</option>
+            <option value="free">Free</option>
+          </select>
           <button class="b-gray act" id="reloadUsersBtn">Recarregar</button>
         </div>
         <table>
-          <thead><tr><th>Jogador</th><th>VIP</th><th>Origem</th><th>Visto por último</th><th>Ações</th></tr></thead>
+          <thead><tr><th>Jogador</th><th>Situação</th><th>VIP</th><th>Origem</th><th>Visto por último</th><th>Ações</th></tr></thead>
           <tbody id="usersBody"></tbody>
         </table>
       </div>
@@ -236,8 +248,7 @@ tr:last-child td{border-bottom:none}
         <div><h2 class="font-display">Moderadores</h2><p class="sub">Somente o dono pode gerenciar a equipe.</p></div>
       </div>
       <div class="card">
-        <h3 class="sec">Criar moderador</h3>
-        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
+        <h3 class="sec">Criar moderador</h3>        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
           <div><label>Usuário do moderador</label><input class="mini-inp" id="modUser" style="width:170px" placeholder="ex: moderador1"></div>
           <div><label>Senha (min. 8)</label><input class="mini-inp" id="modPass" style="width:170px" type="password" placeholder="senha forte"></div>
           <button class="b-green act" id="addModBtn">+ Criar moderador</button>

@@ -81,13 +81,28 @@ async function loadDashboard() {
   const r = await api('/api/admin/dashboard');
   if (r._status !== 200) return;
   const items = [
-    ['Online agora', r.onlineUsers || 0, true], ['Usuários', r.users],
-    ['Usuários VIP', r.vipUsers],
-    ['Keys ativas', r.activeKeys], ['Keys expiradas', r.expiredKeys],
-    ['Gerações hoje', r.generationsToday]
+    ['Online agora', r.onlineCount || 0, true], ['Logados (sessão)', r.loggedNow || 0, true],
+    ['Total de usuários', r.users], ['Usuários VIP', r.vipUsers],
+    ['Keys ativas', r.activeKeys], ['Gerações hoje', r.generationsToday]
   ];
   $('statsBox').innerHTML = items.map(([l, v, hot]) =>
     '<div class="stat"><b style="' + (hot && v > 0 ? 'color:#86efac' : '') + '">' + v + '</b><span>' + l + '</span></div>').join('');
+
+  // lista de quem está online agora
+  const box = $('onlineList');
+  if (!r.onlineList || !r.onlineList.length) {
+    box.innerHTML = '<p class="hint" style="margin:0">Nenhum jogador ativo nos últimos 5 minutos.</p>';
+    return;
+  }
+  box.innerHTML = r.onlineList.map(u =>
+    '<div style="display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid rgba(255,255,255,.05)">' +
+      '<span style="width:9px;height:9px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;flex-shrink:0"></span>' +
+      '<b style="font-size:.95rem">' + esc(u.label) + '</b>' +
+      (u.isVip
+        ? '<span class="badge bg-ok">VIP</span>'
+        : '<span class="badge bg-off">Free</span>') +
+      '<span style="margin-left:auto;color:var(--muted);font-size:.78rem">visto ' + new Date(u.lastSeenAt).toLocaleTimeString('pt-BR') + '</span>' +
+    '</div>').join('');
 }
 
 /* ---------- keys ---------- */
@@ -197,26 +212,35 @@ async function loadUsers() {
 function renderUsers() {
   const tb = $('usersBody');
   const q = ($('userSearch').value || '').toLowerCase().trim();
-  const list = allUsers.filter(u => !q || (u.label || '').toLowerCase().includes(q));
+  const filtro = $('userFilter').value;
+
+  let list = allUsers.filter(u => !q || (u.label || '').toLowerCase().includes(q));
+  if (filtro === 'online') list = list.filter(u => u.online);
+  else if (filtro === 'logado') list = list.filter(u => u.logado);
+  else if (filtro === 'vip') list = list.filter(u => u.isVip);
+  else if (filtro === 'free') list = list.filter(u => !u.isVip);
 
   if (!list.length) {
-    tb.innerHTML = '<tr><td colspan="5" style="color:var(--muted)">' +
-      (q ? 'Nenhum jogador encontrado.' : 'Nenhum usuário ainda. Ele aparece aqui assim que alguém abrir o site.') + '</td></tr>';
+    tb.innerHTML = '<tr><td colspan="6" style="color:var(--muted)">Nenhum jogador encontrado para esse filtro.</td></tr>';
     return;
   }
-  const fiveMinAgo = Date.now() - 5 * 60 * 1000;
   tb.innerHTML = '';
   list.forEach(u => {
-    const online = u.lastSeenAt && new Date(u.lastSeenAt).getTime() > fiveMinAgo;
-    const seen = u.lastSeenAt
-      ? new Date(u.lastSeenAt).toLocaleString('pt-BR')
-      : '—';
+    const seen = u.lastSeenAt ? new Date(u.lastSeenAt).toLocaleString('pt-BR') : '—';
+    const situacao = u.online
+      ? '<span class="badge bg-ok">🟢 online</span>' + (u.logado ? ' <span style="color:var(--muted);font-size:.72rem">' + u.sessoes + ' sessão(ões)</span>' : '')
+      : (u.logado
+        ? '<span class="badge bg-warn">sessão aberta</span>'
+        : '<span style="color:var(--muted);font-size:.78rem">offline</span>');
+
     const tr = document.createElement('tr');
     tr.innerHTML =
-      '<td><b>' + esc(u.label || '(sem nome)') + '</b>' +
-      (online ? ' <span class="badge bg-ok" title="Ativo nos últimos 5 minutos">online</span>' : '') + '</td>' +
-      '<td>' + (u.isVip ? '<span class="badge bg-ok">VIP</span>' : '<span class="badge bg-off">Free</span>') + '</td>' +
-      '<td>' + esc(u.vipSource || '—') + '</td>' +
+      '<td><b>' + esc(u.label || '(sem nome)') + '</b></td>' +
+      '<td>' + situacao + '</td>' +
+      '<td>' + (u.isVip
+        ? '<span class="badge bg-ok">VIP · ' + esc(u.vipSource || '') + '</span>'
+        : '<span class="badge bg-off">Free</span>') + '</td>' +
+      '<td style="color:var(--muted)">' + esc(u.vipSource || '—') + '</td>' +
       '<td style="color:var(--muted)">' + seen + '</td>' +
       '<td><div class="actions">' +
         (u.isVip
@@ -233,6 +257,7 @@ function renderUsers() {
   });
 }
 $('userSearch').addEventListener('input', renderUsers);
+$('userFilter').addEventListener('change', renderUsers);
 
 /* ---------- moderadores ---------- */
 

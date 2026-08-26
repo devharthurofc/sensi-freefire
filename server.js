@@ -544,10 +544,29 @@ app.get('/api/admin/dashboard', requireAdmin, (req, res) => {
   const activeKeys = db.keys.filter(k => k.status === 'ativa' && !store.isKeyExpired(k)).length;
   const expiredKeys = db.keys.filter(k => k.status === 'expirada' || store.isKeyExpired(k)).length;
   const fiveMinAgo = Date.now() - 5 * 60 * 1000;
+
+  // quem está online agora (ativo nos últimos 5 minutos)
+  const onlineList = db.users
+    .filter(u => u.lastSeenAt && new Date(u.lastSeenAt).getTime() > fiveMinAgo)
+    .sort((a, b) => String(b.lastSeenAt).localeCompare(String(a.lastSeenAt)))
+    .slice(0, 50)
+    .map(u => ({ label: u.label || '(sem nome)', isVip: !!u.isVip, lastSeenAt: u.lastSeenAt }));
+
+  // contas com sessão válida aberta (logadas no momento)
+  const now = Date.now();
+  const loggedUserIds = new Set(
+    db.sessions
+      .filter(s => s.userId && s.expiresAt && new Date(s.expiresAt).getTime() > now)
+      .map(s => s.userId)
+  );
+
   res.json({
     users: db.users.length,
     vipUsers: db.users.filter(u => u.isVip).length,
-    onlineUsers: db.users.filter(u => u.lastSeenAt && new Date(u.lastSeenAt).getTime() > fiveMinAgo).length,
+    freeUsers: db.users.filter(u => !u.isVip).length,
+    onlineCount: onlineList.length,
+    onlineList,
+    loggedNow: loggedUserIds.size,
     activeKeys,
     expiredKeys,
     generationsToday: db.generations.filter(g => g.at.slice(0, 10) === new Date().toISOString().slice(0, 10)).length
@@ -629,8 +648,19 @@ app.delete('/api/admin/keys/:id', requireAdmin, (req, res) => {
 });
 
 app.get('/api/admin/users', requireAdmin, (req, res) => {
+  const db = store.getDb();
+  const now = Date.now();
+
+  // sessões válidas por usuário (contas logadas agora)
+  const sessoesPorUsuario = {};
+  db.sessions.forEach(s => {
+    if (s.userId && s.expiresAt && new Date(s.expiresAt).getTime() > now) {
+      sessoesPorUsuario[s.userId] = (sessoesPorUsuario[s.userId] || 0) + 1;
+    }
+  });
+
   // mais recentemente ativos primeiro: quem está logado/usando o site aparece no topo
-  const users = [...store.getDb().users]
+  const users = [...db.users]
     .sort((a, b) => String(b.lastSeenAt || b.createdAt || '').localeCompare(String(a.lastSeenAt || a.createdAt || '')))
     .map(u => ({
       id: u.id,
@@ -640,7 +670,9 @@ app.get('/api/admin/users', requireAdmin, (req, res) => {
       vipSince: u.vipSince,
       createdAt: u.createdAt,
       lastSeenAt: u.lastSeenAt,
-      deviceIdMasked: u.deviceId.slice(0, 8) + '…'
+      online: !!(u.lastSeenAt && new Date(u.lastSeenAt).getTime() > now - 5 * 60 * 1000),
+      logado: !!sessoesPorUsuario[u.id],
+      sessoes: sessoesPorUsuario[u.id] || 0
     }));
   res.json({ users });
 });

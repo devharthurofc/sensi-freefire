@@ -7,6 +7,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#080404">
+<link rel="icon" type="image/png" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SENSI PRO">
 <style>
 :root{
   --bg:#080404;
@@ -261,6 +269,9 @@ footer b{color:var(--muted)}
     </div>
   </div>
   <div class="badges">
+    <button class="chip" id="installChip" style="display:none;cursor:pointer;border-color:rgba(239,68,68,.6);color:#fecaca;background:rgba(239,68,68,.12)">
+      ⬇️ Instalar app
+    </button>
     <span class="chip"><i></i>Servidor Online</span>
     <span class="chip">Escala 200 · 2026</span>
     <span class="chip vip-on" id="vipChip" style="display:none"><i style="background:#ef4444;box-shadow:0 0 8px #ef4444"></i><em id="vipChipTxt" style="font-style:normal">VIP Ativo</em></span>

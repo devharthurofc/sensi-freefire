@@ -698,4 +698,50 @@ document.querySelectorAll(".faq-item").forEach(item => {
     window.__devices = r.devices;
     fillDeviceSelect("modelSel");
   });
+  initPWA();
 })();
+
+/* ================== PWA: offline + instalar app ================== */
+
+let deferredInstallPrompt = null;
+
+function initPWA() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    const chip = document.getElementById('installChip');
+    if (chip && !localStorage.getItem('sensipro_installed')) chip.style.display = '';
+  });
+
+  window.addEventListener('appinstalled', () => {
+    localStorage.setItem('sensipro_installed', '1');
+    document.getElementById('installChip').style.display = 'none';
+    toast('App instalado! Abra pelo ícone na sua tela inicial 📱');
+  });
+
+  const chip = document.getElementById('installChip');
+  if (chip) {
+    chip.addEventListener('click', async () => {
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      try {
+        const res = await deferredInstallPrompt.userChoice;
+        if (res && res.outcome === 'accepted') {
+          localStorage.setItem('sensipro_installed', '1');
+          chip.style.display = 'none';
+        }
+      } catch (_) {}
+      deferredInstallPrompt = null;
+    });
+  }
+
+  // já instalado nesta tela? esconde o botão
+  if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) {
+    localStorage.setItem('sensipro_installed', '1');
+    if (chip) chip.style.display = 'none';
+  }
+}
