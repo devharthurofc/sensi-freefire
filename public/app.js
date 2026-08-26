@@ -5,6 +5,7 @@
 const LS_DEVICE = 'sensipro_device_id';
 const LS_TOKEN = 'sensipro_token';
 const LS_TIER = 'sensipro_tier';
+const LS_NAME = 'sensipro_user_name';
 
 const TIER_INFO = {
   normal: {
@@ -69,11 +70,13 @@ async function api(path, opts = {}, retry = true) {
   return data;
 }
 
-async function initSession() {
+async function initSession(name) {
+  const body = { deviceId: getDeviceId() };
+  if (name) body.name = name;
   const r = await fetch('/api/session/init', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ deviceId: getDeviceId() })
+    body: JSON.stringify(body)
   });
   const data = await r.json();
   state.token = data.token;
@@ -684,14 +687,65 @@ document.querySelectorAll(".faq-item").forEach(item => {
   });
 });
 
+/* ================== modal de nome ================== */
+
+function showNameModal() {
+  document.getElementById("nameModal").classList.add("show");
+  document.getElementById("nameInput").focus();
+}
+
+function hideNameModal() {
+  document.getElementById("nameModal").classList.remove("show");
+}
+
+async function confirmName() {
+  const input = document.getElementById("nameInput");
+  const name = input.value.trim();
+  if (!name) {
+    input.focus();
+    return;
+  }
+  localStorage.setItem(LS_NAME, name);
+  hideNameModal();
+  try {
+    await initSession(name);
+    document.getElementById("userChipName").textContent = name;
+    document.getElementById("userChip").style.display = "inline-flex";
+  } catch (e) {
+    toast("Erro ao salvar nome.", true);
+  }
+}
+
+document.getElementById("nameConfirm").addEventListener("click", confirmName);
+document.getElementById("nameInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") confirmName();
+});
+
 (async function boot() {
   const saved = localStorage.getItem(LS_TIER);
   if (saved && TIER_INFO[saved]) state.tier = saved;
+
+  const savedName = localStorage.getItem(LS_NAME);
+
   try {
-    await initSession();
+    await initSession(savedName || undefined);
   } catch (e) {
     toast("Falha ao conectar no servidor.", true);
   }
+
+  if (savedName) {
+    hideNameModal();
+    document.getElementById("userChipName").textContent = savedName;
+    document.getElementById("userChip").style.display = "inline-flex";
+  } else if (state.user.label && !state.user.label.startsWith("Jogador #")) {
+    hideNameModal();
+    localStorage.setItem(LS_NAME, state.user.label);
+    document.getElementById("userChipName").textContent = state.user.label;
+    document.getElementById("userChip").style.display = "inline-flex";
+  } else {
+    showNameModal();
+  }
+
   switchTier(state.tier);
   api("/api/devices/names").then(r => {
     if (!r.devices) return;

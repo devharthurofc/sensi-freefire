@@ -52,6 +52,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;ma
 .badges{display:flex;gap:8px;flex-wrap:wrap}
 .chip{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:999px;border:1px solid var(--card-border);background:var(--card);color:var(--muted);display:flex;align-items:center;gap:6px}
 .chip i{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);display:inline-block}
+.chip.offline i{background:#ef4444;box-shadow:0 0 8px #ef4444}
 .chip.vip-on{border-color:rgba(239,68,68,.6);color:#fecaca;background:rgba(239,68,68,.12)}
 
 /* ---------- seletor de tier ---------- */
@@ -272,6 +273,7 @@ footer b{color:var(--muted)}
     <button class="chip" id="installChip" style="display:none;cursor:pointer;border-color:rgba(239,68,68,.6);color:#fecaca;background:rgba(239,68,68,.12)">
       ⬇️ Instalar app
     </button>
+    <span class="chip" id="userChip" style="display:none"><i id="userStatusDot"></i><span id="userChipName"></span></span>
     <span class="chip"><i></i>Servidor Online</span>
     <span class="chip">Escala 200 · 2026</span>
     <span class="chip vip-on" id="vipChip" style="display:none"><i style="background:#ef4444;box-shadow:0 0 8px #ef4444"></i><em id="vipChipTxt" style="font-style:normal">VIP Ativo</em></span>
@@ -533,6 +535,23 @@ footer b{color:var(--muted)}
 </div>
 
 <div class="toast" id="toast"><span id="toastMsg">Copiado!</span></div>
+
+<!-- MODAL NOME DO USUÁRIO -->
+<div class="modal-back show" id="nameModal">
+  <div class="modal">
+    <div class="lock-icon" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);box-shadow:0 0 40px rgba(59,130,246,.5)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <h3>Bem-vindo ao SENSI PRO!</h3>
+    <p>Digite seu nome para começar. Ele ficará salvo nas suas próximas visitas.</p>
+    <div style="margin:18px 0 0">
+      <input class="inp" id="nameInput" placeholder="Seu nome..." maxlength="40" autocomplete="off" style="text-align:center;font-size:1.05rem">
+    </div>
+    <div class="modal-actions" style="margin-top:18px">
+      <button class="btn btn-red" id="nameConfirm">COMEÇAR</button>
+    </div>
+  </div>
+</div>
 
 <script src="/particles.js"></script>
 <script src="/app.js"></script>

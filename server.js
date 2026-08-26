@@ -375,12 +375,27 @@ app.post(
       });
     }
 
+    const incomingName = cleanStr(
+      req.body &&
+      req.body.name,
+      40
+    );
+
     let user =
       store.findUserByDevice(deviceId);
 
     if (!user) {
       user =
         store.createUser(deviceId);
+    }
+
+    if (
+      incomingName &&
+      (!user.label ||
+        user.label.startsWith('Jogador #'))
+    ) {
+      user.label = incomingName;
+      store.persistNow();
     }
 
     refreshUserVip(user);
@@ -425,6 +440,39 @@ app.get(
         isVip: !!user.isVip,
         vipExpiresAt:
           vipExpiresAtOf(user)
+      }
+    });
+  }
+);
+
+app.put(
+  '/api/me/name',
+  requireUser,
+  (req, res) => {
+    const name = cleanStr(
+      req.body &&
+      req.body.name,
+      40
+    );
+
+    if (!name) {
+      return res.status(400).json({
+        error: 'bad_request',
+        message:
+          'Informe um nome válido.'
+      });
+    }
+
+    req.user.label = name;
+
+    store.persistNow();
+
+    res.json({
+      ok: true,
+      user: {
+        id: req.user.id,
+        label: req.user.label,
+        isVip: !!req.user.isVip
       }
     });
   }

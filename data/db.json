@@ -56,6 +56,17 @@
       "createdAt": "2026-08-26T14:04:17.540Z",
       "vipSource": null,
       "lastSeenAt": "2026-08-26T14:04:17.739Z"
+    },
+    {
+      "id": "usr_b673199148f864fb95",
+      "isVip": false,
+      "label": "Jogador #0005",
+      "deviceId": "d7901a69963d5ee9257c62ec286effe1",
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T14:27:53.919Z",
+      "vipSource": null,
+      "lastSeenAt": "2026-08-26T14:27:53.919Z"
     }
   ],
   "keys": [
@@ -63,10 +74,22 @@
       "id": "key_682f0e4c9166c952e7",
       "code": "SENSI-UNAS-XHCY-9KHZ",
       "uses": 0,
-      "status": "ativa",
+      "status": "inativa",
       "maxUses": 3,
       "createdAt": "2026-08-26T14:10:01.639Z",
       "expiresAt": "2026-09-02T14:10:01.639Z",
+      "activatedAt": null,
+      "activatedByLabel": null,
+      "activatedByUserId": null
+    },
+    {
+      "id": "key_73e138c22b7ef6301b",
+      "code": "SENSI-ATHZ-KP5F-6X4B",
+      "uses": 0,
+      "status": "inativa",
+      "maxUses": 1,
+      "createdAt": "2026-08-26T14:28:31.919Z",
+      "expiresAt": "2026-11-24T14:28:31.919Z",
       "activatedAt": null,
       "activatedByLabel": null,
       "activatedByUserId": null
@@ -147,6 +170,28 @@
       "isAdmin": true,
       "createdAt": "2026-08-26T14:10:01.534Z",
       "expiresAt": "2026-08-27T02:10:01.534Z"
+    },
+    {
+      "token": "0555ffa65fc8122b660fae05623cbaa15e4c57ac5d58ab287c838c8f6b51feb2",
+      "userId": "usr_b673199148f864fb95",
+      "isAdmin": false,
+      "createdAt": "2026-08-26T14:27:53.919Z",
+      "expiresAt": "2026-09-25T14:27:53.919Z"
+    },
+    {
+      "token": "fcf676fd4ccf771da45c5aca31078be8357e7af393233c26a51b35858a85b51a",
+      "userId": null,
+      "adminId": "adm_11b249b977fc3a7171",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T14:27:57.894Z",
+      "expiresAt": "2026-08-27T02:27:57.894Z"
+    },
+    {
+      "token": "5114bf3eaa63312ffb8f82dc16060f663024243ccbf6f0fedfc67b129d72ccc3",
+      "userId": "usr_b673199148f864fb95",
+      "isAdmin": false,
+      "createdAt": "2026-08-26T14:36:36.569Z",
+      "expiresAt": "2026-09-25T14:36:36.569Z"
     }
   ],
   "generations": [
@@ -240,6 +285,18 @@
       "ip": "::1",
       "action": "key_created",
       "detail": "SENSI-UNAS…"
+    },
+    {
+      "at": "2026-08-26T14:27:57.894Z",
+      "ip": "10.31.99.14",
+      "action": "login_ok",
+      "detail": "owner: admin"
+    },
+    {
+      "at": "2026-08-26T14:28:31.920Z",
+      "ip": "10.26.131.47",
+      "action": "key_created",
+      "detail": "SENSI-ATHZ…"
     }
   ],
   "settings": {
