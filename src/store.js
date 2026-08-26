@@ -41,20 +41,36 @@ let saveTimer = null;
 /* ---------- MongoDB (opcional) ---------- */
 async function connectMongo() {
   const uri = process.env.MONGODB_URI;
+
   if (!uri) return;
+
   try {
     const { MongoClient } = require('mongodb');
-    mongoClient = new MongoClient(uri, { serverSelectionTimeoutMS: 10000 });
+
+    mongoClient = new MongoClient(uri, {
+      serverSelectionTimeoutMS: 10000
+    });
+
     await mongoClient.connect();
-    mongoCol = mongoClient.db('key_system').collection('app_data');
-    console.log('[store] Conectado ao MongoDB Atlas — dados persistentes ✔');
+
+    mongoCol = mongoClient
+      .db('svg')
+      .collection('svg');
+
+    console.log(
+      '[store] Conectado ao MongoDB Atlas — dados persistentes ✔'
+    );
+
   } catch (e) {
-    console.error('[store] FALHA ao conectar no MongoDB:', e.message);
+    console.error(
+      '[store] FALHA ao conectar no MongoDB:',
+      e.message
+    );
+
     mongoClient = null;
     mongoCol = null;
   }
 }
-
 async function loadFromMongo() {
   const doc = await mongoCol.findOne({ _id: 'db' });
   if (doc && doc.data) return doc.data;
@@ -132,9 +148,10 @@ function load() {
 
 function persistNow() {
   if (mongoCol) {
-    saveToMongoNow();
-    return;
+    console.log('[store] Salvando dados no MongoDB...');
+    return saveToMongoNow();
   }
+
   const tmp = DB_FILE + '.tmp';
   fs.writeFileSync(tmp, JSON.stringify(db, null, 2), 'utf8');
   fs.renameSync(tmp, DB_FILE);
