@@ -46,7 +46,7 @@ async function connectMongo() {
     const { MongoClient } = require('mongodb');
     mongoClient = new MongoClient(uri, { serverSelectionTimeoutMS: 10000 });
     await mongoClient.connect();
-    mongoCol = mongoClient.db('sensipro').collection('db');
+    mongoCol = mongoClient.db('key_system').collection('app_data');
     console.log('[store] Conectado ao MongoDB Atlas — dados persistentes ✔');
   } catch (e) {
     console.error('[store] FALHA ao conectar no MongoDB:', e.message);
