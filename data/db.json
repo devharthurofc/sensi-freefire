@@ -5,56 +5,56 @@
   "admins": [
     {
       "id": "adm_11b249b977fc3a7171",
-      "username": "admin",
-      "passwordHash": "574684fa9529218339905783fb542c08:f052064d812820d24b4927c3ff3212ab7385943ab92c4dd0da094aee7f6e9b1fc154003445925a84aa84d3af4f3583d4d48f956f527bc7eaaf237a239c1323b3",
       "role": "owner",
+      "username": "admin",
       "createdAt": "2026-08-25T22:26:43.106Z",
-      "mustChange": true
+      "mustChange": true,
+      "passwordHash": "574684fa9529218339905783fb542c08:f052064d812820d24b4927c3ff3212ab7385943ab92c4dd0da094aee7f6e9b1fc154003445925a84aa84d3af4f3583d4d48f956f527bc7eaaf237a239c1323b3"
     }
   ],
   "users": [
     {
       "id": "usr_c40fde66fee98e2249",
-      "deviceId": "testdevice1234",
-      "label": "Jogador #0001",
       "isVip": false,
-      "vipSource": null,
+      "label": "Jogador #0001",
+      "deviceId": "testdevice1234",
       "vipKeyId": null,
       "vipSince": null,
       "createdAt": "2026-08-25T22:26:45.348Z",
+      "vipSource": null,
       "lastSeenAt": "2026-08-25T22:26:45.661Z"
     },
     {
       "id": "usr_ed6b15b9dcb954e67c",
-      "deviceId": "testdevice5678",
-      "label": "Jogador #0002",
       "isVip": false,
-      "vipSource": null,
+      "label": "Jogador #0002",
+      "deviceId": "testdevice5678",
       "vipKeyId": null,
       "vipSince": null,
       "createdAt": "2026-08-25T22:30:39.243Z",
+      "vipSource": null,
       "lastSeenAt": "2026-08-25T22:30:39.243Z"
     },
     {
       "id": "usr_eb9f18b71a9f544e3e",
-      "deviceId": "persisttest1234",
-      "label": "Jogador #0003",
       "isVip": false,
-      "vipSource": null,
+      "label": "Jogador #0003",
+      "deviceId": "persisttest1234",
       "vipKeyId": null,
       "vipSince": null,
       "createdAt": "2026-08-26T01:29:53.938Z",
+      "vipSource": null,
       "lastSeenAt": "2026-08-26T01:29:53.938Z"
     },
     {
       "id": "usr_827773347d5c0ab50d",
-      "deviceId": "testuser9999",
-      "label": "Jogador #0004",
       "isVip": false,
-      "vipSource": null,
+      "label": "Jogador #0004",
+      "deviceId": "testuser9999",
       "vipKeyId": null,
       "vipSince": null,
       "createdAt": "2026-08-26T14:04:17.540Z",
+      "vipSource": null,
       "lastSeenAt": "2026-08-26T14:04:17.739Z"
     }
   ],
@@ -62,14 +62,14 @@
     {
       "id": "key_682f0e4c9166c952e7",
       "code": "SENSI-UNAS-XHCY-9KHZ",
+      "uses": 0,
       "status": "ativa",
+      "maxUses": 3,
       "createdAt": "2026-08-26T14:10:01.639Z",
       "expiresAt": "2026-09-02T14:10:01.639Z",
-      "maxUses": 3,
-      "uses": 0,
-      "activatedByUserId": null,
+      "activatedAt": null,
       "activatedByLabel": null,
-      "activatedAt": null
+      "activatedByUserId": null
     }
   ],
   "sessions": [
@@ -151,55 +151,55 @@
   ],
   "generations": [
     {
-      "id": "gen_080ddd8e96da1aaa2b",
       "at": "2026-08-25T22:26:45.649Z",
-      "userId": "usr_c40fde66fee98e2249",
+      "id": "gen_080ddd8e96da1aaa2b",
+      "dpi": 520,
       "mode": "normal",
       "inputs": {
-        "tier": "normal",
-        "deviceModel": "Redmi Note 13",
-        "refreshHz": "120",
+        "aim": "equilibrada",
         "fps": "60",
-        "style": "eq",
+        "tier": "normal",
         "level": "intermediario",
-        "aim": "equilibrada"
+        "style": "eq",
+        "refreshHz": "120",
+        "deviceModel": "Redmi Note 13"
       },
+      "userId": "usr_c40fde66fee98e2249",
       "values": {
         "geral": 171,
-        "redDot": 163,
         "mira2x": 158,
         "mira4x": 146,
+        "redDot": 163,
         "miraAwm": 121,
         "olhadinha": 113
       },
-      "dpi": 520,
-      "fireButton": 63,
       "deviceName": "Redmi Note 13",
+      "fireButton": 63,
       "knownDevice": true
     },
     {
-      "id": "gen_e79cebd01903bb2ae1",
       "at": "2026-08-26T14:04:17.740Z",
-      "userId": "usr_827773347d5c0ab50d",
+      "id": "gen_e79cebd01903bb2ae1",
+      "dpi": 483,
       "mode": "normal",
       "inputs": {
+        "aim": "equilibrada",
         "tier": "normal",
-        "deviceModel": "Samsung Galaxy A55",
-        "style": "eq",
         "level": "intermediario",
-        "aim": "equilibrada"
+        "style": "eq",
+        "deviceModel": "Samsung Galaxy A55"
       },
+      "userId": "usr_827773347d5c0ab50d",
       "values": {
         "geral": 165,
-        "redDot": 161,
         "mira2x": 154,
         "mira4x": 142,
+        "redDot": 161,
         "miraAwm": 121,
         "olhadinha": 110
       },
-      "dpi": 483,
-      "fireButton": 61,
       "deviceName": "Samsung Galaxy A55",
+      "fireButton": 61,
       "knownDevice": true
     }
   ],
@@ -207,44 +207,44 @@
   "auditLog": [
     {
       "at": "2026-08-26T14:05:03.631Z",
+      "ip": "::1",
       "action": "login_ok",
-      "detail": "owner: admin",
-      "ip": "::1"
+      "detail": "owner: admin"
     },
     {
       "at": "2026-08-26T14:08:55.055Z",
+      "ip": "::1",
       "action": "login_ok",
-      "detail": "owner: admin",
-      "ip": "::1"
+      "detail": "owner: admin"
     },
     {
       "at": "2026-08-26T14:09:13.360Z",
+      "ip": "::1",
       "action": "login_ok",
-      "detail": "owner: admin",
-      "ip": "::1"
+      "detail": "owner: admin"
     },
     {
       "at": "2026-08-26T14:09:40.344Z",
+      "ip": "::1",
       "action": "login_ok",
-      "detail": "owner: admin",
-      "ip": "::1"
+      "detail": "owner: admin"
     },
     {
       "at": "2026-08-26T14:10:01.534Z",
+      "ip": "::1",
       "action": "login_ok",
-      "detail": "owner: admin",
-      "ip": "::1"
+      "detail": "owner: admin"
     },
     {
       "at": "2026-08-26T14:10:01.640Z",
+      "ip": "::1",
       "action": "key_created",
-      "detail": "SENSI-UNAS…",
-      "ip": "::1"
+      "detail": "SENSI-UNAS…"
     }
   ],
   "settings": {
     "contactLink": "",
-    "freeDailyLimit": 3,
-    "adminPanelPath": "/painel-69588985"
+    "adminPanelPath": "/painel-69588985",
+    "freeDailyLimit": 3
   }
 }
