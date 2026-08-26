@@ -12,6 +12,7 @@ async function api(path, opts = {}) {
   const res = await fetch(path, {
     method: opts.method || (opts.body ? 'POST' : 'GET'),
     headers: Object.assign({'Content-Type':'application/json'}),
+    credentials: 'same-origin',
     body: opts.body ? JSON.stringify(opts.body) : undefined
   });
   let data = {};
@@ -50,9 +51,20 @@ function showSection(sec) {
   document.querySelectorAll('.section').forEach(s => s.classList.toggle('on', s.id === 'sec-' + sec));
 }
 
+let bootRetries = 0;
 async function boot() {
   const me = await api('/api/admin/me');
-  if (me._status !== 200) { location.reload(); return; }
+  if (me._status !== 200) {
+    bootRetries++;
+    if (bootRetries >= 3) {
+      toast('Sessão expirada. Redirecionando para login...', true);
+      setTimeout(() => { location.reload(); }, 1500);
+    } else {
+      setTimeout(() => boot(), 500);
+    }
+    return;
+  }
+  bootRetries = 0;
   myRole = me.admin.role || 'mod';
   const cargo = myRole === 'owner' ? '<span class="badge-role bg-owner">DONO</span>' : '<span class="badge-role bg-mod">MODERADOR</span>';
   $('admWho').innerHTML = '<b>' + esc(me.admin.username) + '</b><br>' + cargo +
@@ -64,10 +76,26 @@ async function boot() {
     loadSettings();
   }
   refreshAll();
-  setInterval(refreshAll, 30000);
+  startAutoRefresh();
+}
+
+async function safeApi(path, opts) {
+  const r = await api(path, opts);
+  if (r._status === 401 || r._status === 403) {
+    toast('Sessão expirada. Recarregando...', true);
+    setTimeout(() => location.reload(), 1500);
+    return null;
+  }
+  return r;
 }
 
 function refreshAll(){ loadDashboard(); loadKeys(); loadUsers(); loadSales(); }
+
+let refreshTimer = null;
+function startAutoRefresh() {
+  if (refreshTimer) clearInterval(refreshTimer);
+  refreshTimer = setInterval(refreshAll, 30000);
+}
 
 $('logoutBtn').addEventListener('click', async () => {
   await api('/api/admin/logout', { method: 'POST' });
@@ -81,11 +109,12 @@ $('reloadSalesBtn').addEventListener('click', loadSales);
 /* ---------- dashboard ---------- */
 async function loadDashboard() {
   const r = await api('/api/admin/dashboard');
+  if (r._status === 401 || r._status === 403) return;
   if (r._status !== 200) return;
 
   const salesStats = await api('/api/admin/sales/stats');
-  const revenue = salesStats._status === 200 ? salesStats.totalRevenue : 0;
-  const salesCount = salesStats._status === 200 ? salesStats.totalSales : 0;
+  const revenue = (salesStats && salesStats._status === 200) ? salesStats.totalRevenue : 0;
+  const salesCount = (salesStats && salesStats._status === 200) ? salesStats.totalSales : 0;
 
   const items = [
     ['Online agora', r.onlineCount || 0, true], ['Logados (sessão)', r.loggedNow || 0, true],
