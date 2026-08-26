@@ -11,9 +11,9 @@
     "node": ">=18"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.112.4",
     "dotenv": "^17.4.2",
     "express": "^4.19.2",
-    "mongodb": "^7.6.0",
-    "mongoose": "^9.9.4"
+    "postgres": "^3.4.9"
   }
 }
