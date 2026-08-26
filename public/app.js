@@ -690,40 +690,51 @@ document.querySelectorAll(".faq-item").forEach(item => {
 /* ================== modal de nome ================== */
 
 function showNameModal() {
-  document.getElementById("nameModal").classList.add("show");
-  document.getElementById("nameInput").focus();
+  var m = document.getElementById("nameModal");
+  if (m) m.classList.add("show");
+  var inp = document.getElementById("nameInput");
+  if (inp) setTimeout(function() { inp.focus(); }, 100);
 }
 
 function hideNameModal() {
-  document.getElementById("nameModal").classList.remove("show");
+  var m = document.getElementById("nameModal");
+  if (m) m.classList.remove("show");
 }
 
-async function confirmName() {
-  const input = document.getElementById("nameInput");
-  const name = input.value.trim();
+function confirmName() {
+  var input = document.getElementById("nameInput");
+  if (!input) return;
+  var name = input.value.trim();
   if (!name) {
     input.focus();
     return;
   }
   localStorage.setItem(LS_NAME, name);
-  document.getElementById("userChipName").textContent = name;
-  document.getElementById("userChip").style.display = "inline-flex";
+  var chipName = document.getElementById("userChipName");
+  var chip = document.getElementById("userChip");
+  if (chipName) chipName.textContent = name;
+  if (chip) chip.style.display = "inline-flex";
   hideNameModal();
-  try {
-    await api("/api/me/name", { method: "PUT", body: { name } });
-  } catch (e) {}
+  api("/api/me/name", { method: "PUT", body: { name: name } }).catch(function() {});
 }
 
-document.getElementById("nameConfirm").addEventListener("click", confirmName);
-document.getElementById("nameInput").addEventListener("keydown", e => {
-  if (e.key === "Enter") confirmName();
+document.getElementById("nameConfirm").addEventListener("click", function(e) {
+  e.preventDefault();
+  confirmName();
+});
+
+document.getElementById("nameInput").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    confirmName();
+  }
 });
 
 (async function boot() {
-  const saved = localStorage.getItem(LS_TIER);
+  var saved = localStorage.getItem(LS_TIER);
   if (saved && TIER_INFO[saved]) state.tier = saved;
 
-  const savedName = localStorage.getItem(LS_NAME);
+  var savedName = localStorage.getItem(LS_NAME);
 
   try {
     await initSession(savedName || undefined);
@@ -733,19 +744,23 @@ document.getElementById("nameInput").addEventListener("keydown", e => {
 
   if (savedName) {
     hideNameModal();
-    document.getElementById("userChipName").textContent = savedName;
-    document.getElementById("userChip").style.display = "inline-flex";
-  } else if (state.user && state.user.label && !state.user.label.startsWith("Jogador #")) {
+    var cn = document.getElementById("userChipName");
+    var cc = document.getElementById("userChip");
+    if (cn) cn.textContent = savedName;
+    if (cc) cc.style.display = "inline-flex";
+  } else if (state.user && state.user.label && state.user.label.indexOf("Jogador #") !== 0) {
     hideNameModal();
     localStorage.setItem(LS_NAME, state.user.label);
-    document.getElementById("userChipName").textContent = state.user.label;
-    document.getElementById("userChip").style.display = "inline-flex";
+    var cn2 = document.getElementById("userChipName");
+    var cc2 = document.getElementById("userChip");
+    if (cn2) cn2.textContent = state.user.label;
+    if (cc2) cc2.style.display = "inline-flex";
   } else {
     showNameModal();
   }
 
   switchTier(state.tier);
-  api("/api/devices/names").then(r => {
+  api("/api/devices/names").then(function(r) {
     if (!r.devices) return;
     window.__devices = r.devices;
     fillDeviceSelect("modelSel");

@@ -537,7 +537,7 @@ footer b{color:var(--muted)}
 <div class="toast" id="toast"><span id="toastMsg">Copiado!</span></div>
 
 <!-- MODAL NOME DO USUÁRIO -->
-<div class="modal-back show" id="nameModal">
+<div class="modal-back" id="nameModal">
   <div class="modal">
     <div class="lock-icon" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);box-shadow:0 0 40px rgba(59,130,246,.5)">
       <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -547,8 +547,8 @@ footer b{color:var(--muted)}
     <div style="margin:18px 0 0">
       <input class="inp" id="nameInput" placeholder="Seu nome..." maxlength="40" autocomplete="off" style="text-align:center;font-size:1.05rem">
     </div>
-    <div class="modal-actions" style="margin-top:18px">
-      <button class="btn btn-red" id="nameConfirm">COMEÇAR</button>
+    <div style="margin-top:18px;text-align:center">
+      <button class="btn btn-red" onclick="confirmName()" id="nameConfirm">COMEÇAR</button>
     </div>
   </div>
 </div>
