@@ -1,204 +1,211 @@
 {
   "meta": {
-    "createdAt": "2026-08-25T22:26:43.026Z"
+    "createdAt": "2026-08-26T15:19:18.057Z"
   },
   "admins": [
     {
-      "id": "adm_11b249b977fc3a7171",
-      "role": "owner",
+      "id": "adm_e99cb1994501ae197d",
       "username": "admin",
-      "createdAt": "2026-08-25T22:26:43.106Z",
-      "mustChange": true,
-      "passwordHash": "574684fa9529218339905783fb542c08:f052064d812820d24b4927c3ff3212ab7385943ab92c4dd0da094aee7f6e9b1fc154003445925a84aa84d3af4f3583d4d48f956f527bc7eaaf237a239c1323b3"
+      "passwordHash": "47728e02561d96bb4ebc013f74a8629b:6643463acf84f321c5e335abdb5d16269ff2f10c10bb362069a6d0d52735e09a98a35801554c5ea277ef6bed357ce3c2b7a4fc63cdd2ddada306a0586d948f3b",
+      "role": "owner",
+      "createdAt": "2026-08-26T15:19:18.810Z",
+      "mustChange": true
     }
   ],
   "users": [
     {
       "id": "usr_c40fde66fee98e2249",
-      "isVip": false,
-      "label": "Jogador #0001",
       "deviceId": "testdevice1234",
+      "label": "Jogador #0001",
+      "isVip": false,
+      "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-25T22:26:45.348Z",
-      "vipSource": null,
-      "lastSeenAt": "2026-08-25T22:26:45.661Z"
+      "createdAt": "2026-08-25T22:26:45.348+00:00",
+      "lastSeenAt": "2026-08-25T22:26:45.661+00:00"
     },
     {
       "id": "usr_ed6b15b9dcb954e67c",
-      "isVip": false,
-      "label": "Jogador #0002",
       "deviceId": "testdevice5678",
+      "label": "Jogador #0002",
+      "isVip": false,
+      "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-25T22:30:39.243Z",
-      "vipSource": null,
-      "lastSeenAt": "2026-08-25T22:30:39.243Z"
+      "createdAt": "2026-08-25T22:30:39.243+00:00",
+      "lastSeenAt": "2026-08-25T22:30:39.243+00:00"
     },
     {
       "id": "usr_eb9f18b71a9f544e3e",
-      "isVip": false,
-      "label": "Jogador #0003",
       "deviceId": "persisttest1234",
+      "label": "Jogador #0003",
+      "isVip": false,
+      "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-26T01:29:53.938Z",
-      "vipSource": null,
-      "lastSeenAt": "2026-08-26T01:29:53.938Z"
+      "createdAt": "2026-08-26T01:29:53.938+00:00",
+      "lastSeenAt": "2026-08-26T01:29:53.938+00:00"
     },
     {
       "id": "usr_827773347d5c0ab50d",
-      "isVip": false,
-      "label": "Jogador #0004",
       "deviceId": "testuser9999",
+      "label": "Jogador #0004",
+      "isVip": false,
+      "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-26T14:04:17.540Z",
-      "vipSource": null,
-      "lastSeenAt": "2026-08-26T14:04:17.739Z"
+      "createdAt": "2026-08-26T14:04:17.54+00:00",
+      "lastSeenAt": "2026-08-26T14:04:17.739+00:00"
     },
     {
       "id": "usr_b673199148f864fb95",
-      "isVip": false,
-      "label": "Jogador #0005",
       "deviceId": "d7901a69963d5ee9257c62ec286effe1",
+      "label": "Jogador #0005",
+      "isVip": false,
+      "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-26T14:27:53.919Z",
-      "vipSource": null,
-      "lastSeenAt": "2026-08-26T14:27:53.919Z"
+      "createdAt": "2026-08-26T14:27:53.919+00:00",
+      "lastSeenAt": "2026-08-26T14:27:53.919+00:00"
     }
   ],
   "keys": [
     {
       "id": "key_682f0e4c9166c952e7",
       "code": "SENSI-UNAS-XHCY-9KHZ",
-      "uses": 0,
       "status": "inativa",
+      "createdAt": "2026-08-26T14:10:01.639+00:00",
+      "expiresAt": "2026-09-02T14:10:01.639+00:00",
       "maxUses": 3,
-      "createdAt": "2026-08-26T14:10:01.639Z",
-      "expiresAt": "2026-09-02T14:10:01.639Z",
-      "activatedAt": null,
+      "uses": 0,
+      "activatedByUserId": null,
       "activatedByLabel": null,
-      "activatedByUserId": null
+      "activatedAt": null
     },
     {
       "id": "key_73e138c22b7ef6301b",
       "code": "SENSI-ATHZ-KP5F-6X4B",
-      "uses": 0,
       "status": "inativa",
+      "createdAt": "2026-08-26T14:28:31.919+00:00",
+      "expiresAt": "2026-11-24T14:28:31.919+00:00",
       "maxUses": 1,
-      "createdAt": "2026-08-26T14:28:31.919Z",
-      "expiresAt": "2026-11-24T14:28:31.919Z",
-      "activatedAt": null,
+      "uses": 0,
+      "activatedByUserId": null,
       "activatedByLabel": null,
-      "activatedByUserId": null
+      "activatedAt": null
     }
   ],
   "sessions": [
     {
       "token": "b981651fed33476887cf9cdfeba08653a7bc3227bbf806b62a113964c7817231",
       "userId": "usr_c40fde66fee98e2249",
+      "adminId": null,
       "isAdmin": false,
-      "createdAt": "2026-08-25T22:26:45.348Z",
-      "expiresAt": "2026-09-24T22:26:45.348Z"
+      "createdAt": "2026-08-25T22:26:45.348+00:00",
+      "expiresAt": "2026-09-24T22:26:45.348+00:00"
     },
     {
       "token": "3db2dbaf8f40d2b273115c217183078f3320391d55ed79ed9365277b90e86e22",
       "userId": "usr_ed6b15b9dcb954e67c",
+      "adminId": null,
       "isAdmin": false,
-      "createdAt": "2026-08-25T22:30:39.244Z",
-      "expiresAt": "2026-09-24T22:30:39.244Z"
+      "createdAt": "2026-08-25T22:30:39.244+00:00",
+      "expiresAt": "2026-09-24T22:30:39.244+00:00"
     },
     {
       "token": "8edc4c2dc9ffdda507615e7c5ecfd942a2993a3b8f09cd7f0b69dbaaaa29552a",
       "userId": "usr_eb9f18b71a9f544e3e",
+      "adminId": null,
       "isAdmin": false,
-      "createdAt": "2026-08-26T01:29:53.938Z",
-      "expiresAt": "2026-09-25T01:29:53.938Z"
+      "createdAt": "2026-08-26T01:29:53.938+00:00",
+      "expiresAt": "2026-09-25T01:29:53.938+00:00"
     },
     {
       "token": "c878b2ee8b823568aea1dde071b8ca77b797adf8b115223132d7d2f1fff807ef",
       "userId": "usr_c40fde66fee98e2249",
+      "adminId": null,
       "isAdmin": false,
-      "createdAt": "2026-08-26T13:56:49.643Z",
-      "expiresAt": "2026-09-25T13:56:49.643Z"
+      "createdAt": "2026-08-26T13:56:49.643+00:00",
+      "expiresAt": "2026-09-25T13:56:49.643+00:00"
     },
     {
       "token": "3081c13902fa0281e6f20ca61f36a7b81d4774b208a54cb3125a02bc3e78dd46",
       "userId": "usr_827773347d5c0ab50d",
+      "adminId": null,
       "isAdmin": false,
-      "createdAt": "2026-08-26T14:04:17.541Z",
-      "expiresAt": "2026-09-25T14:04:17.541Z"
+      "createdAt": "2026-08-26T14:04:17.541+00:00",
+      "expiresAt": "2026-09-25T14:04:17.541+00:00"
     },
     {
       "token": "c43b3d1496d7e1d99ae7171286ecc44294a2b008f74243c9900313078eca4551",
       "userId": null,
       "adminId": "adm_11b249b977fc3a7171",
       "isAdmin": true,
-      "createdAt": "2026-08-26T14:05:03.631Z",
-      "expiresAt": "2026-08-27T02:05:03.631Z"
+      "createdAt": "2026-08-26T14:05:03.631+00:00",
+      "expiresAt": "2026-08-27T02:05:03.631+00:00"
     },
     {
       "token": "e670e6b7440a3efc395bdf22c383ebd02a0474498f634ff5e2f47a7d5fb8d40a",
       "userId": null,
       "adminId": "adm_11b249b977fc3a7171",
       "isAdmin": true,
-      "createdAt": "2026-08-26T14:08:55.055Z",
-      "expiresAt": "2026-08-27T02:08:55.055Z"
+      "createdAt": "2026-08-26T14:08:55.055+00:00",
+      "expiresAt": "2026-08-27T02:08:55.055+00:00"
     },
     {
       "token": "445e30aa9cb96b338b7ec0836f03b4d7efd8059b5eb66b68603c881b72d461c2",
       "userId": null,
       "adminId": "adm_11b249b977fc3a7171",
       "isAdmin": true,
-      "createdAt": "2026-08-26T14:09:13.360Z",
-      "expiresAt": "2026-08-27T02:09:13.360Z"
+      "createdAt": "2026-08-26T14:09:13.36+00:00",
+      "expiresAt": "2026-08-27T02:09:13.36+00:00"
     },
     {
       "token": "d48da3dc138d603a73080056e6184927800621b591af8df7ee44a93aba7d6475",
       "userId": null,
       "adminId": "adm_11b249b977fc3a7171",
       "isAdmin": true,
-      "createdAt": "2026-08-26T14:09:40.344Z",
-      "expiresAt": "2026-08-27T02:09:40.344Z"
+      "createdAt": "2026-08-26T14:09:40.344+00:00",
+      "expiresAt": "2026-08-27T02:09:40.344+00:00"
     },
     {
       "token": "6138a04597a2b99a08e301454e3d1269a051acd0f113b9b402773f1b4317fcd0",
       "userId": null,
       "adminId": "adm_11b249b977fc3a7171",
       "isAdmin": true,
-      "createdAt": "2026-08-26T14:10:01.534Z",
-      "expiresAt": "2026-08-27T02:10:01.534Z"
+      "createdAt": "2026-08-26T14:10:01.534+00:00",
+      "expiresAt": "2026-08-27T02:10:01.534+00:00"
     },
     {
       "token": "0555ffa65fc8122b660fae05623cbaa15e4c57ac5d58ab287c838c8f6b51feb2",
       "userId": "usr_b673199148f864fb95",
+      "adminId": null,
       "isAdmin": false,
-      "createdAt": "2026-08-26T14:27:53.919Z",
-      "expiresAt": "2026-09-25T14:27:53.919Z"
+      "createdAt": "2026-08-26T14:27:53.919+00:00",
+      "expiresAt": "2026-09-25T14:27:53.919+00:00"
     },
     {
       "token": "fcf676fd4ccf771da45c5aca31078be8357e7af393233c26a51b35858a85b51a",
       "userId": null,
       "adminId": "adm_11b249b977fc3a7171",
       "isAdmin": true,
-      "createdAt": "2026-08-26T14:27:57.894Z",
-      "expiresAt": "2026-08-27T02:27:57.894Z"
+      "createdAt": "2026-08-26T14:27:57.894+00:00",
+      "expiresAt": "2026-08-27T02:27:57.894+00:00"
     },
     {
       "token": "5114bf3eaa63312ffb8f82dc16060f663024243ccbf6f0fedfc67b129d72ccc3",
       "userId": "usr_b673199148f864fb95",
+      "adminId": null,
       "isAdmin": false,
-      "createdAt": "2026-08-26T14:36:36.569Z",
-      "expiresAt": "2026-09-25T14:36:36.569Z"
+      "createdAt": "2026-08-26T14:36:36.569+00:00",
+      "expiresAt": "2026-09-25T14:36:36.569+00:00"
     }
   ],
   "generations": [
     {
-      "at": "2026-08-25T22:26:45.649Z",
       "id": "gen_080ddd8e96da1aaa2b",
-      "dpi": 520,
+      "at": "2026-08-25T22:26:45.649+00:00",
+      "userId": "usr_c40fde66fee98e2249",
       "mode": "normal",
       "inputs": {
         "aim": "equilibrada",
@@ -209,7 +216,6 @@
         "refreshHz": "120",
         "deviceModel": "Redmi Note 13"
       },
-      "userId": "usr_c40fde66fee98e2249",
       "values": {
         "geral": 171,
         "mira2x": 158,
@@ -218,14 +224,15 @@
         "miraAwm": 121,
         "olhadinha": 113
       },
-      "deviceName": "Redmi Note 13",
+      "dpi": 520,
       "fireButton": 63,
+      "deviceName": "Redmi Note 13",
       "knownDevice": true
     },
     {
-      "at": "2026-08-26T14:04:17.740Z",
       "id": "gen_e79cebd01903bb2ae1",
-      "dpi": 483,
+      "at": "2026-08-26T14:04:17.74+00:00",
+      "userId": "usr_827773347d5c0ab50d",
       "mode": "normal",
       "inputs": {
         "aim": "equilibrada",
@@ -234,7 +241,6 @@
         "style": "eq",
         "deviceModel": "Samsung Galaxy A55"
       },
-      "userId": "usr_827773347d5c0ab50d",
       "values": {
         "geral": 165,
         "mira2x": 154,
@@ -243,65 +249,17 @@
         "miraAwm": 121,
         "olhadinha": 110
       },
-      "deviceName": "Samsung Galaxy A55",
+      "dpi": 483,
       "fireButton": 61,
+      "deviceName": "Samsung Galaxy A55",
       "knownDevice": true
     }
   ],
   "profiles": [],
-  "auditLog": [
-    {
-      "at": "2026-08-26T14:05:03.631Z",
-      "ip": "::1",
-      "action": "login_ok",
-      "detail": "owner: admin"
-    },
-    {
-      "at": "2026-08-26T14:08:55.055Z",
-      "ip": "::1",
-      "action": "login_ok",
-      "detail": "owner: admin"
-    },
-    {
-      "at": "2026-08-26T14:09:13.360Z",
-      "ip": "::1",
-      "action": "login_ok",
-      "detail": "owner: admin"
-    },
-    {
-      "at": "2026-08-26T14:09:40.344Z",
-      "ip": "::1",
-      "action": "login_ok",
-      "detail": "owner: admin"
-    },
-    {
-      "at": "2026-08-26T14:10:01.534Z",
-      "ip": "::1",
-      "action": "login_ok",
-      "detail": "owner: admin"
-    },
-    {
-      "at": "2026-08-26T14:10:01.640Z",
-      "ip": "::1",
-      "action": "key_created",
-      "detail": "SENSI-UNAS…"
-    },
-    {
-      "at": "2026-08-26T14:27:57.894Z",
-      "ip": "10.31.99.14",
-      "action": "login_ok",
-      "detail": "owner: admin"
-    },
-    {
-      "at": "2026-08-26T14:28:31.920Z",
-      "ip": "10.26.131.47",
-      "action": "key_created",
-      "detail": "SENSI-ATHZ…"
-    }
-  ],
+  "auditLog": [],
   "settings": {
     "contactLink": "",
-    "adminPanelPath": "/painel-69588985",
-    "freeDailyLimit": 3
+    "freeDailyLimit": 3,
+    "adminPanelPath": "/painel-df457bed"
   }
 }

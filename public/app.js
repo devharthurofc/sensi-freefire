@@ -706,14 +706,12 @@ async function confirmName() {
     return;
   }
   localStorage.setItem(LS_NAME, name);
+  document.getElementById("userChipName").textContent = name;
+  document.getElementById("userChip").style.display = "inline-flex";
   hideNameModal();
   try {
-    await initSession(name);
-    document.getElementById("userChipName").textContent = name;
-    document.getElementById("userChip").style.display = "inline-flex";
-  } catch (e) {
-    toast("Erro ao salvar nome.", true);
-  }
+    await api("/api/me/name", { method: "PUT", body: { name } });
+  } catch (e) {}
 }
 
 document.getElementById("nameConfirm").addEventListener("click", confirmName);
@@ -737,7 +735,7 @@ document.getElementById("nameInput").addEventListener("keydown", e => {
     hideNameModal();
     document.getElementById("userChipName").textContent = savedName;
     document.getElementById("userChip").style.display = "inline-flex";
-  } else if (state.user.label && !state.user.label.startsWith("Jogador #")) {
+  } else if (state.user && state.user.label && !state.user.label.startsWith("Jogador #")) {
     hideNameModal();
     localStorage.setItem(LS_NAME, state.user.label);
     document.getElementById("userChipName").textContent = state.user.label;
