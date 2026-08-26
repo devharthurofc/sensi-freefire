@@ -1,15 +1,15 @@
 {
   "meta": {
-    "createdAt": "2026-08-26T15:19:18.057Z"
+    "createdAt": "2026-08-26T15:22:15.830Z"
   },
   "admins": [
     {
       "id": "adm_e99cb1994501ae197d",
       "username": "admin",
       "passwordHash": "47728e02561d96bb4ebc013f74a8629b:6643463acf84f321c5e335abdb5d16269ff2f10c10bb362069a6d0d52735e09a98a35801554c5ea277ef6bed357ce3c2b7a4fc63cdd2ddada306a0586d948f3b",
-      "role": "owner",
-      "createdAt": "2026-08-26T15:19:18.810Z",
-      "mustChange": true
+      "role": "mod",
+      "createdAt": "2026-08-26T15:19:18.81+00:00",
+      "mustChange": false
     }
   ],
   "users": [
