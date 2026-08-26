@@ -45,9 +45,33 @@
       "vipSince": null,
       "createdAt": "2026-08-26T01:29:53.938Z",
       "lastSeenAt": "2026-08-26T01:29:53.938Z"
+    },
+    {
+      "id": "usr_827773347d5c0ab50d",
+      "deviceId": "testuser9999",
+      "label": "Jogador #0004",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T14:04:17.540Z",
+      "lastSeenAt": "2026-08-26T14:04:17.739Z"
     }
   ],
-  "keys": [],
+  "keys": [
+    {
+      "id": "key_682f0e4c9166c952e7",
+      "code": "SENSI-UNAS-XHCY-9KHZ",
+      "status": "ativa",
+      "createdAt": "2026-08-26T14:10:01.639Z",
+      "expiresAt": "2026-09-02T14:10:01.639Z",
+      "maxUses": 3,
+      "uses": 0,
+      "activatedByUserId": null,
+      "activatedByLabel": null,
+      "activatedAt": null
+    }
+  ],
   "sessions": [
     {
       "token": "b981651fed33476887cf9cdfeba08653a7bc3227bbf806b62a113964c7817231",
@@ -76,6 +100,53 @@
       "isAdmin": false,
       "createdAt": "2026-08-26T13:56:49.643Z",
       "expiresAt": "2026-09-25T13:56:49.643Z"
+    },
+    {
+      "token": "3081c13902fa0281e6f20ca61f36a7b81d4774b208a54cb3125a02bc3e78dd46",
+      "userId": "usr_827773347d5c0ab50d",
+      "isAdmin": false,
+      "createdAt": "2026-08-26T14:04:17.541Z",
+      "expiresAt": "2026-09-25T14:04:17.541Z"
+    },
+    {
+      "token": "c43b3d1496d7e1d99ae7171286ecc44294a2b008f74243c9900313078eca4551",
+      "userId": null,
+      "adminId": "adm_11b249b977fc3a7171",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T14:05:03.631Z",
+      "expiresAt": "2026-08-27T02:05:03.631Z"
+    },
+    {
+      "token": "e670e6b7440a3efc395bdf22c383ebd02a0474498f634ff5e2f47a7d5fb8d40a",
+      "userId": null,
+      "adminId": "adm_11b249b977fc3a7171",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T14:08:55.055Z",
+      "expiresAt": "2026-08-27T02:08:55.055Z"
+    },
+    {
+      "token": "445e30aa9cb96b338b7ec0836f03b4d7efd8059b5eb66b68603c881b72d461c2",
+      "userId": null,
+      "adminId": "adm_11b249b977fc3a7171",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T14:09:13.360Z",
+      "expiresAt": "2026-08-27T02:09:13.360Z"
+    },
+    {
+      "token": "d48da3dc138d603a73080056e6184927800621b591af8df7ee44a93aba7d6475",
+      "userId": null,
+      "adminId": "adm_11b249b977fc3a7171",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T14:09:40.344Z",
+      "expiresAt": "2026-08-27T02:09:40.344Z"
+    },
+    {
+      "token": "6138a04597a2b99a08e301454e3d1269a051acd0f113b9b402773f1b4317fcd0",
+      "userId": null,
+      "adminId": "adm_11b249b977fc3a7171",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T14:10:01.534Z",
+      "expiresAt": "2026-08-27T02:10:01.534Z"
     }
   ],
   "generations": [
@@ -105,10 +176,72 @@
       "fireButton": 63,
       "deviceName": "Redmi Note 13",
       "knownDevice": true
+    },
+    {
+      "id": "gen_e79cebd01903bb2ae1",
+      "at": "2026-08-26T14:04:17.740Z",
+      "userId": "usr_827773347d5c0ab50d",
+      "mode": "normal",
+      "inputs": {
+        "tier": "normal",
+        "deviceModel": "Samsung Galaxy A55",
+        "style": "eq",
+        "level": "intermediario",
+        "aim": "equilibrada"
+      },
+      "values": {
+        "geral": 165,
+        "redDot": 161,
+        "mira2x": 154,
+        "mira4x": 142,
+        "miraAwm": 121,
+        "olhadinha": 110
+      },
+      "dpi": 483,
+      "fireButton": 61,
+      "deviceName": "Samsung Galaxy A55",
+      "knownDevice": true
     }
   ],
   "profiles": [],
-  "auditLog": [],
+  "auditLog": [
+    {
+      "at": "2026-08-26T14:05:03.631Z",
+      "action": "login_ok",
+      "detail": "owner: admin",
+      "ip": "::1"
+    },
+    {
+      "at": "2026-08-26T14:08:55.055Z",
+      "action": "login_ok",
+      "detail": "owner: admin",
+      "ip": "::1"
+    },
+    {
+      "at": "2026-08-26T14:09:13.360Z",
+      "action": "login_ok",
+      "detail": "owner: admin",
+      "ip": "::1"
+    },
+    {
+      "at": "2026-08-26T14:09:40.344Z",
+      "action": "login_ok",
+      "detail": "owner: admin",
+      "ip": "::1"
+    },
+    {
+      "at": "2026-08-26T14:10:01.534Z",
+      "action": "login_ok",
+      "detail": "owner: admin",
+      "ip": "::1"
+    },
+    {
+      "at": "2026-08-26T14:10:01.640Z",
+      "action": "key_created",
+      "detail": "SENSI-UNAS…",
+      "ip": "::1"
+    }
+  ],
   "settings": {
     "contactLink": "",
     "freeDailyLimit": 3,
