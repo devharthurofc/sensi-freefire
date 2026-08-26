@@ -1,12 +1,6 @@
 'use strict';
 
-/* ============ SENSI PRO · Service Worker ============
- * App shell em cache para funcionar offline.
- * Chamadas de API (/api/) SEMPRE vão direto pro servidor (dados ao vivo).
- * Ao publicar atualização nova, aumente a versão do CACHE (v2, v3...).
- */
-
-const CACHE = 'sensipro-v1';
+const CACHE = 'sensipro-v2';
 
 const PRECACHE = [
   '/',
@@ -37,23 +31,18 @@ self.addEventListener('fetch', e => {
 
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;
-  if (url.pathname.startsWith('/api/')) return; // dados sempre ao vivo
+  if (url.pathname.startsWith('/api/')) return;
+  if (url.pathname.startsWith('/painel')) return;
+  if (url.pathname === '/admin.js') return;
+  if (url.pathname === '/admin-login.js') return;
 
-  // navegação: tenta rede primeiro, cai pro cache se estiver offline
   if (req.mode === 'navigate') {
     e.respondWith(
-      fetch(req)
-        .then(res => {
-          const copy = res.clone();
-          caches.open(CACHE).then(c => c.put('/', copy));
-          return res;
-        })
-        .catch(() => caches.match('/'))
+      fetch(req).catch(() => caches.match('/'))
     );
     return;
   }
 
-  // estáticos: cache primeiro
   e.respondWith(
     caches.match(req).then(hit => hit || (
       fetch(req).then(res => {
