@@ -11,7 +11,9 @@
     "node": ">=18"
   },
   "dependencies": {
+    "dotenv": "^17.4.2",
     "express": "^4.19.2",
-    "mongodb": "^7.6.0"
+    "mongodb": "^7.6.0",
+    "mongoose": "^9.9.4"
   }
 }
