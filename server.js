@@ -5,7 +5,7 @@ require('dotenv').config();
 const path = require('path');
 const crypto = require('crypto');
 const express = require('express');
-const mongoose = require('mongoose');
+
 
 const store = require('./src/store');
 const engine = require('./src/engine');
@@ -14,13 +14,6 @@ const devices = require('./src/devices');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-if (process.env.MONGODB_URI) {
-  mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('MongoDB conectado!'))
-    .catch((error) => console.error('Erro ao conectar no MongoDB:', error));
-} else {
-  console.log('MONGODB_URI não definida. Usando armazenamento local.');
-}
 
 // Necessário para o rate limiting funcionar certo atrás de hospedagens
 // como Render/Railway/Vercel etc.

@@ -42,7 +42,10 @@ let saveTimer = null;
 async function connectMongo() {
   const uri = process.env.MONGODB_URI;
 
-  if (!uri) return;
+  if (!uri) {
+    console.log('[store] MONGODB_URI não definida');
+    return;
+  }
 
   try {
     const { MongoClient } = require('mongodb');
@@ -54,11 +57,11 @@ async function connectMongo() {
     await mongoClient.connect();
 
     mongoCol = mongoClient
-      .db('svg')
-      .collection('svg');
+    .db('key_system')
+    .collection('keys');
 
     console.log(
-      '[store] Conectado ao MongoDB Atlas — dados persistentes ✔'
+      '[store] Conectado ao MongoDB Atlas ✔'
     );
 
   } catch (e) {
