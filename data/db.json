@@ -34,6 +34,17 @@
       "vipSince": null,
       "createdAt": "2026-08-25T22:30:39.243Z",
       "lastSeenAt": "2026-08-25T22:30:39.243Z"
+    },
+    {
+      "id": "usr_eb9f18b71a9f544e3e",
+      "deviceId": "persisttest1234",
+      "label": "Jogador #0003",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T01:29:53.938Z",
+      "lastSeenAt": "2026-08-26T01:29:53.938Z"
     }
   ],
   "keys": [],
@@ -51,6 +62,13 @@
       "isAdmin": false,
       "createdAt": "2026-08-25T22:30:39.244Z",
       "expiresAt": "2026-09-24T22:30:39.244Z"
+    },
+    {
+      "token": "8edc4c2dc9ffdda507615e7c5ecfd942a2993a3b8f09cd7f0b69dbaaaa29552a",
+      "userId": "usr_eb9f18b71a9f544e3e",
+      "isAdmin": false,
+      "createdAt": "2026-08-26T01:29:53.938Z",
+      "expiresAt": "2026-09-25T01:29:53.938Z"
     }
   ],
   "generations": [

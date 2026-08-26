@@ -4,10 +4,21 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
+/* ============ persistência ============
+ * Dois modos, escolhidos automaticamente:
+ *  - MONGODB_URI definido -> banco de dados MongoDB Atlas (produção: nada se perde)
+ *  - sem MONGODB_URI      -> arquivo local data/db.json (modo PC/dev)
+ * O resto do código não muda: tudo continua lendo/escrevendo em `db`.
+ */
+
 const DATA_DIR = process.env.DATA_DIR
   ? path.resolve(process.env.DATA_DIR)
   : path.join(__dirname, '..', 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
+
+let mongoClient = null;
+let mongoCol = null;
+let mongoWrite = null; // promessa do último save em andamento
 
 const DEFAULT_DB = {
   meta: { createdAt: new Date().toISOString() },
@@ -26,6 +37,77 @@ const DEFAULT_DB = {
 
 let db = null;
 let saveTimer = null;
+
+/* ---------- MongoDB (opcional) ---------- */
+async function connectMongo() {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) return;
+  try {
+    const { MongoClient } = require('mongodb');
+    mongoClient = new MongoClient(uri, { serverSelectionTimeoutMS: 10000 });
+    await mongoClient.connect();
+    mongoCol = mongoClient.db('sensipro').collection('db');
+    console.log('[store] Conectado ao MongoDB Atlas — dados persistentes ✔');
+  } catch (e) {
+    console.error('[store] FALHA ao conectar no MongoDB:', e.message);
+    mongoClient = null;
+    mongoCol = null;
+  }
+}
+
+async function loadFromMongo() {
+  const doc = await mongoCol.findOne({ _id: 'db' });
+  if (doc && doc.data) return doc.data;
+  return null;
+}
+
+function saveToMongoNow() {
+  if (!mongoCol) return Promise.resolve();
+  mongoWrite = mongoCol.updateOne(
+    { _id: 'db' },
+    { $set: { data: db, savedAt: new Date().toISOString() } },
+    { upsert: true }
+  ).catch(e => console.error('[store] erro ao salvar no Mongo:', e.message));
+  return mongoWrite;
+}
+
+/* ---------- inicialização ---------- */
+async function init() {
+  await connectMongo();
+  if (mongoCol) {
+    let data = null;
+    try { data = await loadFromMongo(); }
+    catch (e) { console.error('[store] erro ao ler Mongo:', e.message); }
+    if (data) {
+      db = Object.assign(structuredClone(DEFAULT_DB), data);
+      for (const k of Object.keys(DEFAULT_DB)) {
+        if (db[k] === undefined) db[k] = structuredClone(DEFAULT_DB[k]);
+      }
+      console.log('[store] Banco carregado do MongoDB (' +
+        (db.users ? db.users.length : 0) + ' usuários, ' +
+        (db.keys ? db.keys.length : 0) + ' keys)');
+      return db;
+    }
+    // primeira vez no banco: tenta aproveitar um db.json existente
+    db = structuredClone(DEFAULT_DB);
+    if (fs.existsSync(DB_FILE)) {
+      try {
+        const parsed = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+        db = Object.assign(structuredClone(DEFAULT_DB), parsed);
+        for (const k of Object.keys(DEFAULT_DB)) {
+          if (db[k] === undefined) db[k] = structuredClone(DEFAULT_DB[k]);
+        }
+        console.log('[store] db.json local migrado para o MongoDB ✔');
+      } catch (_) {}
+    }
+    await saveToMongoNow();
+    return db;
+  }
+
+  // modo arquivo (PC/dev)
+  load();
+  return db;
+}
 
 function load() {
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -49,6 +131,10 @@ function load() {
 }
 
 function persistNow() {
+  if (mongoCol) {
+    saveToMongoNow();
+    return;
+  }
   const tmp = DB_FILE + '.tmp';
   fs.writeFileSync(tmp, JSON.stringify(db, null, 2), 'utf8');
   fs.renameSync(tmp, DB_FILE);
@@ -60,6 +146,13 @@ function scheduleSave() {
     saveTimer = null;
     try { persistNow(); } catch (e) { console.error('[store] falha ao salvar:', e.message); }
   }, 120);
+}
+
+/* desligamento: garante que o último estado vá pro banco/arquivo */
+async function shutdown() {
+  try { persistNow(); } catch (_) {}
+  if (mongoWrite) { try { await Promise.race([mongoWrite, new Promise(r => setTimeout(r, 800))]); } catch (_) {} }
+  if (mongoClient) { try { await mongoClient.close(); } catch (_) {} }
 }
 
 function getDb() {
@@ -295,7 +388,7 @@ function updateSettings(patch) {
 }
 
 module.exports = {
-  getDb, load, persistNow,
+  getDb, load, persistNow, init, shutdown,
   id,
   findUserByDevice, findUserById, createUser, touchUser, setUserVip,
   createSession, createAdminSession, findSession, destroySession, pruneSessions,

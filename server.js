@@ -742,29 +742,34 @@ app.use((err, req, res, next) => {
 
 /* ================= start ================= */
 
-store.load();
-ensureDefaultAdmin();
-const PANEL_PATH = ensurePanelPath();
-
-/* Garante que nada se perca quando o servidor é fechado/reiniciado */
 function gracefulShutdown() {
-  try { store.persistNow(); } catch (_) {}
-  process.exit(0);
+  store.shutdown().finally(() => process.exit(0));
 }
 process.on('SIGINT', gracefulShutdown);
 process.on('SIGTERM', gracefulShutdown);
 process.on('beforeExit', gracefulShutdown);
 
-// limpeza periódica de sessões vencidas
-store.pruneSessions();
-setInterval(() => store.pruneSessions(), 3600 * 1000).unref();
+(async () => {
+  await store.init();
+  ensureDefaultAdmin();
+  const PANEL_PATH = ensurePanelPath();
 
-app.listen(PORT, () => {
-  console.log(`SENSI PRO rodando em http://localhost:${PORT}`);
-  console.log('==============================================================');
-  console.log('  PAINEL ADMIN (endereço secreto): ' + PANEL_PATH);
-  console.log('  Abra: http://localhost:' + PORT + PANEL_PATH);
-  console.log('  /admin comum retorna 404 de propósito.');
-  console.log('  Você pode mudar esse endereço no painel, em Configurações.');
-  console.log('==============================================================');
-});
+  // limpeza periódica de sessões vencidas
+  store.pruneSessions();
+  setInterval(() => store.pruneSessions(), 3600 * 1000).unref();
+
+  app.listen(PORT, () => {
+    console.log(`SENSI PRO rodando em http://localhost:${PORT}`);
+    console.log('==============================================================');
+    console.log('  PAINEL ADMIN (endereço secreto): ' + PANEL_PATH);
+    console.log('  Abra: http://localhost:' + PORT + PANEL_PATH);
+    console.log('  /admin comum retorna 404 de propósito.');
+    console.log('  Você pode mudar esse endereço no painel, em Configurações.');
+    if (process.env.MONGODB_URI) {
+      console.log('  BANCO DE DADOS: MongoDB conectado — nada se perde ✔');
+    } else {
+      console.log('  BANCO DE DADOS: arquivo local (defina MONGODB_URI p/ produção)');
+    }
+    console.log('==============================================================');
+  });
+})();

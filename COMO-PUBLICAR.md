@@ -24,10 +24,38 @@ Hospede de graça em um serviço de Node.js — assim o site fica com um link qu
 3. Configurações:
    - Build command: `npm install`
    - Start command: `npm start`
-4. **IMPORTANTE — não perder as keys/configurações:** no plano grátis o Render apaga os arquivos do servidor toda vez que ele dorme ou reinicia (o link do WhatsApp, as KEYs e usuários voltariam ao zero). Para salvar de verdade:
-   - No painel do serviço: **Disks → Create Disk**, monte em `/data`
-   - Em **Environment → Add**: nome `DATA_DIR`, valor `/data`
-   - Salve e faça o deploy novamente. Pronto: tudo passa a ser gravado nesse disco e não se perde mais.
+4. **IMPORTANTE — conectar o banco de dados (pra nada se perder):**
+   No plano grátis o Render apaga os arquivos quando o servidor dorme/reinicia.
+   A solução é o **MongoDB Atlas** (grátis pra sempre, sem cartão):
+
+   **Criar o banco (uma única vez, ~5 minutos):**
+   1. Acesse https://www.mongodb.com/cloud/atlas → **Try Free** → crie a conta
+   2. Deploy gratuito **M0** → escolha a região mais perto (ex: AWS São Paulo)
+   3. Em **Database Access** → Add New Database User:
+      - Usuário: `sensipro` · Senha: crie uma forte (anote!)
+      - Database User privilege: **Read and write**
+   4. Em **Network Access** → Add IP Address → **Allow access from anywhere** (0.0.0.0/0)
+
+   **Pegar a chave de conexão:**
+   5. **Database → Connect → Drivers** → copie a string, fica tipo:
+      `mongodb+srv://sensipro:SUA_SENHA@sensi.xxxxx.mongodb.net/?retryWrites=true&w=majority`
+      (troque `<password>` pela senha que você criou)
+
+   **Ligar no Render:**
+   6. No painel do serviço: **Environment → Add from .env** ou manualmente:
+      - Nome: `MONGODB_URI`
+      - Valor: a string do passo 5 (com sua senha no lugar de `<password>`)
+   7. Salve e faça o deploy novamente.
+   8. Nos logs do Render vai aparecer:
+      `BANCO DE DADOS: MongoDB conectado — nada se perda ✔`
+
+   > Pronto: KEYs, VIPs, usuários e configurações ficam salvos no banco,
+   > mesmo se o servidor dormir, reiniciar ou você publicar atualização nova.
+   > Se já existia um db.json local, ele é migrado pro banco automaticamente
+   > no primeiro boot.
+
+   **Recomendado também:** defina `ADMIN_PASSWORD` no Environment
+   (senha forte para o painel admin) antes de publicar.
 5. Pronto: você recebe um link tipo `https://sensi-pro.onrender.com`
 
 ### Opção B — Railway.app
