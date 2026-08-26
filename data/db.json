@@ -69,6 +69,13 @@
       "isAdmin": false,
       "createdAt": "2026-08-26T01:29:53.938Z",
       "expiresAt": "2026-09-25T01:29:53.938Z"
+    },
+    {
+      "token": "c878b2ee8b823568aea1dde071b8ca77b797adf8b115223132d7d2f1fff807ef",
+      "userId": "usr_c40fde66fee98e2249",
+      "isAdmin": false,
+      "createdAt": "2026-08-26T13:56:49.643Z",
+      "expiresAt": "2026-09-25T13:56:49.643Z"
     }
   ],
   "generations": [

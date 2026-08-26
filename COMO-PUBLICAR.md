@@ -26,32 +26,28 @@ Hospede de graça em um serviço de Node.js — assim o site fica com um link qu
    - Start command: `npm start`
 4. **IMPORTANTE — conectar o banco de dados (pra nada se perder):**
    No plano grátis o Render apaga os arquivos quando o servidor dorme/reinicia.
-   A solução é o **MongoDB Atlas** (grátis pra sempre, sem cartão):
+   A solução é o **Supabase** (grátis, sem cartão):
 
    **Criar o banco (uma única vez, ~5 minutos):**
-   1. Acesse https://www.mongodb.com/cloud/atlas → **Try Free** → crie a conta
-   2. Deploy gratuito **M0** → escolha a região mais perto (ex: AWS São Paulo)
-   3. Em **Database Access** → Add New Database User:
-      - Usuário: `sensipro` · Senha: crie uma forte (anote!)
-      - Database User privilege: **Read and write**
-   4. Em **Network Access** → Add IP Address → **Allow access from anywhere** (0.0.0.0/0)
-
-   **Pegar a chave de conexão:**
-   5. **Database → Connect → Drivers** → copie a string, fica tipo:
-      `mongodb+srv://sensipro:SUA_SENHA@sensi.xxxxx.mongodb.net/?retryWrites=true&w=majority`
-      (troque `<password>` pela senha que você criou)
+   1. Acesse https://supabase.com → **Start your project** → crie a conta
+   2. **New project** → escolha um nome e uma senha do banco (anote!)
+   3. No menu lateral: **SQL Editor** → **New query** → cole todo o conteúdo
+      do arquivo `supabase-schema.sql` → clique em **RUN**
+   4. Pegue as chaves em **Project Settings → API**:
+      - **Project URL** (algo como `https://xxxx.supabase.co`)
+      - **service_role key** (em `Project API Keys`)
 
    **Ligar no Render:**
-   6. No painel do serviço: **Environment → Add from .env** ou manualmente:
-      - Nome: `MONGODB_URI`
-      - Valor: a string do passo 5 (com sua senha no lugar de `<password>`)
-   7. Salve e faça o deploy novamente.
-   8. Nos logs do Render vai aparecer:
-      `BANCO DE DADOS: MongoDB conectado — nada se perda ✔`
+   5. No painel do serviço: **Environment → Add from .env** ou manualmente:
+      - Nome: `SUPABASE_URL` · Valor: a Project URL
+      - Nome: `SUPABASE_SERVICE_ROLE_KEY` · Valor: a service_role key
+   6. Salve e faça o deploy novamente.
+   7. Nos logs do Render vai aparecer:
+      `BANCO DE DADOS: Supabase configurado ✔`
 
-   > Pronto: KEYs, VIPs, usuários e configurações ficam salvos no banco,
+   > Pronto: KEYs, VIPs, usuários e configurações ficam salvos no Supabase,
    > mesmo se o servidor dormir, reiniciar ou você publicar atualização nova.
-   > Se já existia um db.json local, ele é migrado pro banco automaticamente
+   > Se já existia um db.json local, ele é migrado pro Supabase automaticamente
    > no primeiro boot.
 
    **Recomendado também:** defina `ADMIN_PASSWORD` no Environment
@@ -87,4 +83,4 @@ Com o site publicado (opção acima), no celular:
 
 - Defina a senha do admin antes de publicar: variável de ambiente `ADMIN_PASSWORD`
 - Troque a senha padrão no painel após o primeiro acesso
-- Faça backup do arquivo `data/db.json` (é onde ficam keys, usuários e configs)
+- Os dados ficam no Supabase; o arquivo `data/db.json` é só um espelho/backup local

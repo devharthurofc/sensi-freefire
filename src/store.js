@@ -6,9 +6,10 @@ const path = require('path');
 const crypto = require('crypto');
 
 /* ============ persistência ============
-
- * Banco de dados somente em arquivo:
- * data/db.json
+ * Tudo fica salvo no Supabase, na tabela `app_data`:
+ * uma única linha com o banco inteiro em JSON.
+ * Um espelho local em data/db.json continua sendo gravado
+ * como backup / modo offline.
  *
  * O restante do código continua lendo/escrevendo em `db`.
  */
@@ -18,6 +19,8 @@ const DATA_DIR = process.env.DATA_DIR
   : path.join(__dirname, '..', 'data');
 
 const DB_FILE = path.join(DATA_DIR, 'db.json');
+
+const STATE_ID = 'db';
 
 const DEFAULT_DB = {
   meta: {
@@ -41,68 +44,79 @@ const DEFAULT_DB = {
 let db = null;
 let saveTimer = null;
 
-/* ---------- inicialização ---------- */
+/* fila de gravação: garante que os saves cheguem ao Supabase em ordem */
 
-async function init() {
-  load();
-  return db;
-}
+let writeChain = Promise.resolve();
 
-function load() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, {
-      recursive: true
-    });
-  }
+function hydrate(parsed) {
+  const merged = Object.assign(
+    structuredClone(DEFAULT_DB),
+    parsed || {}
+  );
 
-  if (fs.existsSync(DB_FILE)) {
-    try {
-      const raw = fs.readFileSync(
-        DB_FILE,
-        'utf8'
+  for (const key of Object.keys(DEFAULT_DB)) {
+    if (merged[key] === undefined) {
+      merged[key] = structuredClone(
+        DEFAULT_DB[key]
       );
-
-      const parsed = JSON.parse(raw);
-
-      db = Object.assign(
-        structuredClone(DEFAULT_DB),
-        parsed
-      );
-
-      for (const key of Object.keys(DEFAULT_DB)) {
-        if (db[key] === undefined) {
-          db[key] = structuredClone(
-            DEFAULT_DB[key]
-          );
-        }
-      }
-
-      return db;
-
-    } catch (e) {
-      console.error(
-        '[store] db.json corrompido, recriando backup...'
-      );
-
-      try {
-        fs.copyFileSync(
-          DB_FILE,
-          DB_FILE +
-            '.corrupt-' +
-            Date.now()
-        );
-      } catch (_) {}
     }
   }
 
-  db = structuredClone(DEFAULT_DB);
-
-  persistNow();
-
-  return db;
+  return merged;
 }
 
-function persistNow() {
+/* ---------- supabase ---------- */
+
+async function fetchRemoteState() {
+  const { data, error } = await supabase
+    .from('app_data')
+    .select('data')
+    .eq('id', STATE_ID)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return data && data.data
+    ? data.data
+    : null;
+}
+
+function pushRemoteState(snapshot) {
+  return supabase
+    .from('app_data')
+    .upsert(
+      {
+        id: STATE_ID,
+        data: snapshot,
+        saved_at: new Date().toISOString()
+      },
+      { onConflict: 'id' }
+    );
+}
+
+function queueRemoteSave(snapshot) {
+  const job = () =>
+    pushRemoteState(snapshot).then(
+      ({ error }) => {
+        if (error) {
+          console.error(
+            '[store] falha ao salvar no Supabase:',
+            error.message
+          );
+        }
+      }
+    );
+
+  writeChain = writeChain.then(job, job);
+
+  return writeChain;
+}
+
+/* ---------- espelho local ---------- */
+
+function writeLocalMirror() {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, {
       recursive: true
@@ -128,6 +142,109 @@ function persistNow() {
   );
 }
 
+function readLocalMirror() {
+  if (!fs.existsSync(DB_FILE)) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(
+      fs.readFileSync(
+        DB_FILE,
+        'utf8'
+      )
+    );
+  } catch (e) {
+    console.error(
+      '[store] db.json corrompido, ignorando cópia local...'
+    );
+
+    try {
+      fs.copyFileSync(
+        DB_FILE,
+        DB_FILE +
+          '.corrupt-' +
+          Date.now()
+      );
+    } catch (_) {}
+
+    return null;
+  }
+}
+
+/* ---------- inicialização ---------- */
+
+async function init() {
+  let remote = null;
+  let online = true;
+
+  try {
+    remote = await fetchRemoteState();
+  } catch (e) {
+    online = false;
+    console.error(
+      '[store] Supabase indisponível no boot:',
+      e.message
+    );
+  }
+
+  const local = readLocalMirror();
+
+  if (remote) {
+    db = hydrate(remote);
+
+    console.log(
+      '[store] Banco carregado do Supabase ✔ (' +
+        db.users.length +
+        ' usuários, ' +
+        db.keys.length +
+        ' keys)'
+    );
+  } else if (local) {
+    db = hydrate(local);
+
+    console.log(
+      online
+        ? '[store] Supabase vazio -> dados locais migrados ✔ (' +
+          db.users.length +
+          ' usuários, ' +
+          db.keys.length +
+          ' keys)'
+        : '[store] Usando cópia local (Supabase inacessível)'
+    );
+  } else {
+    db = structuredClone(DEFAULT_DB);
+
+    console.log(
+      '[store] Banco novo criado'
+    );
+  }
+
+  persistNow();
+
+  return db;
+}
+
+function persistNow() {
+  if (!db) {
+    return Promise.resolve();
+  }
+
+  try {
+    writeLocalMirror();
+  } catch (e) {
+    console.error(
+      '[store] falha no espelho local:',
+      e.message
+    );
+  }
+
+  const snapshot =
+    structuredClone(db);
+
+  return queueRemoteSave(snapshot);
+}
+
 function scheduleSave() {
   if (saveTimer) {
     return;
@@ -136,33 +253,26 @@ function scheduleSave() {
   saveTimer = setTimeout(() => {
     saveTimer = null;
 
-    try {
-      persistNow();
-    } catch (e) {
-      console.error(
-        '[store] falha ao salvar:',
-        e.message
-      );
-    }
-  }, 120);
+    persistNow();
+  }, 150);
 }
 
 /* ---------- desligamento ---------- */
 
 async function shutdown() {
   try {
-    persistNow();
-  } catch (e) {
-    console.error(
-      '[store] erro ao salvar no desligamento:',
-      e.message
-    );
-  }
+    await Promise.race([
+      writeChain.catch(() => {}),
+      new Promise(resolve =>
+        setTimeout(resolve, 4000)
+      )
+    ]);
+  } catch (_) {}
 }
 
 function getDb() {
   if (!db) {
-    load();
+    db = hydrate(readLocalMirror());
   }
 
   return db;
@@ -180,53 +290,38 @@ function id(prefix) {
 
 /* ---------- usuários ---------- */
 
-async function findUserByDevice(deviceId) {
-  const { data, error } = await supabase
-    .from('users')
-    .select('*')
-    .eq('deviceId', deviceId)
-    .maybeSingle();
-
-  if (error) {
-    console.error('[supabase] Erro ao buscar usuário:', error.message);
-    return null;
-  }
-
-  return data || null;
+function findUserByDevice(deviceId) {
+  return (
+    getDb()
+      .users
+      .find(
+        u =>
+          u.deviceId ===
+          deviceId
+      ) || null
+  );
 }
 
-async function findUserById(userId) {
-  const { data, error } = await supabase
-    .from('users')
-    .select('*')
-    .eq('id', userId)
-    .maybeSingle();
-
-  if (error) {
-    console.error('[supabase] Erro ao buscar usuário:', error.message);
-    return null;
-  }
-
-  return data || null;
+function findUserById(userId) {
+  return (
+    getDb()
+      .users
+      .find(
+        u =>
+          u.id ===
+          userId
+      ) || null
+  );
 }
 
-async function createUser(deviceId) {
-  const { count, error: countError } = await supabase
-    .from('users')
-    .select('*', { count: 'exact', head: true });
-
-  if (countError) {
-    console.error(
-      '[supabase] Erro ao contar usuários:',
-      countError.message
-    );
-    throw countError;
-  }
+function createUser(deviceId) {
+  const n =
+    getDb().users.length + 1;
 
   const user = {
     id: id('usr'),
     deviceId,
-    label: 'Jogador #' + String((count || 0) + 1).padStart(4, '0'),
+    label: 'Jogador #' + String(n).padStart(4, '0'),
     isVip: false,
     vipSource: null,
     vipKeyId: null,
@@ -235,18 +330,11 @@ async function createUser(deviceId) {
     lastSeenAt: new Date().toISOString()
   };
 
-  const { data, error } = await supabase
-    .from('users')
-    .insert(user)
-    .select()
-    .single();
+  getDb().users.push(user);
 
-  if (error) {
-    console.error('[supabase] Erro ao criar usuário:', error.message);
-    throw error;
-  }
+  scheduleSave();
 
-  return data;
+  return user;
 }
 
 function touchUser(user) {
@@ -907,7 +995,7 @@ function updateSettings(patch) {
 
 module.exports = {
   getDb,
-  load,
+  load: readLocalMirror,
   persistNow,
   init,
   shutdown,

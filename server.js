@@ -530,7 +530,7 @@ app.post(
     if (
       store.keyUsesLeft(key) <= 0 &&
       key.activatedByUserId !==
-        req.user.id
+      req.user.id
     ) {
       return res.json({
         status: 'exhausted',
@@ -541,7 +541,7 @@ app.post(
 
     if (
       key.activatedByUserId ===
-        req.user.id &&
+      req.user.id &&
       req.user.isVip
     ) {
       return res.json({
@@ -703,7 +703,7 @@ app.post(
         Math.max(
           0,
           limit -
-            (used + 1)
+          (used + 1)
         );
     }
 
@@ -1040,7 +1040,7 @@ app.post(
       store.addAudit(
         'login_fail',
         'usuário: ' +
-          (uname || '(vazio)'),
+        (uname || '(vazio)'),
         ip
       );
 
@@ -1067,8 +1067,8 @@ app.post(
     store.addAudit(
       'login_ok',
       admin.role +
-        ': ' +
-        admin.username,
+      ': ' +
+      admin.username,
       ip
     );
 
@@ -1246,7 +1246,7 @@ app.post(
 
     if (
       typeof password !==
-        'string' ||
+      'string' ||
       password.length < 8
     ) {
       return res.status(400).json({
@@ -1357,30 +1357,30 @@ app.get(
     const dayAgo =
       Date.now() -
       24 *
-        3600 *
-        1000;
+      3600 *
+      1000;
 
     res.json({
       failedLogins24h:
         db.auditLog.filter(
           audit =>
             audit.action ===
-              'login_fail' &&
+            'login_fail' &&
             new Date(
               audit.at
             ).getTime() >
-              dayAgo
+            dayAgo
         ).length,
 
       lockedEvents24h:
         db.auditLog.filter(
           audit =>
             audit.action ===
-              'login_locked' &&
+            'login_locked' &&
             new Date(
               audit.at
             ).getTime() >
-              dayAgo
+            dayAgo
         ).length,
 
       events:
@@ -1425,7 +1425,7 @@ app.post(
 
     if (
       typeof newPassword !==
-        'string' ||
+      'string' ||
       newPassword.length < 8
     ) {
       return res.status(400).json({
@@ -1457,11 +1457,11 @@ app.post(
       db.sessions.filter(
         session =>
           session.isAdmin ===
-            false ||
+          false ||
           session.adminId !==
-            admin.id ||
+          admin.id ||
           session.token ===
-            token
+          token
       );
 
     store.persistNow();
@@ -1491,7 +1491,7 @@ app.get(
       db.keys.filter(
         key =>
           key.status ===
-            'ativa' &&
+          'ativa' &&
           !store.isKeyExpired(
             key
           )
@@ -1501,7 +1501,7 @@ app.get(
       db.keys.filter(
         key =>
           key.status ===
-            'expirada' ||
+          'expirada' ||
           store.isKeyExpired(
             key
           )
@@ -1510,8 +1510,8 @@ app.get(
     const fiveMinAgo =
       Date.now() -
       5 *
-        60 *
-        1000;
+      60 *
+      1000;
 
     const onlineList =
       db.users
@@ -1521,7 +1521,7 @@ app.get(
             new Date(
               user.lastSeenAt
             ).getTime() >
-              fiveMinAgo
+            fiveMinAgo
         )
         .sort(
           (a, b) =>
@@ -1559,7 +1559,7 @@ app.get(
               new Date(
                 session.expiresAt
               ).getTime() >
-                now
+              now
           )
           .map(
             session =>
@@ -1752,17 +1752,17 @@ app.post(
     const expiresAt =
       ms > 0
         ? new Date(
-            Date.now() + ms
-          ).toISOString()
+          Date.now() + ms
+        ).toISOString()
         : null;
 
     let maxUses = 1;
 
     if (
       body.maxUses !==
-        undefined &&
+      undefined &&
       body.maxUses !==
-        null &&
+      null &&
       body.maxUses !== ''
     ) {
       const number =
@@ -1775,7 +1775,7 @@ app.post(
         Number.isInteger(
           number
         ) &&
-        number > 0
+          number > 0
           ? number
           : 0;
     }
@@ -1825,9 +1825,9 @@ app.patch(
 
     if (
       body.status ===
-        'ativa' ||
+      'ativa' ||
       body.status ===
-        'inativa'
+      'inativa'
     ) {
       key.status =
         body.status;
@@ -1838,9 +1838,9 @@ app.patch(
     ) {
       if (
         body.expiresAt ===
-          null ||
+        null ||
         body.expiresAt ===
-          ''
+        ''
       ) {
         key.expiresAt =
           null;
@@ -1874,7 +1874,7 @@ app.patch(
         Number.isInteger(
           number
         ) &&
-        number > 0
+          number > 0
           ? number
           : 0;
     }
@@ -1932,9 +1932,9 @@ app.delete(
       'key_deleted',
       key
         ? key.code.slice(
-            0,
-            10
-          ) + '…'
+          0,
+          10
+        ) + '…'
         : req.params.id,
       req.ip
     );
@@ -1968,14 +1968,14 @@ app.get(
           new Date(
             session.expiresAt
           ).getTime() >
-            now
+          now
         ) {
           sessoesPorUsuario[
             session.userId
           ] =
             (
               sessoesPorUsuario[
-                session.userId
+              session.userId
               ] || 0
             ) + 1;
         }
@@ -2028,20 +2028,20 @@ app.get(
                 new Date(
                   user.lastSeenAt
                 ).getTime() >
-                  now -
-                    5 *
-                    60 *
-                    1000
+                now -
+                5 *
+                60 *
+                1000
               ),
 
             logado:
               !!sessoesPorUsuario[
-                user.id
+              user.id
               ],
 
             sessoes:
               sessoesPorUsuario[
-                user.id
+              user.id
               ] || 0
           })
         );
@@ -2151,8 +2151,8 @@ app.put(
       store.addAudit(
         'panel_path_changed',
         oldPath +
-          ' → ' +
-          settings.adminPanelPath,
+        ' → ' +
+        settings.adminPanelPath,
         req.ip
       );
     }
@@ -2371,17 +2371,17 @@ process.on(
         );
 
         if (
-          process.env.MONGODB_URI
+          process.env.SUPABASE_URL &&
+          process.env.SUPABASE_SERVICE_ROLE_KEY
         ) {
           console.log(
-            '  BANCO DE DADOS: MongoDB configurado ✔'
+            '  BANCO DE DADOS: Supabase configurado ✔'
           );
         } else {
           console.log(
-            '  BANCO DE DADOS: arquivo local (defina MONGODB_URI para produção)'
+            '  BANCO DE DADOS: Supabase não configurado'
           );
         }
-
         console.log(
           '=============================================================='
         );
