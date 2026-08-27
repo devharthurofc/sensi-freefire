@@ -1,6 +1,6 @@
 'use strict';
 
-const CACHE = 'sensipro-v7';
+const CACHE = 'sensipro-v8';
 
 const PRECACHE = [
   '/',

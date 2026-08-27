@@ -360,15 +360,6 @@ footer b{color:var(--muted)}
         <div class="opt" data-v="cabeca">Headshot (drag)</div>
         <div class="opt" data-v="precisao">Precisão / controle</div>
       </div>
-
-      <div class="gen-actions">
-        <button class="btn btn-red" id="genBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
-          <span id="genBtnLabel">Gerar Sensi</span>
-        </button>
-        <span class="remaining" id="remaining"></span>
-        <button class="btn btn-ghost" id="copyBtn" style="display:none">Copiar Config</button>
-      </div>
     </div>
 
     <!-- CAMPOS DO GERADOR EMULADOR -->
@@ -393,6 +384,16 @@ footer b{color:var(--muted)}
         <div class="opt" data-v="ag">Agressivo</div>
         <div class="opt" data-v="pr">Precisão</div>
       </div>
+    </div>
+
+    <!-- AÇÕES (visível em todos os modos: Normal/Premium/VIP/Emulador) -->
+    <div class="gen-actions" style="margin-top:18px">
+      <button class="btn btn-red" id="genBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+        <span id="genBtnLabel">Gerar Sensi</span>
+      </button>
+      <span class="remaining" id="remaining"></span>
+      <button class="btn btn-ghost" id="copyBtn" style="display:none">Copiar Config</button>
     </div>
   </div>
 

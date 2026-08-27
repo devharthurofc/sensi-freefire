@@ -1,6 +1,6 @@
 {
   "meta": {
-    "createdAt": "2026-08-27T22:36:22.714Z"
+    "createdAt": "2026-08-27T22:54:32.788Z"
   },
   "admins": [
     {
@@ -14,59 +14,15 @@
   ],
   "users": [
     {
-      "id": "usr_8de8e268bf066a0988",
-      "deviceId": "262436be44526eac83d89814b6afec21",
-      "label": "Jogador #0022",
+      "id": "usr_e5ff5ee0f8a5990219",
+      "deviceId": "31205b74567003337cc419ef5df93243",
+      "label": "yu",
       "isVip": false,
       "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-26T22:12:40.572+00:00",
-      "lastSeenAt": "2026-08-26T22:12:40.572+00:00"
-    },
-    {
-      "id": "usr_8a59ae6918c80dbdca",
-      "deviceId": "84731a51ffb4d985772212476f138461",
-      "label": "Mnr_ale",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-26T20:31:52.928+00:00",
-      "lastSeenAt": "2026-08-26T20:33:49.858+00:00"
-    },
-    {
-      "id": "usr_c9b5a313f5c6e01138",
-      "deviceId": "1f75d1f76cae01c09978cf39820b48fe",
-      "label": "Neguin",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-26T22:05:58.616+00:00",
-      "lastSeenAt": "2026-08-26T22:06:03.925+00:00"
-    },
-    {
-      "id": "usr_dad3e4a549e70eb82b",
-      "deviceId": "a962eee45cbfac743e007bed738561a7",
-      "label": "Murilo",
-      "isVip": true,
-      "vipSource": "key",
-      "vipKeyId": "key_5c8a000087583bb160",
-      "vipSince": "2026-08-26T22:07:32.862+00:00",
-      "createdAt": "2026-08-26T22:07:06.68+00:00",
-      "lastSeenAt": "2026-08-26T22:12:34.573+00:00"
-    },
-    {
-      "id": "usr_03f19f712bde26dac3",
-      "deviceId": "e4d676c0819e419ac2596e28ad8c3c10",
-      "label": "Murilo",
-      "isVip": true,
-      "vipSource": "key",
-      "vipKeyId": "key_1ec4d8dec361b83578",
-      "vipSince": "2026-08-26T22:17:35.563+00:00",
-      "createdAt": "2026-08-26T22:09:47.443+00:00",
-      "lastSeenAt": "2026-08-26T22:18:23.185+00:00"
+      "createdAt": "2026-08-27T22:49:24.223+00:00",
+      "lastSeenAt": "2026-08-27T22:52:31.528+00:00"
     },
     {
       "id": "usr_cd9899ceaf28dbf629",
@@ -78,61 +34,6 @@
       "vipSince": null,
       "createdAt": "2026-08-27T22:24:54.187+00:00",
       "lastSeenAt": "2026-08-27T22:24:54.301+00:00"
-    },
-    {
-      "id": "usr_0807201bf5d887f41d",
-      "deviceId": "3debff90ec2b0aa8e5c7b3612a2ced38",
-      "label": "Jogador #0015",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-26T19:09:09.53+00:00",
-      "lastSeenAt": "2026-08-26T19:09:09.53+00:00"
-    },
-    {
-      "id": "usr_6f5065e637376d702e",
-      "deviceId": "c57dd2d6b19738754dece47feb1d698c",
-      "label": "harthur",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-26T23:30:07.701+00:00",
-      "lastSeenAt": "2026-08-26T23:30:12.868+00:00"
-    },
-    {
-      "id": "usr_1aa4bd1909dd45f97c",
-      "deviceId": "db74b42510c5c48b95b3c99c957292b9",
-      "label": "harthur",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-27T01:03:35.578+00:00",
-      "lastSeenAt": "2026-08-27T01:03:52.974+00:00"
-    },
-    {
-      "id": "usr_2f0cd6460ebaf28c24",
-      "deviceId": "fe27a2cd4fc4d3142b36f278d800be3e",
-      "label": "Jogador #0021",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-26T22:11:50.058+00:00",
-      "lastSeenAt": "2026-08-26T22:11:50.058+00:00"
-    },
-    {
-      "id": "usr_4203dbb5dfeacaf7d5",
-      "deviceId": "131351252936aee0cd5fbf2ab27711f9",
-      "label": "Harthur Santos",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-27T22:26:48.095+00:00",
-      "lastSeenAt": "2026-08-27T22:26:54.61+00:00"
     },
     {
       "id": "usr_cddcdcb72fb0e47259",
@@ -212,92 +113,125 @@
       "lastSeenAt": "2026-08-27T22:25:51.016+00:00"
     },
     {
-      "id": "usr_c40fde66fee98e2249",
-      "deviceId": "testdevice1234",
-      "label": "Jogador #0001",
+      "id": "usr_8de8e268bf066a0988",
+      "deviceId": "262436be44526eac83d89814b6afec21",
+      "label": "Jogador #0022",
       "isVip": false,
       "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-25T22:26:45.348+00:00",
-      "lastSeenAt": "2026-08-25T22:26:45.661+00:00"
+      "createdAt": "2026-08-26T22:12:40.572+00:00",
+      "lastSeenAt": "2026-08-26T22:12:40.572+00:00"
     },
     {
-      "id": "usr_523740489ebdaf57f9",
-      "deviceId": "13511395944dd158dc8208442d9a1c03",
+      "id": "usr_8a59ae6918c80dbdca",
+      "deviceId": "84731a51ffb4d985772212476f138461",
+      "label": "Mnr_ale",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T20:31:52.928+00:00",
+      "lastSeenAt": "2026-08-26T20:33:49.858+00:00"
+    },
+    {
+      "id": "usr_c9b5a313f5c6e01138",
+      "deviceId": "1f75d1f76cae01c09978cf39820b48fe",
       "label": "Neguin",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T22:05:58.616+00:00",
+      "lastSeenAt": "2026-08-26T22:06:03.925+00:00"
+    },
+    {
+      "id": "usr_dad3e4a549e70eb82b",
+      "deviceId": "a962eee45cbfac743e007bed738561a7",
+      "label": "Murilo",
       "isVip": true,
-      "vipSource": "admin",
-      "vipKeyId": null,
-      "vipSince": "2026-08-26T15:59:06.639+00:00",
-      "createdAt": "2026-08-26T15:53:37.421+00:00",
-      "lastSeenAt": "2026-08-27T00:57:07.955+00:00"
+      "vipSource": "key",
+      "vipKeyId": "key_5c8a000087583bb160",
+      "vipSince": "2026-08-26T22:07:32.862+00:00",
+      "createdAt": "2026-08-26T22:07:06.68+00:00",
+      "lastSeenAt": "2026-08-26T22:12:34.573+00:00"
     },
     {
-      "id": "usr_0d806a3448de394584",
-      "deviceId": "2016ef98ab75c1aa3d4c09c913bc03dd",
-      "label": "Neguin",
+      "id": "usr_03f19f712bde26dac3",
+      "deviceId": "e4d676c0819e419ac2596e28ad8c3c10",
+      "label": "Murilo",
+      "isVip": true,
+      "vipSource": "key",
+      "vipKeyId": "key_1ec4d8dec361b83578",
+      "vipSince": "2026-08-26T22:17:35.563+00:00",
+      "createdAt": "2026-08-26T22:09:47.443+00:00",
+      "lastSeenAt": "2026-08-26T22:18:23.185+00:00"
+    },
+    {
+      "id": "usr_0807201bf5d887f41d",
+      "deviceId": "3debff90ec2b0aa8e5c7b3612a2ced38",
+      "label": "Jogador #0015",
       "isVip": false,
       "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-26T16:02:30.384+00:00",
-      "lastSeenAt": "2026-08-26T16:02:36.682+00:00"
+      "createdAt": "2026-08-26T19:09:09.53+00:00",
+      "lastSeenAt": "2026-08-26T19:09:09.53+00:00"
     },
     {
-      "id": "usr_09e2f9c6963e73c5f5",
-      "deviceId": "6cbc88d53c55737061afe26448a29edf",
-      "label": "Jogador #0011",
+      "id": "usr_6f5065e637376d702e",
+      "deviceId": "c57dd2d6b19738754dece47feb1d698c",
+      "label": "harthur",
       "isVip": false,
       "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-26T16:39:40.878+00:00",
-      "lastSeenAt": "2026-08-26T16:39:40.878+00:00"
+      "createdAt": "2026-08-26T23:30:07.701+00:00",
+      "lastSeenAt": "2026-08-26T23:30:12.868+00:00"
     },
     {
-      "id": "usr_b673199148f864fb95",
-      "deviceId": "d7901a69963d5ee9257c62ec286effe1",
-      "label": "Jogador #0005",
+      "id": "usr_1aa4bd1909dd45f97c",
+      "deviceId": "db74b42510c5c48b95b3c99c957292b9",
+      "label": "harthur",
       "isVip": false,
       "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-26T14:27:53.919+00:00",
-      "lastSeenAt": "2026-08-26T15:30:52.776+00:00"
+      "createdAt": "2026-08-27T01:03:35.578+00:00",
+      "lastSeenAt": "2026-08-27T01:03:52.974+00:00"
     },
     {
-      "id": "usr_717998fa09c4a81b2c",
-      "deviceId": "9ceb93d16a82694b8df998ba382e7cf7",
-      "label": "Jogador #0008",
+      "id": "usr_2f0cd6460ebaf28c24",
+      "deviceId": "fe27a2cd4fc4d3142b36f278d800be3e",
+      "label": "Jogador #0021",
       "isVip": false,
       "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-26T15:53:29.449+00:00",
-      "lastSeenAt": "2026-08-26T15:53:29.449+00:00"
+      "createdAt": "2026-08-26T22:11:50.058+00:00",
+      "lastSeenAt": "2026-08-26T22:11:50.058+00:00"
     },
     {
-      "id": "usr_827773347d5c0ab50d",
-      "deviceId": "testuser9999",
-      "label": "Jogador #0004",
+      "id": "usr_4203dbb5dfeacaf7d5",
+      "deviceId": "131351252936aee0cd5fbf2ab27711f9",
+      "label": "Harthur Santos",
       "isVip": false,
       "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-26T14:04:17.54+00:00",
-      "lastSeenAt": "2026-08-26T14:04:17.739+00:00"
+      "createdAt": "2026-08-27T22:26:48.095+00:00",
+      "lastSeenAt": "2026-08-27T22:47:17.732+00:00"
     },
     {
-      "id": "usr_eb9f18b71a9f544e3e",
-      "deviceId": "persisttest1234",
-      "label": "Jogador #0003",
+      "id": "usr_f6b222da604c22c990",
+      "deviceId": "cc5d8a6801dd7b2407b0e3f7514e3bff",
+      "label": "Jogador #0035",
       "isVip": false,
       "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-26T01:29:53.938+00:00",
-      "lastSeenAt": "2026-08-26T01:29:53.938+00:00"
+      "createdAt": "2026-08-27T22:49:15.328+00:00",
+      "lastSeenAt": "2026-08-27T22:49:15.431+00:00"
     },
     {
       "id": "usr_4d0213ae24b3227015",
@@ -355,17 +289,6 @@
       "lastSeenAt": "2026-08-27T00:48:58.316+00:00"
     },
     {
-      "id": "usr_ed6b15b9dcb954e67c",
-      "deviceId": "testdevice5678",
-      "label": "Jogador #0002",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-25T22:30:39.243+00:00",
-      "lastSeenAt": "2026-08-25T22:30:39.243+00:00"
-    },
-    {
       "id": "usr_9ca1533ab2612eeac0",
       "deviceId": "8b1bcafa06c6cb303b81ff948ee8357c",
       "label": "Yasmim",
@@ -385,10 +308,122 @@
       "vipKeyId": "key_95b1817fbd3e5f5cdd",
       "vipSince": "2026-08-27T00:55:59.195+00:00",
       "createdAt": "2026-08-27T00:54:10.6+00:00",
-      "lastSeenAt": "2026-08-27T01:54:26.426+00:00"
+      "lastSeenAt": "2026-08-27T22:50:53.689+00:00"
+    },
+    {
+      "id": "usr_523740489ebdaf57f9",
+      "deviceId": "13511395944dd158dc8208442d9a1c03",
+      "label": "Neguin",
+      "isVip": true,
+      "vipSource": "admin",
+      "vipKeyId": null,
+      "vipSince": "2026-08-26T15:59:06.639+00:00",
+      "createdAt": "2026-08-26T15:53:37.421+00:00",
+      "lastSeenAt": "2026-08-27T00:57:07.955+00:00"
+    },
+    {
+      "id": "usr_0d806a3448de394584",
+      "deviceId": "2016ef98ab75c1aa3d4c09c913bc03dd",
+      "label": "Neguin",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T16:02:30.384+00:00",
+      "lastSeenAt": "2026-08-26T16:02:36.682+00:00"
+    },
+    {
+      "id": "usr_09e2f9c6963e73c5f5",
+      "deviceId": "6cbc88d53c55737061afe26448a29edf",
+      "label": "Jogador #0011",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T16:39:40.878+00:00",
+      "lastSeenAt": "2026-08-26T16:39:40.878+00:00"
+    },
+    {
+      "id": "usr_b673199148f864fb95",
+      "deviceId": "d7901a69963d5ee9257c62ec286effe1",
+      "label": "Jogador #0005",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T14:27:53.919+00:00",
+      "lastSeenAt": "2026-08-26T15:30:52.776+00:00"
+    },
+    {
+      "id": "usr_717998fa09c4a81b2c",
+      "deviceId": "9ceb93d16a82694b8df998ba382e7cf7",
+      "label": "Jogador #0008",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T15:53:29.449+00:00",
+      "lastSeenAt": "2026-08-26T15:53:29.449+00:00"
+    },
+    {
+      "id": "usr_c40fde66fee98e2249",
+      "deviceId": "testdevice1234",
+      "label": "Jogador #0001",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-25T22:26:45.348+00:00",
+      "lastSeenAt": "2026-08-25T22:26:45.661+00:00"
+    },
+    {
+      "id": "usr_827773347d5c0ab50d",
+      "deviceId": "testuser9999",
+      "label": "Jogador #0004",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T14:04:17.54+00:00",
+      "lastSeenAt": "2026-08-26T14:04:17.739+00:00"
+    },
+    {
+      "id": "usr_eb9f18b71a9f544e3e",
+      "deviceId": "persisttest1234",
+      "label": "Jogador #0003",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T01:29:53.938+00:00",
+      "lastSeenAt": "2026-08-26T01:29:53.938+00:00"
+    },
+    {
+      "id": "usr_ed6b15b9dcb954e67c",
+      "deviceId": "testdevice5678",
+      "label": "Jogador #0002",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-25T22:30:39.243+00:00",
+      "lastSeenAt": "2026-08-25T22:30:39.243+00:00"
     }
   ],
   "keys": [
+    {
+      "id": "key_8a37a00f7e81035dfb",
+      "code": "AIMZY-2XSM-PSG4",
+      "type": "premium",
+      "status": "ativa",
+      "createdAt": "2026-08-27T22:01:33.186+00:00",
+      "expiresAt": "2026-08-27T23:01:33.183+00:00",
+      "maxUses": 10,
+      "uses": 2,
+      "activatedByUserId": "usr_d7d9d2d8515e53ddbd",
+      "activatedByLabel": "TesteProibida",
+      "activatedAt": "2026-08-27T22:09:52.375+00:00"
+    },
     {
       "id": "key_c0b9fcc6d135435a40",
       "code": "AIM-VIP-QQVA-P3AK",
@@ -557,19 +592,6 @@
       "activatedByUserId": "usr_a93fe4e1ebe8c9284b",
       "activatedByLabel": "TestePremium",
       "activatedAt": "2026-08-27T22:05:00.089+00:00"
-    },
-    {
-      "id": "key_8a37a00f7e81035dfb",
-      "code": "AIMZY-2XSM-PSG4",
-      "type": "premium",
-      "status": "ativa",
-      "createdAt": "2026-08-27T22:01:33.186+00:00",
-      "expiresAt": "2026-08-27T23:01:33.183+00:00",
-      "maxUses": 10,
-      "uses": 2,
-      "activatedByUserId": "usr_d7d9d2d8515e53ddbd",
-      "activatedByLabel": "TesteProibida",
-      "activatedAt": "2026-08-27T22:09:52.375+00:00"
     }
   ],
   "sessions": [
@@ -998,20 +1020,12 @@
       "expiresAt": "2026-09-26T15:55:07.356+00:00"
     },
     {
-      "token": "229614db7f3076af92c09f8884fa006c191cde76a450ed92aed38218fdcc4827",
-      "userId": "usr_4203dbb5dfeacaf7d5",
+      "token": "4b8a7a264ee3b33eaa5ba7f211b01173ad09c19c2efce90e67a56f7482aa0e75",
+      "userId": "usr_37660f66ae8b16ce83",
       "adminId": null,
       "isAdmin": false,
-      "createdAt": "2026-08-27T22:26:48.095+00:00",
-      "expiresAt": "2026-09-26T22:26:48.095+00:00"
-    },
-    {
-      "token": "71d8ea77e71d8b6bc0487d87b65fa3a657f3bf6b9a72a3440afb1032a9f16673",
-      "userId": null,
-      "adminId": "adm_e99cb1994501ae197d",
-      "isAdmin": true,
-      "createdAt": "2026-08-27T22:28:22.156+00:00",
-      "expiresAt": "2026-08-28T10:28:22.156+00:00"
+      "createdAt": "2026-08-27T22:48:45.769+00:00",
+      "expiresAt": "2026-09-26T22:48:45.769+00:00"
     },
     {
       "token": "689c37e91275814fc76ff39c79923c52d8e9ed5e6e5bdbe3f433c8801ac3c51c",
@@ -1028,6 +1042,22 @@
       "isAdmin": false,
       "createdAt": "2026-08-27T15:07:58.428+00:00",
       "expiresAt": "2026-09-26T15:07:58.428+00:00"
+    },
+    {
+      "token": "965254bcfcf59b4448ebad214252bdc6743ff06636107cf9dc34a3d3545b7f8e",
+      "userId": "usr_4d0213ae24b3227015",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-27T15:09:16.004+00:00",
+      "expiresAt": "2026-09-26T15:09:16.004+00:00"
+    },
+    {
+      "token": "57fb58c800b3950f1e42a9c847d55c89fc395b5e01be2d7523ab02f80cb7583a",
+      "userId": "usr_8cf0ce182419532215",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-27T14:43:20.006+00:00",
+      "expiresAt": "2026-09-26T14:43:20.006+00:00"
     },
     {
       "token": "33cef94fedaec83033b534a10d1b2d6960714a83216aadbbcb9c32770f2a16b3",
@@ -1150,12 +1180,28 @@
       "expiresAt": "2026-09-26T22:24:15.67+00:00"
     },
     {
+      "token": "229614db7f3076af92c09f8884fa006c191cde76a450ed92aed38218fdcc4827",
+      "userId": "usr_4203dbb5dfeacaf7d5",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-27T22:26:48.095+00:00",
+      "expiresAt": "2026-09-26T22:26:48.095+00:00"
+    },
+    {
       "token": "3081c13902fa0281e6f20ca61f36a7b81d4774b208a54cb3125a02bc3e78dd46",
       "userId": "usr_827773347d5c0ab50d",
       "adminId": null,
       "isAdmin": false,
       "createdAt": "2026-08-26T14:04:17.541+00:00",
       "expiresAt": "2026-09-25T14:04:17.541+00:00"
+    },
+    {
+      "token": "71d8ea77e71d8b6bc0487d87b65fa3a657f3bf6b9a72a3440afb1032a9f16673",
+      "userId": null,
+      "adminId": "adm_e99cb1994501ae197d",
+      "isAdmin": true,
+      "createdAt": "2026-08-27T22:28:22.156+00:00",
+      "expiresAt": "2026-08-28T10:28:22.156+00:00"
     },
     {
       "token": "8edc4c2dc9ffdda507615e7c5ecfd942a2993a3b8f09cd7f0b69dbaaaa29552a",
@@ -1182,20 +1228,60 @@
       "expiresAt": "2026-09-25T13:56:49.643+00:00"
     },
     {
-      "token": "965254bcfcf59b4448ebad214252bdc6743ff06636107cf9dc34a3d3545b7f8e",
-      "userId": "usr_4d0213ae24b3227015",
+      "token": "ab7874f983e8a20661a840a18af5840d741bc641c665d394fefd51e646957f13",
+      "userId": "usr_f6b222da604c22c990",
       "adminId": null,
       "isAdmin": false,
-      "createdAt": "2026-08-27T15:09:16.004+00:00",
-      "expiresAt": "2026-09-26T15:09:16.004+00:00"
+      "createdAt": "2026-08-27T22:49:15.328+00:00",
+      "expiresAt": "2026-09-26T22:49:15.328+00:00"
     },
     {
-      "token": "57fb58c800b3950f1e42a9c847d55c89fc395b5e01be2d7523ab02f80cb7583a",
+      "token": "13d184de8815c0befba41747f021c45b640b0a2934a204bdba74fd0a88609303",
+      "userId": "usr_e5ff5ee0f8a5990219",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-27T22:49:24.223+00:00",
+      "expiresAt": "2026-09-26T22:49:24.223+00:00"
+    },
+    {
+      "token": "f3be169ae684ec787f614710b522917f2809bf7f5de5bb40b354669a52f8a85f",
       "userId": "usr_8cf0ce182419532215",
       "adminId": null,
       "isAdmin": false,
-      "createdAt": "2026-08-27T14:43:20.006+00:00",
-      "expiresAt": "2026-09-26T14:43:20.006+00:00"
+      "createdAt": "2026-08-27T21:50:39.912+00:00",
+      "expiresAt": "2026-09-26T21:50:39.912+00:00"
+    },
+    {
+      "token": "95adeaadf5cf00394be0a3fd31660d37c61bb527b57d4f954312b057cfee8d0a",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:30:23.96+00:00",
+      "expiresAt": "2026-09-25T15:30:23.96+00:00"
+    },
+    {
+      "token": "fa6932d22cb1992a1d2e6e7ffe1624a8ffe59ece22b5191c303cfdb9e47f2e9b",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:30:41.974+00:00",
+      "expiresAt": "2026-09-25T15:30:41.974+00:00"
+    },
+    {
+      "token": "e57653c21cb8cfb7cb8bf1b40070e00006762b8afabdec59421ca0b519cabba5",
+      "userId": "usr_c9b5a313f5c6e01138",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-27T15:11:06.845+00:00",
+      "expiresAt": "2026-09-26T15:11:06.845+00:00"
+    },
+    {
+      "token": "b981651fed33476887cf9cdfeba08653a7bc3227bbf806b62a113964c7817231",
+      "userId": "usr_c40fde66fee98e2249",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-25T22:26:45.348+00:00",
+      "expiresAt": "2026-09-24T22:26:45.348+00:00"
     },
     {
       "token": "9b93bec7186fe62b5d4ebd299609f357d3c48530bf83a7143250c6ca578f8f1a",
@@ -1326,44 +1412,20 @@
       "expiresAt": "2026-09-25T15:29:49.905+00:00"
     },
     {
-      "token": "f3be169ae684ec787f614710b522917f2809bf7f5de5bb40b354669a52f8a85f",
-      "userId": "usr_8cf0ce182419532215",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-27T21:50:39.912+00:00",
-      "expiresAt": "2026-09-26T21:50:39.912+00:00"
+      "token": "e632bb825efdd53df4503a383b908d660bd5b17b5b08a9b3d16ad7ae4de272bc",
+      "userId": null,
+      "adminId": "adm_e99cb1994501ae197d",
+      "isAdmin": true,
+      "createdAt": "2026-08-27T22:50:49.456+00:00",
+      "expiresAt": "2026-08-28T10:50:49.456+00:00"
     },
     {
-      "token": "b981651fed33476887cf9cdfeba08653a7bc3227bbf806b62a113964c7817231",
-      "userId": "usr_c40fde66fee98e2249",
+      "token": "f788069bf0868cc9eaed2607075dfb0610cbb18fedb2d104b4a47ecd3cf34a73",
+      "userId": "usr_37660f66ae8b16ce83",
       "adminId": null,
       "isAdmin": false,
-      "createdAt": "2026-08-25T22:26:45.348+00:00",
-      "expiresAt": "2026-09-24T22:26:45.348+00:00"
-    },
-    {
-      "token": "95adeaadf5cf00394be0a3fd31660d37c61bb527b57d4f954312b057cfee8d0a",
-      "userId": "usr_b673199148f864fb95",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:30:23.96+00:00",
-      "expiresAt": "2026-09-25T15:30:23.96+00:00"
-    },
-    {
-      "token": "fa6932d22cb1992a1d2e6e7ffe1624a8ffe59ece22b5191c303cfdb9e47f2e9b",
-      "userId": "usr_b673199148f864fb95",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:30:41.974+00:00",
-      "expiresAt": "2026-09-25T15:30:41.974+00:00"
-    },
-    {
-      "token": "e57653c21cb8cfb7cb8bf1b40070e00006762b8afabdec59421ca0b519cabba5",
-      "userId": "usr_c9b5a313f5c6e01138",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-27T15:11:06.845+00:00",
-      "expiresAt": "2026-09-26T15:11:06.845+00:00"
+      "createdAt": "2026-08-27T22:50:53.171+00:00",
+      "expiresAt": "2026-09-26T22:50:53.171+00:00"
     },
     {
       "token": "0f75958d0b8dc4a74149dcca457cacbc0d31e5abc81a367db3f4ff2c4f6e4778",
@@ -1719,32 +1781,6 @@
       "knownDevice": true
     },
     {
-      "id": "gen_6b3e54529e04936b4c",
-      "at": "2026-08-26T15:30:52.777+00:00",
-      "userId": "usr_b673199148f864fb95",
-      "mode": "normal",
-      "inputs": {
-        "aim": "equilibrada",
-        "tier": "normal",
-        "level": "intermediario",
-        "style": "eq",
-        "dpiAtual": "",
-        "deviceModel": "Samsung Galaxy A54"
-      },
-      "values": {
-        "geral": 169,
-        "mira2x": 153,
-        "mira4x": 144,
-        "redDot": 162,
-        "miraAwm": 121,
-        "olhadinha": 105
-      },
-      "dpi": 476,
-      "fireButton": 58,
-      "deviceName": "Samsung Galaxy A54",
-      "knownDevice": true
-    },
-    {
       "id": "gen_2513a641bbec18e641",
       "at": "2026-08-26T20:33:49.861+00:00",
       "userId": "usr_8a59ae6918c80dbdca",
@@ -1873,6 +1909,58 @@
       "fireButton": 58,
       "deviceName": null,
       "knownDevice": false
+    },
+    {
+      "id": "gen_4e16dd7eab6b30291d",
+      "at": "2026-08-27T22:49:40.677+00:00",
+      "userId": "usr_e5ff5ee0f8a5990219",
+      "mode": "normal",
+      "inputs": {
+        "aim": "equilibrada",
+        "tier": "normal",
+        "level": "iniciante",
+        "style": "eq",
+        "dpiAtual": "",
+        "deviceModel": "Samsung Galaxy A35"
+      },
+      "values": {
+        "geral": 166,
+        "mira2x": 151,
+        "mira4x": 137,
+        "redDot": 159,
+        "miraAwm": 112,
+        "olhadinha": 104
+      },
+      "dpi": 444,
+      "fireButton": 61,
+      "deviceName": "Samsung Galaxy A35",
+      "knownDevice": true
+    },
+    {
+      "id": "gen_6b3e54529e04936b4c",
+      "at": "2026-08-26T15:30:52.777+00:00",
+      "userId": "usr_b673199148f864fb95",
+      "mode": "normal",
+      "inputs": {
+        "aim": "equilibrada",
+        "tier": "normal",
+        "level": "intermediario",
+        "style": "eq",
+        "dpiAtual": "",
+        "deviceModel": "Samsung Galaxy A54"
+      },
+      "values": {
+        "geral": 169,
+        "mira2x": 153,
+        "mira4x": 144,
+        "redDot": 162,
+        "miraAwm": 121,
+        "olhadinha": 105
+      },
+      "dpi": 476,
+      "fireButton": 58,
+      "deviceName": "Samsung Galaxy A54",
+      "knownDevice": true
     },
     {
       "id": "gen_286a5dfd90dbaae6ca",
@@ -2244,6 +2332,14 @@
         "permanent": 1
       }
     },
-    "plans": []
+    "plans": [
+      {
+        "id": "plan_mtc3zzgl1xzn",
+        "name": "1 horas",
+        "type": "proibida",
+        "price": 1.5,
+        "active": true
+      }
+    ]
   }
 }

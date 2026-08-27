@@ -24,6 +24,7 @@ const TIER_INFO = {
   },
   proibida: {
     label: 'AIMZY VIP',
+    desc: 'AGRESSIVA. Drag insano pra quem já tem controle. Exige treino.',
     btn: 'Gerar Sensi VIP',
     resTitle: 'Sua Sensi VIP',
     lock: true
@@ -31,6 +32,7 @@ const TIER_INFO = {
   vip: {
     label: 'AIMZY VIP',
     tier: 'proibida',
+    desc: 'AGRESSIVA. Drag insano pra quem já tem controle. Exige treino.',
     btn: 'Gerar Sensi VIP',
     resTitle: 'Sua Sensi VIP',
     lock: true
@@ -243,7 +245,7 @@ function switchTier(tier) {
 
   const info = TIER_INFO[tier];
   document.getElementById("heroTitle").innerHTML = "<em>" + info.label + "</em>";
-  document.getElementById("heroDesc").textContent = info.desc;
+  document.getElementById("heroDesc").textContent = info.desc || "";
   document.getElementById("genBtnLabel").textContent = info.btn;
   document.getElementById("resTitle").textContent = info.resTitle;
 
