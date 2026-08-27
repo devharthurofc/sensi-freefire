@@ -567,21 +567,25 @@ function findKeyByCode(code) {
   return getDb().keys.find(k => k.code === norm) || null;
 }
 
-function generateKeyCode() {
+function generateKeyCode(type) {
   const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   const block = () => Array.from(crypto.randomBytes(4)).map(b => alphabet[b % alphabet.length]).join('');
+  let prefix = 'AIMZY';
+  if (type === 'premium') prefix = 'AIM-PREM';
+  else if (type === 'vip') prefix = 'AIM-VIP';
   let code;
   let tries = 0;
-  do { code = 'AIMZY-' + block() + '-' + block() + '-' + block(); tries++; }
+  do { code = prefix + '-' + block().slice(0, 4) + '-' + block().slice(0, 4); tries++; }
   while (findKeyByCode(code) && tries < 50);
   return code;
 }
 
-function createKey({ expiresAt = null, maxUses = 1 }) {
-  const code = generateKeyCode();
+function createKey({ expiresAt = null, maxUses = 1, type = 'premium' }) {
+  const code = generateKeyCode(type);
   const key = {
     id: id('key'),
     code,
+    type: type === 'vip' ? 'vip' : 'premium',
     status: 'ativa',
     createdAt: new Date().toISOString(),
     expiresAt: expiresAt || null,

@@ -553,6 +553,16 @@ footer b{color:var(--muted)}
   </div>
 </div>
 
+<!-- MODAL AVISO -->
+<div id="announceModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;padding:20px">
+  <div style="background:rgba(20,10,10,.95);border:1px solid var(--card-border);border-radius:16px;max-width:400px;width:100%;padding:28px;text-align:center;backdrop-filter:blur(20px)">
+    <div style="font-size:2.2rem;margin-bottom:12px">📢</div>
+    <h3 id="announceTitle" style="margin-bottom:12px;color:var(--red3)"></h3>
+    <p id="announceMsg" style="color:var(--muted);margin-bottom:20px;line-height:1.6"></p>
+    <button class="btn" onclick="document.getElementById('announceModal').style.display='none'" style="background:var(--red2);color:#fff;border:none;padding:10px 28px;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600">Entendi</button>
+  </div>
+</div>
+
 <script src="/particles.js"></script>
 <script src="/app.js"></script>
 </body>

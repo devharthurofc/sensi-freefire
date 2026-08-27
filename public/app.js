@@ -765,6 +765,16 @@ document.getElementById("nameInput").addEventListener("keydown", function(e) {
     window.__devices = r.devices;
     fillDeviceSelect("modelSel");
   });
+  api("/api/announcement").then(function(r) {
+    if (r._status === 200 && r.announcement && r.announcement.message) {
+      var el = document.getElementById("announceModal");
+      var t = document.getElementById("announceTitle");
+      var m = document.getElementById("announceMsg");
+      if (t) t.textContent = r.announcement.title || "⚠️ Aviso";
+      if (m) m.textContent = r.announcement.message;
+      if (el) el.style.display = "flex";
+    }
+  });
   initPWA();
 })();
 

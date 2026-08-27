@@ -4,7 +4,6 @@ let myRole = 'mod';
 const allKeys = [];
 const allUsers = [];
 const allSales = [];
-const allProducts = [];
 
 function $(id){ return document.getElementById(id); }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -90,7 +89,7 @@ async function safeApi(path, opts) {
   return r;
 }
 
-function refreshAll(){ loadDashboard(); loadKeys(); loadUsers(); loadSales(); loadProducts(); loadNotifications(); }
+function refreshAll(){ loadDashboard(); loadKeys(); loadUsers(); loadSales(); loadNotifications(); }
 
 let refreshTimer = null;
 function startAutoRefresh() {
@@ -158,12 +157,13 @@ $('genKeyBtn').addEventListener('click', async () => {
   const r = await api('/api/admin/keys', { body: {
     expiresInDays: $('nkDays').value, expiresInHours: $('nkHours').value,
     expiresInMinutes: $('nkMin').value, expiresInSeconds: $('nkSec').value,
-    maxUses: $('nkUses').value
+    maxUses: $('nkUses').value,
+    type: $('nkType').value
   }});
   btn.disabled = false;
   if (r.key) {
     try { await navigator.clipboard.writeText(r.key.code); } catch(_){}
-    toast('KEY gerada e copiada: ' + r.key.code.slice(0, 12) + '…');
+    toast('KEY gerada e copiada: ' + r.key.code);
     loadKeys(); loadDashboard();
   } else {
     toast(r.message || 'Erro ao gerar KEY.', true);
@@ -184,7 +184,7 @@ function renderKeys() {
     !q || k.code.toLowerCase().includes(q) || (k.activatedByLabel || '').toLowerCase().includes(q));
 
   if (!list.length) {
-    tb.innerHTML = '<tr><td colspan="6" style="color:var(--muted)">' +
+    tb.innerHTML = '<tr><td colspan="7" style="color:var(--muted)">' +
       (q ? 'Nenhuma key encontrada para esse filtro.' : 'Nenhuma KEY criada ainda.') + '</td></tr>';
     return;
   }
@@ -194,9 +194,13 @@ function renderKeys() {
     const statusBadge = k.status === 'ativa'
       ? (k.expired ? '<span class="badge bg-warn">expirada</span>' : '<span class="badge bg-ok">ativa</span>')
       : '<span class="badge bg-off">inativa</span>';
+    const typeBadge = k.type === 'vip'
+      ? '<span class="badge bg-warn" style="font-size:.7rem">🟨 VIP</span>'
+      : '<span class="badge bg-owner" style="font-size:.7rem">🟦 PREMIUM</span>';
     const usesTxt = k.maxUses ? (k.uses + '/' + k.maxUses) : (k.uses + '/∞');
     tr.innerHTML =
       '<td><span class="code">' + esc(k.code) + '</span></td>' +
+      '<td>' + typeBadge + '</td>' +
       '<td>' + statusBadge + '</td>' +
       '<td>' + usesTxt + '</td>' +
       '<td><input type="date" class="mini-inp exp-inp" value="' + (k.expiresAt ? k.expiresAt.slice(0,10) : '') + '"></td>' +
@@ -270,8 +274,6 @@ $('addSaleBtn').addEventListener('click', async () => {
   const price = $('salePrice').value;
   const buyer = $('saleBuyer').value.trim();
   const contact = $('saleContact').value.trim();
-  const product = $('saleProduct').value;
-  const plan = $('salePlan').value;
   const paymentMethod = $('salePayment').value;
   const status = $('saleStatus').value;
   const notes = $('saleNotes').value.trim();
@@ -282,15 +284,15 @@ $('addSaleBtn').addEventListener('click', async () => {
   const btn = $('addSaleBtn'); btn.disabled = true;
   const r = await api('/api/admin/sales', { body: {
     keyCode: key, price: parseFloat(price) || 0, buyerLabel: buyer,
-    buyerContact: contact, product, plan, paymentMethod, status, notes
+    buyerContact: contact, paymentMethod, status, notes
   }});
   btn.disabled = false;
 
   if (r._status === 200) {
-    toast('Venda registrada! R$ ' + (parseFloat(price) || 0).toFixed(2));
+    toast('Venda registrada com sucesso!');
     $('saleKey').value = ''; $('salePrice').value = ''; $('saleBuyer').value = '';
     $('saleContact').value = ''; $('saleNotes').value = '';
-    $('saleProduct').value = ''; $('salePlan').value = '';
+    if (r.sale) showReceipt(r.sale);
     loadSales(); loadDashboard();
   } else {
     toast(r.message || 'Erro ao registrar venda.', true);
@@ -326,11 +328,10 @@ function renderSales() {
   const tb = $('salesBody');
   const q = ($('saleSearch').value || '').toLowerCase().trim();
   const list = allSales.filter(s =>
-    !q || s.keyCode.toLowerCase().includes(q) || (s.buyerLabel || '').toLowerCase().includes(q) ||
-    (s.product || '').toLowerCase().includes(q) || (s.plan || '').toLowerCase().includes(q));
+    !q || s.keyCode.toLowerCase().includes(q) || (s.buyerLabel || '').toLowerCase().includes(q));
 
   if (!list.length) {
-    tb.innerHTML = '<tr><td colspan="9" style="color:var(--muted)">' +
+    tb.innerHTML = '<tr><td colspan="7" style="color:var(--muted)">' +
       (q ? 'Nenhuma venda encontrada.' : 'Nenhuma venda registrada ainda.') + '</td></tr>';
     return;
   }
@@ -345,8 +346,6 @@ function renderSales() {
     tr.innerHTML =
       '<td><span class="code">' + esc(s.keyCode) + '</span></td>' +
       '<td><b>' + esc(s.buyerLabel) + '</b></td>' +
-      '<td style="color:var(--muted)">' + esc(s.product || '—') + '</td>' +
-      '<td style="color:var(--muted)">' + esc(s.plan || '—') + '</td>' +
       '<td style="color:#86efac;font-weight:700">R$ ' + (s.price || 0).toFixed(2) + '</td>' +
       '<td style="color:var(--muted)">' + esc(paymentLabels[s.paymentMethod] || s.paymentMethod || '—') + '</td>' +
       '<td>' + statusBadge + '</td>' +
@@ -503,6 +502,20 @@ $('changePwBtn').addEventListener('click', async () => {
   if (r._status === 200) { $('pwOld').value = ''; $('pwNew').value = ''; }
 });
 
+$('saveAnnBtn').addEventListener('click', async () => {
+  const title = $('annTitle').value.trim();
+  const message = $('annMsg').value.trim();
+  if (!message) { toast('Escreva uma mensagem.', true); return; }
+  const r = await api('/api/admin/announcement', { body: { title, message, active: true } });
+  if (r._status === 200) { toast('Aviso publicado!'); $('annTitle').value = ''; $('annMsg').value = ''; }
+  else toast('Erro ao salvar aviso.', true);
+});
+
+$('clearAnnBtn').addEventListener('click', async () => {
+  const r = await api('/api/admin/announcement', { body: { active: false } });
+  if (r._status === 200) toast('Aviso removido.');
+});
+
 /* ---------- segurança ---------- */
 
 async function loadSecurity() {
@@ -542,138 +555,6 @@ async function loadSecurity() {
   });
 }
 
-/* ---------- produtos / planos ---------- */
-
-let editingProductId = null;
-
-async function loadProducts() {
-  const r = await api('/api/admin/products');
-  allProducts.length = 0;
-  if (r._status === 200 && r.products) allProducts.push(...r.products);
-  renderProducts();
-  updateProductSelects();
-}
-
-function renderProducts() {
-  const el = $('productsList');
-  if (!allProducts.length) {
-    el.innerHTML = '<p style="color:var(--muted)">Nenhum produto cadastrado.</p>';
-    return;
-  }
-  el.innerHTML = '';
-  allProducts.forEach(p => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.style.marginBottom = '12px';
-    card.style.borderLeft = '3px solid ' + (p.active ? 'var(--red2)' : 'var(--muted)');
-    let plansHtml = '';
-    if (p.plans && p.plans.length) {
-      plansHtml = '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">' +
-        p.plans.map(pl =>
-          '<div style="background:var(--bg2);padding:8px 12px;border-radius:8px;font-size:.85rem">' +
-          '<b>' + esc(pl.name) + '</b> · ' + esc(pl.duration) + ' · <span style="color:#86efac">R$ ' + pl.price.toFixed(2) + '</span>' +
-          (pl.active ? '' : ' <span style="color:var(--muted)">(inativo)</span>') +
-          '</div>'
-        ).join('') + '</div>';
-    }
-    card.innerHTML =
-      '<div style="display:flex;justify-content:space-between;align-items:start">' +
-        '<div><h3 class="sec" style="margin:0">' + esc(p.name) + '</h3>' +
-        '<p style="color:var(--muted);font-size:.85rem;margin:4px 0">' + esc(p.description || 'Sem descrição') + '</p>' +
-        (p.active ? '<span class="badge bg-ok">ativo</span>' : '<span class="badge bg-off">inativo</span>') +
-        '</div>' +
-        '<div style="display:flex;gap:6px">' +
-          '<button class="b-gray act prod-toggle" data-id="' + p.id + '">' + (p.active ? 'Desativar' : 'Ativar') + '</button>' +
-          '<button class="b-gray act prod-addplan" data-id="' + p.id + '">+ Plano</button>' +
-          '<button class="b-red act prod-del" data-id="' + p.id + '">Excluir</button>' +
-        '</div>' +
-      '</div>' + plansHtml;
-    el.appendChild(card);
-
-    card.querySelector('.prod-toggle').onclick = async () => {
-      await api('/api/admin/products/' + p.id, { method: 'PATCH', body: { active: !p.active } });
-      toast(p.active ? 'Produto desativado.' : 'Produto ativado.');
-      loadProducts();
-    };
-    card.querySelector('.prod-addplan').onclick = () => {
-      editingProductId = p.id;
-      $('prodPlanCard').style.display = '';
-      $('prodPlanName').textContent = p.name;
-    };
-    card.querySelector('.prod-del').onclick = async () => {
-      if (!confirm('Excluir o produto "' + p.name + '"?')) return;
-      await api('/api/admin/products/' + p.id, { method: 'DELETE' });
-      toast('Produto excluído.');
-      loadProducts();
-    };
-  });
-}
-
-function updateProductSelects() {
-  const sel = $('saleProduct');
-  if (!sel) return;
-  const prev = sel.value;
-  sel.innerHTML = '<option value="">Selecionar...</option>';
-  allProducts.filter(p => p.active).forEach(p => {
-    const opt = document.createElement('option');
-    opt.value = p.name;
-    opt.textContent = p.name;
-    sel.appendChild(opt);
-  });
-  sel.value = prev;
-  updatePlanSelects();
-}
-
-function updatePlanSelects() {
-  const prodName = $('saleProduct').value;
-  const planSel = $('salePlan');
-  if (!planSel) return;
-  const prev = planSel.value;
-  planSel.innerHTML = '<option value="">Selecionar...</option>';
-  const product = allProducts.find(p => p.name === prodName);
-  if (product && product.plans) {
-    product.plans.filter(pl => pl.active).forEach(pl => {
-      const opt = document.createElement('option');
-      opt.value = pl.name;
-      opt.textContent = pl.name + ' · R$ ' + pl.price.toFixed(2);
-      planSel.appendChild(opt);
-    });
-  }
-  planSel.value = prev;
-}
-
-if ($('saleProduct')) $('saleProduct').addEventListener('change', updatePlanSelects);
-
-$('addProdBtn').addEventListener('click', async () => {
-  const name = $('prodName').value.trim();
-  if (!name) { toast('Informe o nome do produto.', true); return; }
-  const r = await api('/api/admin/products', { body: { name, description: $('prodDesc').value.trim() } });
-  if (r._status === 200) { toast('Produto criado!'); $('prodName').value = ''; $('prodDesc').value = ''; loadProducts(); }
-  else toast(r.message || 'Erro ao criar produto.', true);
-});
-
-$('addPlanBtn').addEventListener('click', async () => {
-  if (!editingProductId) return;
-  const product = allProducts.find(p => p.id === editingProductId);
-  if (!product) return;
-  const planName = $('planName').value.trim();
-  const duration = $('planDuration').value.trim();
-  const price = parseFloat($('planPrice').value) || 0;
-  if (!planName) { toast('Informe o nome do plano.', true); return; }
-  const plans = (product.plans || []).concat([{ name: planName, duration, price, active: true }]);
-  await api('/api/admin/products/' + editingProductId, { method: 'PATCH', body: { plans } });
-  toast('Plano adicionado!');
-  $('planName').value = ''; $('planDuration').value = ''; $('planPrice').value = '';
-  $('prodPlanCard').style.display = 'none';
-  editingProductId = null;
-  loadProducts();
-});
-
-$('cancelPlanBtn').addEventListener('click', () => {
-  $('prodPlanCard').style.display = 'none';
-  editingProductId = null;
-});
-
 /* ---------- relatórios ---------- */
 
 async function loadReports() {
@@ -697,25 +578,15 @@ async function loadReports() {
   }
 
   const sales = (salesR._status === 200 && salesR.sales) ? salesR.sales : [];
-  const productCount = {};
-  const planCount = {};
   const paymentCount = {};
   sales.forEach(s => {
-    if (s.product) productCount[s.product] = (productCount[s.product] || 0) + 1;
-    if (s.plan) planCount[s.plan] = (planCount[s.plan] || 0) + 1;
     if (s.paymentMethod) paymentCount[s.paymentMethod] = (paymentCount[s.paymentMethod] || 0) + 1;
   });
 
-  const topProducts = Object.entries(productCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
-  const topPlans = Object.entries(planCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
   const topPayments = Object.entries(paymentCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
 
   $('reportTop').innerHTML =
     '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">' +
-    '<div><h4 style="margin-bottom:8px;color:var(--muted)">Produtos mais vendidos</h4>' +
-    (topProducts.length ? topProducts.map(([k, v]) => '<div style="padding:6px 0;border-bottom:1px solid var(--border)">' + esc(k) + ' · <b>' + v + ' vendas</b></div>').join('') : '<p style="color:var(--muted)">Sem dados</p>') + '</div>' +
-    '<div><h4 style="margin-bottom:8px;color:var(--muted)">Planos mais vendidos</h4>' +
-    (topPlans.length ? topPlans.map(([k, v]) => '<div style="padding:6px 0;border-bottom:1px solid var(--border)">' + esc(k) + ' · <b>' + v + ' vendas</b></div>').join('') : '<p style="color:var(--muted)">Sem dados</p>') + '</div>' +
     '<div><h4 style="margin-bottom:8px;color:var(--muted)">Formas de pagamento</h4>' +
     (topPayments.length ? topPayments.map(([k, v]) => '<div style="padding:6px 0;border-bottom:1px solid var(--border)">' + esc(k) + ' · <b>' + v + ' vendas</b></div>').join('') : '<p style="color:var(--muted)">Sem dados</p>') + '</div>' +
     '</div>';
@@ -733,9 +604,6 @@ async function loadActivity() {
   const names = {
     sale_created: ['Venda registrada', 'bg-purple'],
     sale_deleted: ['Venda excluída', 'bg-off'],
-    produto_criado: ['Produto criado', 'bg-ok'],
-    produto_atualizado: ['Produto atualizado', 'bg-warn'],
-    produto_excluido: ['Produto excluído', 'bg-off'],
     key_created: ['KEY criada', 'bg-owner'],
     key_deleted: ['KEY excluída', 'bg-off'],
     vip_granted: ['VIP liberado', 'bg-ok'],
@@ -786,11 +654,87 @@ $('reloadNotifBtn').addEventListener('click', loadNotifications);
 
 $('notifBell').addEventListener('click', () => showSection('notifications'));
 
-/* ---------- atualizar vendas (selects) ---------- */
-const origAddSale = loadSales;
-loadSales = async function() {
-  await origAddSale.call ? origAddSale.call(this) : origAddSale();
-  updateProductSelects();
-};
+/* ---------- comprovante de venda ---------- */
+
+let lastReceiptData = null;
+
+function showReceipt(sale) {
+  lastReceiptData = sale;
+  const d = new Date(sale.soldAt);
+  const dateStr = d.toLocaleDateString('pt-BR');
+  const paymentLabels = { pix: 'Pix', dinheiro: 'Dinheiro', cartao: 'Cartão', outro: 'Outro' };
+  const payment = paymentLabels[sale.paymentMethod] || sale.paymentMethod || '—';
+
+  $('receiptBody').innerHTML =
+    '<div style="border-bottom:1px dashed var(--border);padding-bottom:12px;margin-bottom:12px">' +
+      '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Produto</span><b>' + esc(sale.product || 'Aimzy') + '</b></div>' +
+      '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Plano</span><b>' + esc(sale.plan || '—') + '</b></div>' +
+      '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Valor</span><b style="color:#86efac">R$ ' + (sale.price || 0).toFixed(2) + '</b></div>' +
+      '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Pagamento</span><b>' + payment + '</b></div>' +
+      '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Data</span><b>' + dateStr + '</b></div>' +
+    '</div>' +
+    '<div style="text-align:center;padding:8px 0;border-bottom:1px dashed var(--border);margin-bottom:12px">' +
+      '<span style="color:var(--muted);font-size:.8rem">Sua Key</span><br>' +
+      '<b style="font-size:1.1rem;letter-spacing:.05em;color:var(--red3)">' + esc(sale.keyCode) + '</b>' +
+    '</div>' +
+    '<p style="text-align:center;color:var(--muted);font-size:.8rem">Obrigado pela compra! ❤️<br>Acesse seu painel para acompanhar sua licença.</p>';
+
+  $('receiptModal').style.display = 'flex';
+}
+
+function closeReceipt() { $('receiptModal').style.display = 'none'; }
+
+function copyReceipt() {
+  if (!lastReceiptData) return;
+  const s = lastReceiptData;
+  const d = new Date(s.soldAt);
+  const paymentLabels = { pix: 'Pix', dinheiro: 'Dinheiro', cartao: 'Cartão', outro: 'Outro' };
+  const txt =
+    '╔══════════════════════════════╗\n' +
+    '║            AIMZY             ║\n' +
+    '║     COMPROVANTE DE VENDA     ║\n' +
+    '╠══════════════════════════════╣\n' +
+    '║ Produto: ' + (s.product || 'Aimzy') + '\n' +
+    '║ Plano: ' + (s.plan || '—') + '\n' +
+    '║ Valor: R$ ' + (s.price || 0).toFixed(2) + '\n' +
+    '║ Pagamento: ' + (paymentLabels[s.paymentMethod] || '—') + '\n' +
+    '║ Data: ' + d.toLocaleDateString('pt-BR') + '\n' +
+    '╠══════════════════════════════╣\n' +
+    '║ Sua Key:\n' +
+    '║ ' + s.keyCode + '\n' +
+    '╠══════════════════════════════╣\n' +
+    '║ Obrigado pela compra! ❤️\n' +
+    '╚══════════════════════════════╝';
+  navigator.clipboard.writeText(txt).then(() => toast('Comprovante copiado!'));
+}
+
+function copyReceiptKey() {
+  if (!lastReceiptData) return;
+  navigator.clipboard.writeText(lastReceiptData.keyCode).then(() => toast('Key copiada!'));
+}
+
+function printReceipt() {
+  const content = $('receiptBody').innerHTML;
+  const w = window.open('', '', 'width=400,height=500');
+  w.document.write('<html><head><title>AIMZY - Comprovante</title><style>body{font-family:monospace;padding:20px;background:#080404;color:#f5f0ee}b{color:#ef4444}.muted{color:#a89f9c}</style></head><body>' + content + '</body></html>');
+  w.document.close();
+  w.print();
+}
+
+/* ---------- central de avisos ---------- */
+
+let userAnnouncement = null;
+
+async function loadAnnouncement() {
+  const r = await api('/api/announcement');
+  if (r._status === 200 && r.announcement && r.announcement.message) {
+    userAnnouncement = r.announcement;
+    $('announceTitle').textContent = r.announcement.title || '⚠️ Aviso';
+    $('announceMsg').textContent = r.announcement.message;
+    $('announceModal').style.display = 'flex';
+  }
+}
+
+function closeAnnounce() { $('announceModal').style.display = 'none'; }
 
 /* ---------- boot ---------- */

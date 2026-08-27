@@ -1853,7 +1853,8 @@ app.post(
     const key =
       store.createKey({
         expiresAt,
-        maxUses
+        maxUses,
+        type: body.type || 'premium'
       });
 
     store.addAudit(
@@ -2427,6 +2428,38 @@ app.get(
 
     notifications.sort((a, b) => b.at.localeCompare(a.at));
     res.json({ notifications: notifications.slice(0, 20) });
+  }
+);
+
+/* ================= central de avisos ================= */
+
+app.get(
+  '/api/announcement',
+  (req, res) => {
+    const settings = store.getSettings();
+    res.json({ announcement: settings.announcement || null });
+  }
+);
+
+app.post(
+  '/api/admin/announcement',
+  requireAdmin,
+  express.json(),
+  (req, res) => {
+    const { title, message, active } = req.body || {};
+    const settings = store.getSettings();
+    if (active === false) {
+      settings.announcement = null;
+    } else {
+      settings.announcement = {
+        title: store.clean(title, 80) || '⚠️ Aviso',
+        message: store.clean(message, 500),
+        createdAt: new Date().toISOString()
+      };
+    }
+    store.persistNow();
+    store.addAudit('announcement_updated', 'Aviso atualizado');
+    res.json({ ok: true, announcement: settings.announcement });
   }
 );
 
