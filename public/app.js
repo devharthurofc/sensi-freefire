@@ -28,6 +28,13 @@ const TIER_INFO = {
     btn: 'Gerar Sensi VIP',
     resTitle: 'Sua Sensi VIP',
     lock: true
+  },
+  emulador: {
+    label: 'AIMZY EMULADOR',
+    desc: 'Configuração gratuita para BlueStacks, GameLoop, LDPlayer e MSI App Player. Não precisa de KEY.',
+    btn: 'Gerar Sensi Emulador',
+    resTitle: 'Sua Sensi Emulador',
+    lock: false
   }
 };
 
@@ -71,6 +78,23 @@ async function api(path, opts = {}, retry = true) {
 }
 
 async function initSession(name) {
+  // restaura sessão salva (conta e-mail/senha ou dispositivo)
+  const saved = localStorage.getItem(LS_TOKEN);
+  if (saved) {
+    state.token = saved;
+    const me = await api("/api/me", {}, false);
+    if (me && me.user) {
+      state.user = me.user;
+      api("/api/settings").then(function(r2) {
+        if (r2 && r2.settings && r2.settings.contactLink) state.contactLink = r2.settings.contactLink;
+      }).catch(function() {});
+      applyVipState();
+      return;
+    }
+    state.token = null;
+    localStorage.removeItem(LS_TOKEN);
+  }
+
   const body = { deviceId: getDeviceId() };
   if (name) body.name = name;
   const r = await fetch('/api/session/init', {
@@ -82,7 +106,7 @@ async function initSession(name) {
   state.token = data.token;
   state.user = data.user;
   state.contactLink = (data.settings && data.settings.contactLink) || '';
-  localStorage.setItem(LS_TOKEN, '');
+  localStorage.setItem(LS_TOKEN, data.token || '');
   applyVipState();
 }
 
@@ -95,6 +119,15 @@ const NAMES = [
   ["mira4x", "Mira 4X"],
   ["miraAwm", "Mira AWM"],
   ["olhadinha", "Olhadinha"]
+];
+const EMU_NAMES = [
+  ["geral", "Geral"],
+  ["redDot", "Red Dot"],
+  ["mira2x", "Mira 2X"],
+  ["mira4x", "Mira 4X"],
+  ["miraAwm", "Mira AWM"],
+  ["sensX", "Sensibilidade X"],
+  ["sensY", "Sensibilidade Y"]
 ];
 const MAX_SENSI = 200;
 
@@ -131,9 +164,9 @@ function animateNumPercent(elm, target) {
   requestAnimationFrame(step);
 }
 
-function renderGrid(gridEl, values) {
+function renderGrid(gridEl, values, names) {
   gridEl.innerHTML = "";
-  NAMES.forEach(([k, label]) => {
+  (names || NAMES).forEach(([k, label]) => {
     const c = el("div", "sensi-card");
     c.appendChild(el("div", "label", label));
     c.appendChild(el("div", "value", "<span class='num'>0</span>"));
@@ -168,6 +201,12 @@ function tierLabelOf(mode) {
 function fmtResult(r) {
   let s = "=== AIMZY | FREE FIRE ===\n";
   s += "Sensi: " + tierLabelOf(r.mode || r.tier) + "\n";
+  if (r.mode === "emulador") {
+    if (r.emulatorLabel) s += "Emulador: " + r.emulatorLabel + "\n";
+    EMU_NAMES.forEach(([k, label]) => { s += label + ": " + r.values[k] + "\n"; });
+    s += "DPI recomendado do mouse: " + r.dpi + "\n";
+    return s;
+  }
   if (r.deviceName) s += "Aparelho: " + r.deviceName + "\n";
   const values = (state.dpiSel && r.valuesByDpi) ? r.valuesByDpi[state.dpiSel] : r.values;
   NAMES.forEach(([k, label]) => { s += label + ": " + values[k] + "\n"; });
@@ -200,6 +239,12 @@ function switchTier(tier) {
   document.getElementById("genBtnLabel").textContent = info.btn;
   document.getElementById("resTitle").textContent = info.resTitle;
 
+  // gerador emulador usa campos próprios
+  const isEmu = tier === "emulador";
+  document.getElementById("genBox").style.display = isEmu ? "none" : "";
+  document.getElementById("emuBox").style.display = isEmu ? "" : "none";
+  document.getElementById("genWarn").classList.remove("show");
+
   const locked = info.lock && !state.user.isVip;
   document.getElementById("tierLock").classList.toggle("hide-lock", !locked);
   document.getElementById("genBox").classList.toggle("blur-lock", locked);
@@ -224,7 +269,7 @@ function setupOpts(id) {
     });
   });
 }
-setupOpts("styleOpts"); setupOpts("levelOpts"); setupOpts("aimOpts");
+setupOpts("styleOpts"); setupOpts("levelOpts"); setupOpts("aimOpts"); setupOpts("emuStyleOpts");
 
 function selVal(id) {
   const b = document.getElementById(id);
@@ -436,6 +481,7 @@ document.querySelectorAll("#dpiPicker .dp-opt").forEach(btn => {
 /* ================== GERADOR UNIFICADO ================== */
 
 document.getElementById("genBtn").addEventListener("click", async () => {
+  if (state.tier === "emulador") { await generateEmulatorSensi(); return; }
   const warn = document.getElementById("genWarn");
   const model = getModelValue();
   if (!model) {
@@ -468,6 +514,8 @@ document.getElementById("genBtn").addEventListener("click", async () => {
   state.lastResult = r;
   state.dpiSel = 'equilibrada';
   renderDpiPicker(r);
+  document.getElementById("dpiPicker").style.display = "";
+  document.getElementById("resBtn").parentElement.style.display = "";
   renderGrid(document.getElementById("resGrid"), r.valuesByDpi.equilibrada);
   animateNumPercent(document.getElementById("resBtn"), r.fireButton);
   document.getElementById("resDpiNote").style.display = "none";
@@ -498,6 +546,62 @@ document.getElementById("genBtn").addEventListener("click", async () => {
   toast(tierLabelOf(r.mode) + " gerada! Agora treine com ela 💪");
   setTimeout(() => result.scrollIntoView({ behavior: "smooth", block: "nearest" }), 80);
 });
+
+/* ================== GERADOR EMULADOR (grátis) ================== */
+
+async function generateEmulatorSensi() {
+  const warn = document.getElementById("genWarn");
+  const emu = document.getElementById("emuSel").value;
+  if (!emu) {
+    warn.textContent = "Escolha o seu emulador para continuar.";
+    warn.classList.add("show");
+    return;
+  }
+  warn.classList.remove("show");
+
+  const btn = document.getElementById("genBtn");
+  btn.disabled = true;
+  btn.innerHTML = "<span class='spinner'></span> Gerando...";
+  const r = await api("/api/generate/emulator", { body: {
+    emulator: emu,
+    mouseDpi: document.getElementById("mouseDpi").value,
+    mouseSens: document.getElementById("mouseSens").value,
+    style: selVal("emuStyleOpts")
+  }});
+  btn.disabled = false;
+  btn.innerHTML = "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round'><path d='M13 2L3 14h7l-1 8 10-12h-7l1-8z'/></svg><span id='genBtnLabel'>Gerar Novamente</span>";
+
+  if (r._status === 429) {
+    toast(r.message, true);
+    document.getElementById("remaining").textContent = "Limite diário atingido — vire VIP 👑";
+    openUpsell();
+    return;
+  }
+  if (r.error) { toast(r.message || "Erro ao gerar.", true); return; }
+
+  state.lastResult = r;
+  state.dpiSel = null;
+  document.getElementById("dpiPicker").style.display = "none";
+  document.getElementById("resBtn").parentElement.style.display = "none";
+  document.getElementById("cicChip").style.display = "none";
+  document.getElementById("resDpiNote").style.display = "none";
+  renderGrid(document.getElementById("resGrid"), r.values, EMU_NAMES);
+
+  const note = document.getElementById("resNote");
+  note.innerHTML =
+    "Emulador: <b>" + escapeHtml(r.emulatorLabel) + "</b> · " +
+    "<b>DPI recomendado do mouse: " + r.dpi + "</b><br>" + escapeHtml(r.summary);
+
+  document.getElementById("copyBtn").style.display = "inline-flex";
+  const result = document.getElementById("result");
+  result.classList.add("visible");
+
+  updateRemaining(r);
+  state.historyLoaded = false;
+  if (state.user.isVip) loadExtrasOnce(true);
+  toast("Sensi Emulador gerada! Agora treine com ela 💪");
+  setTimeout(() => result.scrollIntoView({ behavior: "smooth", block: "nearest" }), 80);
+}
 
 function genInputs() {
   return {
@@ -730,6 +834,107 @@ document.getElementById("nameInput").addEventListener("keydown", function(e) {
   }
 });
 
+/* ================== conta (e-mail / senha) ================== */
+
+let accMode = "login";
+
+function setAccMode(m) {
+  accMode = m;
+  var tabs = document.getElementById("accTabs");
+  if (tabs) tabs.querySelectorAll(".opt").forEach(function(o) { o.classList.toggle("sel", o.dataset.v === m); });
+  var nameRow = document.getElementById("accNameRow");
+  if (nameRow) nameRow.style.display = m === "register" ? "" : "none";
+  var go = document.getElementById("accGo");
+  if (go) go.textContent = m === "register" ? "Criar conta" : "Entrar";
+  var pw = document.getElementById("accPwInp");
+  if (pw) pw.setAttribute("autocomplete", m === "register" ? "new-password" : "current-password");
+}
+
+function openAccountModal() {
+  var m = document.getElementById("accountModal");
+  if (m) m.classList.add("show");
+  setAccMode(accMode);
+  var inp = document.getElementById("accEmailInp");
+  if (inp) setTimeout(function() { inp.focus(); }, 100);
+}
+
+function closeAccountModal() {
+  var m = document.getElementById("accountModal");
+  if (m) m.classList.remove("show");
+}
+
+function refreshAccountChip() {
+  var chipTxt = document.getElementById("accountChipTxt");
+  if (!chipTxt) return;
+  api("/api/auth/me").then(function(r) {
+    if (r && r._status === 200 && r.account) {
+      chipTxt.textContent = r.account.email;
+      document.getElementById("accLogged").style.display = "";
+      document.getElementById("accForms").style.display = "none";
+      var em = document.getElementById("accEmail");
+      if (em) em.textContent = r.account.email;
+    } else {
+      chipTxt.textContent = "Entrar";
+      document.getElementById("accLogged").style.display = "none";
+      document.getElementById("accForms").style.display = "";
+    }
+  }).catch(function() {});
+}
+
+document.getElementById("accountChip").addEventListener("click", openAccountModal);
+document.getElementById("accClose").addEventListener("click", closeAccountModal);
+document.getElementById("accClose2").addEventListener("click", closeAccountModal);
+document.getElementById("accountModal").addEventListener("click", function(e) {
+  if (e.target.id === "accountModal") closeAccountModal();
+});
+document.getElementById("accTabs").addEventListener("click", function(e) {
+  var opt = e.target.closest(".opt");
+  if (opt) setAccMode(opt.dataset.v);
+});
+
+document.getElementById("accGo").addEventListener("click", async function() {
+  var email = document.getElementById("accEmailInp").value.trim();
+  var password = document.getElementById("accPwInp").value;
+  var name = document.getElementById("accName").value.trim();
+  if (!email || !password) { toast("Preencha e-mail e senha.", true); return; }
+  if (accMode === "register" && password.length < 8) { toast("A senha precisa ter pelo menos 8 caracteres.", true); return; }
+
+  var btn = this;
+  btn.disabled = true;
+  var path = accMode === "register" ? "/api/auth/register" : "/api/auth/login";
+  var body = accMode === "register" ? { email: email, password: password, name: name } : { email: email, password: password };
+  var r = await api(path, { body: body });
+  btn.disabled = false;
+
+  if (r && r.token) {
+    localStorage.setItem(LS_TOKEN, r.token);
+    toast(accMode === "register" ? "Conta criada! Bem-vindo 🎮" : "Bem-vindo de volta!");
+    setTimeout(function() { location.reload(); }, 900);
+  } else {
+    toast((r && r.message) || "Não foi possível entrar.", true);
+  }
+});
+
+document.getElementById("accLogoutBtn").addEventListener("click", async function() {
+  await api("/api/auth/logout", { method: "POST" });
+  localStorage.removeItem(LS_TOKEN);
+  location.reload();
+});
+
+document.getElementById("accPwBtn").addEventListener("click", async function() {
+  var oldPw = document.getElementById("accOldPw").value;
+  var newPw = document.getElementById("accNewPw").value;
+  if (!oldPw || newPw.length < 8) { toast("A nova senha precisa ter pelo menos 8 caracteres.", true); return; }
+  var r = await api("/api/auth/change-password", { body: { currentPassword: oldPw, newPassword: newPw } });
+  if (r && r.ok) {
+    toast("Senha alterada com sucesso!");
+    document.getElementById("accOldPw").value = "";
+    document.getElementById("accNewPw").value = "";
+  } else {
+    toast((r && r.message) || "Erro ao trocar a senha.", true);
+  }
+});
+
 (async function boot() {
   var saved = localStorage.getItem(LS_TIER);
   if (saved && TIER_INFO[saved]) state.tier = saved;
@@ -760,6 +965,7 @@ document.getElementById("nameInput").addEventListener("keydown", function(e) {
   }
 
   switchTier(state.tier);
+  refreshAccountChip();
   api("/api/devices/names").then(function(r) {
     if (!r.devices) return;
     window.__devices = r.devices;

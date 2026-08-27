@@ -33,6 +33,7 @@ const DEFAULT_DB = {
   sales: [],
   products: [],
   auditLog: [],
+  accounts: [],
   settings: {
     contactLink: '',
     freeDailyLimit: 3,
@@ -73,6 +74,14 @@ function hydrate(parsed) {
       merged[key] = structuredClone(DEFAULT_DB[key]);
     }
   }
+  // merge profundo das settings para não perder defaults (ex.: prices) quando
+  // a cópia remota/local vier incompleta
+  merged.settings = Object.assign(structuredClone(DEFAULT_DB.settings), merged.settings || {});
+  const prices = (merged.settings && merged.settings.prices) || {};
+  merged.settings.prices = {
+    premium: Object.assign(structuredClone(DEFAULT_DB.settings.prices.premium), prices.premium || {}),
+    vip: Object.assign(structuredClone(DEFAULT_DB.settings.prices.vip), prices.vip || {})
+  };
   return merged;
 }
 
@@ -113,6 +122,7 @@ async function fetchRemoteKeys() {
   return (data || []).map(k => ({
     id: k.id,
     code: k.code,
+    type: inferKeyType(k),
     status: k.status,
     createdAt: k.created_at,
     expiresAt: k.expires_at || null,
@@ -122,6 +132,14 @@ async function fetchRemoteKeys() {
     activatedByLabel: k.activated_by_label || null,
     activatedAt: k.activated_at || null
   }));
+}
+
+/* Deduz o tipo da KEY: coluna type, ou prefixo legado (AIM-VIP/AIM-PREM) */
+function inferKeyType(k) {
+  if (k.type) return canonicalKeyType(k.type);
+  const code = String(k.code || '').toUpperCase();
+  if (code.startsWith('AIM-VIP') || code.startsWith('AIMZY-VIP')) return 'proibida';
+  return 'premium';
 }
 
 async function fetchRemoteSessions() {
@@ -211,6 +229,24 @@ async function fetchRemoteSales() {
   }));
 }
 
+async function fetchRemoteAccounts() {
+  // tabela pode ainda não existir — não derruba o carregamento do banco
+  try {
+    const { data, error } = await supabase.from('accounts').select('*');
+    if (error) throw error;
+    return (data || []).map(a => ({
+      id: a.id,
+      email: a.email,
+      passwordHash: a.password_hash,
+      userId: a.user_id || null,
+      createdAt: a.created_at
+    }));
+  } catch (e) {
+    console.error('[store] tabela accounts indisponível:', e.message);
+    return [];
+  }
+}
+
 /* ============ salvar no Supabase (tabelas individuais) ============ */
 
 function toUserRow(u) {
@@ -242,6 +278,7 @@ function toKeyRow(k) {
   return {
     id: k.id,
     code: k.code,
+    type: canonicalKeyType(k.type),
     status: k.status,
     created_at: k.createdAt,
     expires_at: k.expiresAt || null,
@@ -307,21 +344,58 @@ function toSalesRow(s) {
   };
 }
 
+function toAccountRow(a) {
+  return {
+    id: a.id,
+    email: a.email,
+    password_hash: a.passwordHash,
+    user_id: a.userId || null,
+    created_at: a.createdAt
+  };
+}
+
 async function pushAllRemote() {
   const d = getDb();
 
   const ops = [
     supabase.from('users').upsert(d.users.map(toUserRow), { onConflict: 'id' }),
-    supabase.from('keys').upsert(d.keys.map(toKeyRow), { onConflict: 'id' }),
     supabase.from('sessions').upsert(d.sessions.map(toSessionRow), { onConflict: 'token' }),
     supabase.from('generations').upsert(d.generations.map(toGenerationRow), { onConflict: 'id' }),
     supabase.from('profiles').upsert(d.profiles.map(toProfileRow), { onConflict: 'id' }),
     supabase.from('vendas').upsert(d.sales.map(toSalesRow), { onConflict: 'id' }),
     supabase.from('audit_log').upsert(
-      d.auditLog.map((a, i) => ({ id: 'log_' + i, at: a.at, action: a.action, detail: a.detail, ip: a.ip })),
+      d.auditLog.map((a, i) => {
+        // id estável por conteúdo: rotação do log não sobrescreve eventos antigos
+        const h = crypto.createHash('md5').update(a.at + '|' + a.action + '|' + a.detail + '|' + a.ip).digest('hex').slice(0, 12);
+        return { id: a.id || 'logl_' + h, at: a.at, action: a.action, detail: a.detail, ip: a.ip };
+      }),
       { onConflict: 'id' }
     )
   ];
+
+  // keys: tenta salvar com a coluna "type"; se o banco ainda não tiver a
+  // coluna, salva sem ela (rode corrigir-banco.sql para adicionar)
+  try {
+    const r = await supabase.from('keys').upsert(d.keys.map(toKeyRow), { onConflict: 'id' });
+    if (r.error) throw r.error;
+  } catch (e) {
+    try {
+      const rows = d.keys.map(k => { const { type, ...rest } = toKeyRow(k); return rest; });
+      const r2 = await supabase.from('keys').upsert(rows, { onConflict: 'id' });
+      if (r2.error) throw r2.error;
+      console.error('[store] keys salvos SEM a coluna type (rode corrigir-banco.sql):', e.message);
+    } catch (e2) {
+      throw new Error('keys: ' + e2.message);
+    }
+  }
+
+  // accounts: tabela pode ainda não existir — não bloqueia as demais gravações
+  try {
+    const r = await supabase.from('accounts').upsert(d.accounts.map(toAccountRow), { onConflict: 'id' });
+    if (r.error) throw r.error;
+  } catch (e) {
+    console.error('[store] falha ao salvar accounts (rode criar-tabela-accounts.sql):', e.message);
+  }
 
   // admins: upsert sem role/must_change (colunas podem não existir)
   for (const a of d.admins) {
@@ -335,23 +409,44 @@ async function pushAllRemote() {
     );
   }
 
-  // settings: pegar id existente ou inserir
+  // settings: pegar id existente ou inserir. Tenta com todas as colunas e
+  // reduz gradualmente caso alguma (announcement/prices/admin_panel_path)
+  // ainda não exista no banco remoto.
   try {
     const { data: existing } = await supabase.from('settings').select('id').limit(1).maybeSingle();
     const settingsId = existing ? existing.id : undefined;
-    ops.push(
-      supabase.from('settings').upsert({
-        ...(settingsId ? { id: settingsId } : {}),
-        contact_link: d.settings.contactLink || '',
-        free_daily_limit: d.settings.freeDailyLimit != null ? d.settings.freeDailyLimit : 3,
-        admin_panel_path: d.settings.adminPanelPath || '',
-        announcement: d.settings.announcement || null,
-        prices: d.settings.prices || {}
-      }, { onConflict: 'id' })
-    );
-  } catch (_) {}
+    const base = {
+      ...(settingsId ? { id: settingsId } : {}),
+      contact_link: d.settings.contactLink || '',
+      free_daily_limit: d.settings.freeDailyLimit != null ? d.settings.freeDailyLimit : 3
+    };
+    const variants = [
+      Object.assign({}, base, { admin_panel_path: d.settings.adminPanelPath || '', announcement: d.settings.announcement || null, prices: d.settings.prices || {} }),
+      Object.assign({}, base, { admin_panel_path: d.settings.adminPanelPath || '', prices: d.settings.prices || {} }),
+      Object.assign({}, base, { admin_panel_path: d.settings.adminPanelPath || '' }),
+      base
+    ];
+    let lastErr = null;
+    for (const row of variants) {
+      const r = await supabase.from('settings').upsert(row, { onConflict: 'id' });
+      if (!r.error) { lastErr = null; break; }
+      lastErr = r.error;
+      console.error('[store] settings: reduzindo colunas após erro:', r.error.message);
+    }
+    if (lastErr) throw lastErr;
+  } catch (e) {
+    console.error('[store] falha ao salvar settings:', e.message);
+  }
 
-  await Promise.all(ops);
+  const results = await Promise.all(ops);
+
+  // supabase-js RETORNA erro em vez de lançar — sem esta checagem,
+  // falhas de gravação passam em silêncio
+  const failed = results.filter(r => r && r.error);
+  if (failed.length) {
+    const msg = failed.map(f => f.error && f.error.message).join(' | ');
+    throw new Error('Supabase rejeitou ' + failed.length + ' op(ões): ' + String(msg).slice(0, 300));
+  }
 }
 
 /* ============ espelho local ============ */
@@ -383,7 +478,7 @@ async function init() {
   let online = true;
 
   try {
-    const [users, admins, keys, sessions, generations, profiles, auditLog, settings, sales] = await Promise.all([
+    const [users, admins, keys, sessions, generations, profiles, auditLog, settings, sales, accounts] = await Promise.all([
       fetchRemoteUsers(),
       fetchRemoteAdmins(),
       fetchRemoteKeys(),
@@ -392,10 +487,11 @@ async function init() {
       fetchRemoteProfiles(),
       fetchRemoteAudit(),
       fetchRemoteSettings(),
-      fetchRemoteSales()
+      fetchRemoteSales(),
+      fetchRemoteAccounts()
     ]);
 
-    remote = { users, admins, keys, sessions, generations, profiles, auditLog, settings, sales };
+    remote = { users, admins, keys, sessions, generations, profiles, auditLog, settings, sales, accounts };
   } catch (e) {
     online = false;
     console.error('[store] Supabase indisponível no boot:', e.message);
@@ -404,6 +500,16 @@ async function init() {
   const local = readLocalMirror();
 
   if (remote && (remote.users.length || remote.admins.length || remote.keys.length)) {
+    // a coluna "type" das keys pode ainda não existir no Supabase:
+    // recupera o tipo a partir do espelho local (rode corrigir-banco.sql
+    // para persistir o type também no banco remoto)
+    if (local && Array.isArray(local.keys)) {
+      const typesById = new Map(local.keys.map(k => [k.id, k.type]));
+      remote.keys.forEach(k => {
+        const t = typesById.get(k.id);
+        if (t) k.type = t;
+      });
+    }
     db = hydrate(remote);
     console.log('[store] Banco carregado do Supabase ✔ (' + db.users.length + ' usuários, ' + db.keys.length + ' keys)');
   } else if (local) {
@@ -564,6 +670,7 @@ function pruneSessions() {
 function addAudit(action, detail, ip) {
   const d = getDb();
   d.auditLog.push({
+    id: id('log'),
     at: new Date().toISOString(),
     action,
     detail: String(detail || '').slice(0, 200),
@@ -594,25 +701,31 @@ function findKeyByCode(code) {
   return getDb().keys.find(k => k.code === norm) || null;
 }
 
-function generateKeyCode(type) {
+/* Tipos canônicos de KEY: 'premium' e 'proibida' (aceita legado 'vip' = proibida) */
+function canonicalKeyType(type) {
+  const t = String(type || '').toLowerCase();
+  if (t === 'proibida' || t === 'vip' || t === 'proibido') return 'proibida';
+  return 'premium';
+}
+
+function generateKeyCode() {
   const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   const block = () => Array.from(crypto.randomBytes(4)).map(b => alphabet[b % alphabet.length]).join('');
-  let prefix = 'AIMZY';
-  if (type === 'premium') prefix = 'AIM-PREM';
-  else if (type === 'vip') prefix = 'AIM-VIP';
   let code;
   let tries = 0;
-  do { code = prefix + '-' + block().slice(0, 4) + '-' + block().slice(0, 4); tries++; }
-  while (findKeyByCode(code) && tries < 50);
+  do {
+    code = 'AIMZY-' + block() + '-' + block();
+    tries++;
+  } while (findKeyByCode(code) && tries < 50);
   return code;
 }
 
 function createKey({ expiresAt = null, maxUses = 1, type = 'premium' }) {
-  const code = generateKeyCode(type);
+  const code = generateKeyCode();
   const key = {
     id: id('key'),
     code,
-    type: type === 'vip' ? 'vip' : 'premium',
+    type: canonicalKeyType(type),
     status: 'ativa',
     createdAt: new Date().toISOString(),
     expiresAt: expiresAt || null,
@@ -663,7 +776,7 @@ function countFreeToday(userId) {
   const today = new Date().toISOString().slice(0, 10);
   return getDb().generations.filter(g =>
     g.userId === userId &&
-    ['normal', 'free', 'iphone'].includes(g.mode) &&
+    ['normal', 'free', 'iphone', 'emulador'].includes(g.mode) &&
     g.at.slice(0, 10) === today
   ).length;
 }
@@ -842,7 +955,7 @@ function findProduct(productId) {
 function addProduct(data) {
   const d = getDb();
   const product = {
-    id: id(),
+    id: id('prd'),
     name: clean(data.name, 80),
     description: clean(data.description, 300),
     active: data.active !== false,
@@ -887,6 +1000,65 @@ function deleteProduct(productId) {
   return false;
 }
 
+/* ============ contas (e-mail / senha) ============ */
+
+function normalizeEmail(email) {
+  return String(email || '').trim().toLowerCase();
+}
+
+function findAccountByEmail(email) {
+  const norm = normalizeEmail(email);
+  if (!norm) return null;
+  return getDb().accounts.find(a => a.email === norm) || null;
+}
+
+function findAccountById(accountId) {
+  return getDb().accounts.find(a => a.id === accountId) || null;
+}
+
+function findAccountByUserId(userId) {
+  if (!userId) return null;
+  return getDb().accounts.find(a => a.userId === userId) || null;
+}
+
+function createAccount({ email, passwordHash, userId }) {
+  const account = {
+    id: id('acc'),
+    email: normalizeEmail(email),
+    passwordHash,
+    userId: userId || null,
+    createdAt: new Date().toISOString()
+  };
+  getDb().accounts.push(account);
+  persistNow();
+  return account;
+}
+
+function saveAccount(account) {
+  const d = getDb();
+  const i = d.accounts.findIndex(a => a.id === account.id);
+  if (i >= 0) d.accounts[i] = account;
+  persistNow();
+  return account;
+}
+
+function deleteAccount(accountId) {
+  const d = getDb();
+  const i = d.accounts.findIndex(a => a.id === accountId);
+  if (i >= 0) { d.accounts.splice(i, 1); persistNow(); return true; }
+  return false;
+}
+
+/* ============ limpeza de dados do usuário ============ */
+
+function deleteUserData(userId) {
+  const d = getDb();
+  const before = d.sessions.length + d.profiles.length;
+  d.sessions = d.sessions.filter(s => s.userId !== userId);
+  d.profiles = d.profiles.filter(p => p.userId !== userId);
+  if ((d.sessions.length + d.profiles.length) !== before) scheduleSave();
+}
+
 /* ============ exports ============ */
 
 module.exports = {
@@ -903,6 +1075,16 @@ module.exports = {
   createUser,
   touchUser,
   setUserVip,
+  deleteUserData,
+
+  canonicalKeyType,
+
+  findAccountByEmail,
+  findAccountById,
+  findAccountByUserId,
+  createAccount,
+  saveAccount,
+  deleteAccount,
 
   createSession,
   createAdminSession,

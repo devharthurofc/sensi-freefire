@@ -273,6 +273,7 @@ footer b{color:var(--muted)}
     <button class="chip" id="installChip" style="display:none;cursor:pointer;border-color:rgba(239,68,68,.6);color:#fecaca;background:rgba(239,68,68,.12)">
       ⬇️ Instalar app
     </button>
+    <button class="chip" id="accountChip" style="cursor:pointer;border-color:rgba(59,130,246,.5);color:#dbeafe;background:rgba(59,130,246,.10)">👤 <span id="accountChipTxt">Entrar</span></button>
     <span class="chip" id="userChip" style="display:none"><i id="userStatusDot"></i><span id="userChipName"></span></span>
     <span class="chip"><i></i>Servidor Online</span>
     <span class="chip">Escala 200 · 2026</span>
@@ -299,6 +300,12 @@ footer b{color:var(--muted)}
     <span class="emoji">🔥</span>
     <h3>AIMZY VIP</h3>
     <p>AGRESSIVA. Drag insano pra quem já tem controle. Exige treino.</p>
+  </button>
+  <button class="mode-card normal" data-tier="emulador">
+    <span class="mode-badge mb-free">Grátis</span>
+    <span class="emoji">🖥️</span>
+    <h3>AIMZY EMULADOR</h3>
+    <p>Para PC: BlueStacks, GameLoop, LDPlayer e MSI. Não precisa de KEY.</p>
   </button>
 </nav>
 
@@ -361,6 +368,30 @@ footer b{color:var(--muted)}
         </button>
         <span class="remaining" id="remaining"></span>
         <button class="btn btn-ghost" id="copyBtn" style="display:none">Copiar Config</button>
+      </div>
+    </div>
+
+    <!-- CAMPOS DO GERADOR EMULADOR -->
+    <div id="emuBox" style="display:none">
+      <label class="field-label">Emulador <b>*</b></label>
+      <select class="inp" id="emuSel">
+        <option value="bluestacks">BlueStacks</option>
+        <option value="gameloop">GameLoop</option>
+        <option value="ldplayer">LDPlayer</option>
+        <option value="msi">MSI App Player</option>
+      </select>
+
+      <label class="field-label">DPI do mouse (opcional)</label>
+      <input type="number" class="inp" id="mouseDpi" min="100" max="16000" placeholder="Ex: 800" style="max-width:260px">
+
+      <label class="field-label">Sensibilidade do mouse no emulador (opcional)</label>
+      <input type="number" class="inp" id="mouseSens" min="0.5" max="100" step="0.5" placeholder="Ex: 25" style="max-width:260px">
+
+      <label class="field-label">Estilo de jogo</label>
+      <div class="opts" id="emuStyleOpts">
+        <div class="opt sel" data-v="eq">Equilibrado</div>
+        <div class="opt" data-v="ag">Agressivo</div>
+        <div class="opt" data-v="pr">Precisão</div>
       </div>
     </div>
   </div>
@@ -570,6 +601,49 @@ footer b{color:var(--muted)}
     </div>
     <div style="margin-top:18px;text-align:center">
       <button class="btn btn-red" onclick="confirmName()" id="nameConfirm">COMEÇAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CONTA (E-MAIL / SENHA) -->
+<div class="modal-back" id="accountModal">
+  <div class="modal" style="text-align:left">
+    <div class="lock-icon" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);box-shadow:0 0 40px rgba(59,130,246,.5)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <h3 style="text-align:center">Minha Conta</h3>
+
+    <div id="accLogged" style="display:none">
+      <p style="color:var(--muted);font-size:.92rem;margin-bottom:14px;text-align:center">Conectado como <b id="accEmail" style="color:#fecaca"></b></p>
+      <label class="field-label">Senha atual</label>
+      <input type="password" class="inp" id="accOldPw" autocomplete="current-password">
+      <label class="field-label" style="margin-top:10px">Nova senha (mín. 8)</label>
+      <input type="password" class="inp" id="accNewPw" autocomplete="new-password">
+      <div class="modal-actions" style="margin-top:16px">
+        <button class="btn btn-red btn-sm" id="accPwBtn">Trocar senha</button>
+        <button class="btn btn-ghost btn-sm" id="accLogoutBtn">Sair</button>
+        <button class="btn btn-ghost btn-sm" id="accClose2">Fechar</button>
+      </div>
+    </div>
+
+    <div id="accForms">
+      <div class="opts" id="accTabs" style="margin-bottom:14px">
+        <div class="opt sel" data-v="login">Entrar</div>
+        <div class="opt" data-v="register">Criar conta</div>
+      </div>
+      <div id="accNameRow" style="display:none">
+        <label class="field-label">Nome de jogador</label>
+        <input class="inp" id="accName" maxlength="40" autocomplete="nickname" placeholder="Como quer ser chamado?">
+      </div>
+      <label class="field-label">E-mail</label>
+      <input type="email" class="inp" id="accEmailInp" autocomplete="email" placeholder="voce@email.com">
+      <label class="field-label" style="margin-top:10px">Senha (mín. 8)</label>
+      <input type="password" class="inp" id="accPwInp" autocomplete="current-password" placeholder="••••••••">
+      <div class="modal-actions" style="margin-top:16px">
+        <button class="btn btn-red" id="accGo">Entrar</button>
+        <button class="btn btn-ghost btn-sm" id="accClose">Fechar</button>
+      </div>
+      <p style="color:var(--muted);font-size:.78rem;margin-top:12px;text-align:center">Sua conta guarda VIP, histórico e perfis — entre em qualquer aparelho.</p>
     </div>
   </div>
 </div>

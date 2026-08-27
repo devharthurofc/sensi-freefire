@@ -203,4 +203,81 @@ function generate(data) {
   };
 }
 
-module.exports = { generate, TIERS: Object.keys(TIER_TUNING), TIER_TUNING, MAX_SENSI };
+/**
+ * GERADOR EMULADOR — gratuito (BlueStacks, GameLoop, LDPlayer, MSI App Player).
+ * Recebe: emulador, DPI do mouse, sensibilidade do mouse e estilo de jogo.
+ * Devolve: Geral, Red Dot, Mira 2x, Mira 4x, AWM, Sensibilidade X e Y
+ * + DPI recomendado do mouse.
+ */
+const EMULATORS = {
+  bluestacks: {
+    label: 'BlueStacks',
+    base: { geral: 96, redDot: 90, mira2x: 82, mira4x: 72, miraAwm: 62, sensX: 98, sensY: 92 }
+  },
+  gameloop: {
+    label: 'GameLoop',
+    base: { geral: 92, redDot: 86, mira2x: 78, mira4x: 68, miraAwm: 58, sensX: 94, sensY: 88 }
+  },
+  ldplayer: {
+    label: 'LDPlayer',
+    base: { geral: 94, redDot: 88, mira2x: 80, mira4x: 70, miraAwm: 60, sensX: 96, sensY: 90 }
+  },
+  msi: {
+    label: 'MSI App Player',
+    base: { geral: 95, redDot: 89, mira2x: 81, mira4x: 71, miraAwm: 61, sensX: 97, sensY: 91 }
+  }
+};
+
+const EMU_STYLE_DELTA = {
+  geral: 5, redDot: 5, mira2x: 4, mira4x: 3, miraAwm: -2, sensX: 5, sensY: 4
+};
+
+function generateEmulator(data) {
+  const emuKey = EMULATORS[data.emulator] ? data.emulator : 'bluestacks';
+  const emu = EMULATORS[emuKey];
+
+  const styleAdj = data.style === 'ag' ? 1 : (data.style === 'pr' ? -1 : 0);
+
+  // compensação pela DPI do mouse: mouse rápido -> sensi menor
+  let dpiComp = 0;
+  const mouseDpi = parseInt(data.mouseDpi, 10);
+  if (Number.isInteger(mouseDpi) && mouseDpi >= 100 && mouseDpi <= 16000) {
+    dpiComp = clamp(Math.round((800 - mouseDpi) / 40), -14, 14);
+  }
+
+  // sensibilidade do mouse informada pelo jogador (escala típica 0.5 - 100)
+  const mouseSens = parseFloat(data.mouseSens);
+  const sensComp = Number.isFinite(mouseSens) && mouseSens > 0
+    ? clamp(Math.round((25 - Math.min(mouseSens, 100)) / 4), -10, 10)
+    : 0;
+
+  const values = {};
+  for (const k of Object.keys(emu.base)) {
+    const v = emu.base[k] + styleAdj * EMU_STYLE_DELTA[k] + dpiComp + sensComp;
+    values[k] = clamp(jitter(v, 2), 1, 200);
+  }
+
+  const dpi = Number.isInteger(mouseDpi) && mouseDpi >= 100 && mouseDpi <= 16000
+    ? clamp(Math.round(mouseDpi / 10) * 10, 400, 1600)
+    : 800;
+
+  return {
+    mode: 'emulador',
+    emulator: emuKey,
+    emulatorLabel: emu.label,
+    values,
+    dpi,
+    fireButton: null,
+    summary: 'Config para ' + emu.label + ' ajustada ao seu mouse e estilo de jogo. Treine antes das ranqueadas.'
+  };
+}
+
+module.exports = {
+  generate,
+  generateEmulator,
+  EMULATORS,
+  EMULATOR_KEYS: Object.keys(EMULATORS),
+  TIERS: Object.keys(TIER_TUNING),
+  TIER_TUNING,
+  MAX_SENSI
+};

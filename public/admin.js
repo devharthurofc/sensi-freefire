@@ -181,7 +181,8 @@ function renderKeys() {
   const tb = $('keysBody');
   const q = ($('keySearch').value || '').toLowerCase().trim();
   const list = allKeys.filter(k =>
-    !q || k.code.toLowerCase().includes(q) || (k.activatedByLabel || '').toLowerCase().includes(q));
+    !q || k.code.toLowerCase().includes(q) || (k.activatedByLabel || '').toLowerCase().includes(q) ||
+    (k.type || '').toLowerCase().includes(q));
 
   if (!list.length) {
     tb.innerHTML = '<tr><td colspan="7" style="color:var(--muted)">' +
@@ -194,8 +195,8 @@ function renderKeys() {
     const statusBadge = k.status === 'ativa'
       ? (k.expired ? '<span class="badge bg-warn">expirada</span>' : '<span class="badge bg-ok">ativa</span>')
       : '<span class="badge bg-off">inativa</span>';
-    const typeBadge = k.type === 'vip'
-      ? '<span class="badge bg-warn" style="font-size:.7rem">🟨 VIP</span>'
+    const typeBadge = (k.type === 'proibida' || k.type === 'vip')
+      ? '<span class="badge bg-warn" style="font-size:.7rem">🔴 PROIBIDA</span>'
       : '<span class="badge bg-owner" style="font-size:.7rem">🟦 PREMIUM</span>';
     const usesTxt = k.maxUses ? (k.uses + '/' + k.maxUses) : (k.uses + '/∞');
     tr.innerHTML =

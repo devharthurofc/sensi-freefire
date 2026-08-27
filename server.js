@@ -492,6 +492,202 @@ app.post(
   }
 );
 
+/* ================= contas (e-mail / senha) ================= */
+
+const authLimiter = rateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: 12,
+  message:
+    'Muitas tentativas. Aguarde alguns minutos antes de tentar novamente.'
+});
+
+function validEmail(email) {
+  return (
+    typeof email === 'string' &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())
+  );
+}
+
+function accountUserById(userId) {
+  return store.findUserById(userId);
+}
+
+app.post(
+  '/api/auth/register',
+  authLimiter,
+  (req, res) => {
+    const email = cleanStr(req.body && req.body.email, 120).toLowerCase();
+    const password = (req.body && req.body.password) || '';
+    const name = cleanStr(req.body && req.body.name, 40);
+
+    if (!validEmail(email)) {
+      return res.status(400).json({
+        error: 'bad_request',
+        message: 'Informe um e-mail válido.'
+      });
+    }
+
+    if (typeof password !== 'string' || password.length < 8) {
+      return res.status(400).json({
+        error: 'weak_password',
+        message: 'A senha precisa ter pelo menos 8 caracteres.'
+      });
+    }
+
+    if (store.findAccountByEmail(email)) {
+      return res.status(400).json({
+        error: 'email_in_use',
+        message: 'Este e-mail já está cadastrado.'
+      });
+    }
+
+    // se já existe sessão de dispositivo válida, vincula a conta a esse
+    // usuário (mantém VIP, histórico e perfis)
+    let user = currentUser(req);
+
+    if (!user) {
+      const deviceId = 'acct' + crypto.randomBytes(12).toString('hex');
+      user = store.createUser(deviceId);
+      if (name) user.label = name;
+    }
+
+    const account = store.createAccount({
+      email,
+      passwordHash: hashPassword(password),
+      userId: user.id
+    });
+
+    store.addAudit('account_created', email, req.ip);
+
+    const token = store.createSession(user);
+
+    res.json({
+      token,
+      user: {
+        id: user.id,
+        label: user.label,
+        isVip: !!user.isVip,
+        vipExpiresAt: vipExpiresAtOf(user)
+      },
+      account: { email: account.email }
+    });
+  }
+);
+
+app.post(
+  '/api/auth/login',
+  authLimiter,
+  async (req, res) => {
+    const email = cleanStr(req.body && req.body.email, 120).toLowerCase();
+    const password = (req.body && req.body.password) || '';
+
+    const account = store.findAccountByEmail(email);
+    const ok = account && verifyPassword(password, account.passwordHash);
+
+    if (!ok) {
+      await sleep(350 + Math.floor(Math.random() * 250));
+
+      return res.status(401).json({
+        error: 'bad_credentials',
+        message: 'E-mail ou senha inválidos.'
+      });
+    }
+
+    let user = account.userId ? accountUserById(account.userId) : null;
+
+    if (!user) {
+      const deviceId = 'acct' + crypto.randomBytes(12).toString('hex');
+      user = store.createUser(deviceId);
+      account.userId = user.id;
+      store.saveAccount(account);
+    }
+
+    refreshUserVip(user);
+
+    const token = store.createSession(user);
+
+    res.json({
+      token,
+      user: {
+        id: user.id,
+        label: user.label,
+        isVip: !!user.isVip,
+        vipExpiresAt: vipExpiresAtOf(user)
+      },
+      account: { email: account.email }
+    });
+  }
+);
+
+app.get(
+  '/api/auth/me',
+  requireUser,
+  (req, res) => {
+    const account = store.findAccountByUserId(req.user.id);
+
+    res.json({
+      user: {
+        id: req.user.id,
+        label: req.user.label,
+        isVip: !!req.user.isVip,
+        vipType: req.user.vipType || null,
+        vipExpiresAt: vipExpiresAtOf(req.user)
+      },
+      account: account ? { email: account.email } : null
+    });
+  }
+);
+
+app.post(
+  '/api/auth/logout',
+  (req, res) => {
+    const token = getToken(req);
+
+    if (token) {
+      store.destroySession(token);
+    }
+
+    res.json({ ok: true });
+  }
+);
+
+app.post(
+  '/api/auth/change-password',
+  requireUser,
+  (req, res) => {
+    const { currentPassword, newPassword } = req.body || {};
+
+    const account = store.findAccountByUserId(req.user.id);
+
+    if (!account) {
+      return res.status(400).json({
+        error: 'no_account',
+        message: 'Sua sessão não possui conta de e-mail vinculada.'
+      });
+    }
+
+    if (!verifyPassword(currentPassword || '', account.passwordHash)) {
+      return res.status(401).json({
+        error: 'bad_credentials',
+        message: 'Senha atual incorreta.'
+      });
+    }
+
+    if (typeof newPassword !== 'string' || newPassword.length < 8) {
+      return res.status(400).json({
+        error: 'weak_password',
+        message: 'A nova senha precisa ter pelo menos 8 caracteres.'
+      });
+    }
+
+    account.passwordHash = hashPassword(newPassword);
+    store.saveAccount(account);
+    store.addAudit('account_password_changed', account.email, req.ip);
+
+    res.json({ ok: true });
+  }
+);
+
 /* ================= informações públicas ================= */
 
 app.get(
@@ -585,10 +781,16 @@ app.post(
       });
     }
 
+    const keyType =
+      store.canonicalKeyType(key.type);
+
+    // reativação da mesma KEY: só considera "ok" se o tipo ainda bate
+    // (ativação de uma KEY de outro tipo deve trocar o acesso do usuário)
     if (
       key.activatedByUserId ===
       req.user.id &&
-      req.user.isVip
+      req.user.isVip &&
+      store.canonicalKeyType(req.user.vipType) === keyType
     ) {
       return res.json({
         status: 'ok',
@@ -596,6 +798,7 @@ app.post(
           '✅ KEY ativada com sucesso!',
         user: {
           isVip: true,
+          vipType: keyType,
           vipExpiresAt:
             vipExpiresAtOf(req.user)
         }
@@ -617,7 +820,7 @@ app.post(
       true,
       'key',
       key.id,
-      key.type || 'premium'
+      keyType
     );
 
     res.json({
@@ -626,7 +829,7 @@ app.post(
         '✅ KEY ativada com sucesso!',
       user: {
         isVip: true,
-        vipType: key.type || 'premium',
+        vipType: keyType,
         vipExpiresAt:
           vipExpiresAtOf(req.user)
       }
@@ -756,6 +959,8 @@ app.post(
       aim: body.aim
     };
 
+    const userKeyType = store.canonicalKeyType(req.user.vipType);
+
     if (tier !== 'normal' && !req.user.isVip) {
       return res.status(403).json({
         error: 'vip_required',
@@ -765,12 +970,23 @@ app.post(
       });
     }
 
-    if (tier === 'proibida' && req.user.vipType === 'premium') {
+    // Separação estrita (spec §3): KEY Premium só libera Premium;
+    // KEY Proibida só libera Proibida — nunca o contrário.
+    if (tier === 'premium' && userKeyType !== 'premium') {
+      return res.status(403).json({
+        error: 'vip_required',
+        upsell: true,
+        title: 'Sensi Premium',
+        message: '🔒 Sua KEY não possui acesso ao Premium.'
+      });
+    }
+
+    if (tier === 'proibida' && userKeyType !== 'proibida') {
       return res.status(403).json({
         error: 'vip_required',
         upsell: true,
         title: 'Sensi VIP',
-        message: 'A Sensi VIP requer uma KEY VIP. Sua KEY é Premium.'
+        message: '🔒 Este recurso exige uma KEY Proibida válida.'
       });
     }
 
@@ -846,6 +1062,81 @@ app.post(
     }
 
     res.json(result);
+  }
+);
+
+/* ================= gerador emulador (grátis) ================= */
+
+app.post(
+  '/api/generate/emulator',
+  requireUser,
+  (req, res) => {
+    const body = req.body || {};
+
+    const inputs = {
+      emulator: cleanStr(body.emulator, 20),
+      mouseDpi: body.mouseDpi,
+      mouseSens: body.mouseSens,
+      style: body.style
+    };
+
+    let remaining = null;
+    let limit = null;
+
+    if (!req.user.isVip) {
+      limit =
+        store.getSettings()
+          .freeDailyLimit;
+
+      const used =
+        store.countFreeToday(
+          req.user.id
+        );
+
+      if (
+        limit > 0 &&
+        used >= limit
+      ) {
+        return res.status(429).json({
+          error: 'daily_limit',
+          message:
+            `Você atingiu o limite de ${limit} gerações de hoje. Ative uma KEY VIP para gerar sem limites.`,
+          used,
+          limit
+        });
+      }
+
+      remaining =
+        Math.max(
+          0,
+          limit -
+          (used + 1)
+        );
+    }
+
+    const result =
+      engine.generateEmulator(inputs);
+
+    recordGen(
+      req.user,
+      'emulador',
+      inputs,
+      result
+    );
+
+    if (req.user.isVip) {
+      return res.json({
+        ...result,
+        remaining: null,
+        unlimited: true
+      });
+    }
+
+    res.json({
+      ...result,
+      remaining,
+      limit
+    });
   }
 );
 
@@ -1720,6 +2011,7 @@ function publicKey(key) {
   return {
     id: key.id,
     code: key.code,
+    type: store.canonicalKeyType(key.type),
     status: key.status,
     createdAt:
       key.createdAt,
@@ -2213,6 +2505,9 @@ app.delete(
     if (i < 0) return res.status(404).json({ error: 'not_found' });
     const user = db.users[i];
     db.users.splice(i, 1);
+    store.deleteUserData(user.id);
+    const account = store.findAccountByUserId(user.id);
+    if (account) store.deleteAccount(account.id);
     store.persistNow();
     store.addAudit('user_deleted', user.label || user.id, req.ip);
     res.json({ ok: true });
