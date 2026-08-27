@@ -2172,16 +2172,27 @@ app.patch(
 
     res.json({
       user: {
-        id:
-          user.id,
-        label:
-          user.label,
-        isVip:
-          user.isVip,
-        vipSource:
-          user.vipSource
+        id: user.id,
+        label: user.label,
+        isVip: user.isVip,
+        vipSource: user.vipSource
       }
     });
+  }
+);
+
+app.delete(
+  '/api/admin/users/:id',
+  requireAdmin,
+  (req, res) => {
+    const db = store.getDb();
+    const i = db.users.findIndex(u => u.id === req.params.id);
+    if (i < 0) return res.status(404).json({ error: 'not_found' });
+    const user = db.users[i];
+    db.users.splice(i, 1);
+    store.persistNow();
+    store.addAudit('user_deleted', user.label || user.id, req.ip);
+    res.json({ ok: true });
   }
 );
 
@@ -2474,21 +2485,9 @@ app.post(
 /* ================= estáticos ================= */
 
 function ensurePanelPath() {
-  const settings =
-    store.getSettings();
-
-  if (
-    !settings.adminPanelPath
-  ) {
-    settings.adminPanelPath =
-      '/painel-' +
-      crypto
-        .randomBytes(4)
-        .toString('hex');
-
-    store.persistNow();
-  }
-
+  const settings = store.getSettings();
+  settings.adminPanelPath = '/painel-' + crypto.randomBytes(4).toString('hex');
+  store.persistNow();
   return settings.adminPanelPath;
 }
 

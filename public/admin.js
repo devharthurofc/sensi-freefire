@@ -421,11 +421,18 @@ function renderUsers() {
         (u.isVip
           ? '<button class="b-red act rm">Remover VIP</button>'
           : '<button class="b-green act gv">Liberar VIP</button>') +
+        '<button class="b-red act del" title="Remover usuário">🗑️</button>' +
       '</div></td>';
     const b = tr.querySelector('.gv') || tr.querySelector('.rm');
     b.onclick = async () => {
       await api('/api/admin/users/' + u.id, { method: 'PATCH', body: { isVip: !u.isVip } });
       toast(u.isVip ? ('VIP removido de ' + u.label + '.') : ('VIP liberado para ' + u.label + '!'));
+      loadUsers(); loadDashboard();
+    };
+    tr.querySelector('.del').onclick = async () => {
+      if (!confirm('Remover o usuário "' + (u.label || '(sem nome)') + '"?\nEle poderá criar uma nova conta ao acessar o site.')) return;
+      await api('/api/admin/users/' + u.id, { method: 'DELETE' });
+      toast('Usuário removido.');
       loadUsers(); loadDashboard();
     };
     tb.appendChild(tr);

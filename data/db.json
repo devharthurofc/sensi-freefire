@@ -1,6 +1,6 @@
 {
   "meta": {
-    "createdAt": "2026-08-27T00:52:36.539Z"
+    "createdAt": "2026-08-27T01:15:19.064Z"
   },
   "admins": [
     {
@@ -13,28 +13,6 @@
     }
   ],
   "users": [
-    {
-      "id": "usr_cddcdcb72fb0e47259",
-      "deviceId": "ff9efcb783934fa4751539982c9362bf",
-      "label": "Jogador #0013",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-26T17:38:43.793+00:00",
-      "lastSeenAt": "2026-08-26T17:38:43.793+00:00"
-    },
-    {
-      "id": "usr_b8c7279ce287936d4d",
-      "deviceId": "f0fc94acbd8a632e6a17478e5dcc6d89",
-      "label": "Jogador #0014",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-26T17:43:25.171+00:00",
-      "lastSeenAt": "2026-08-26T17:43:25.171+00:00"
-    },
     {
       "id": "usr_0807201bf5d887f41d",
       "deviceId": "3debff90ec2b0aa8e5c7b3612a2ced38",
@@ -135,6 +113,72 @@
       "lastSeenAt": "2026-08-26T22:12:40.572+00:00"
     },
     {
+      "id": "usr_cddcdcb72fb0e47259",
+      "deviceId": "ff9efcb783934fa4751539982c9362bf",
+      "label": "Jogador #0013",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T17:38:43.793+00:00",
+      "lastSeenAt": "2026-08-26T17:38:43.793+00:00"
+    },
+    {
+      "id": "usr_b8c7279ce287936d4d",
+      "deviceId": "f0fc94acbd8a632e6a17478e5dcc6d89",
+      "label": "Jogador #0014",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T17:43:25.171+00:00",
+      "lastSeenAt": "2026-08-26T17:43:25.171+00:00"
+    },
+    {
+      "id": "usr_1aa4bd1909dd45f97c",
+      "deviceId": "db74b42510c5c48b95b3c99c957292b9",
+      "label": "harthur",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-27T01:03:35.578+00:00",
+      "lastSeenAt": "2026-08-27T01:03:52.974+00:00"
+    },
+    {
+      "id": "usr_a36eea8096918f1c0b",
+      "deviceId": "718d2b2fd4c266c54162a133a7198c8a",
+      "label": "pedro",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T17:03:27.086+00:00",
+      "lastSeenAt": "2026-08-26T17:03:41.387+00:00"
+    },
+    {
+      "id": "usr_c40fde66fee98e2249",
+      "deviceId": "testdevice1234",
+      "label": "Jogador #0001",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-25T22:26:45.348+00:00",
+      "lastSeenAt": "2026-08-25T22:26:45.661+00:00"
+    },
+    {
+      "id": "usr_ed6b15b9dcb954e67c",
+      "deviceId": "testdevice5678",
+      "label": "Jogador #0002",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-25T22:30:39.243+00:00",
+      "lastSeenAt": "2026-08-25T22:30:39.243+00:00"
+    },
+    {
       "id": "usr_616556ff0ce8680426",
       "deviceId": "68f7e2b93fec0c046adf36e8d01a18d2",
       "label": "Bn",
@@ -209,7 +253,18 @@
       "vipKeyId": null,
       "vipSince": null,
       "createdAt": "2026-08-27T00:48:30.388+00:00",
-      "lastSeenAt": "2026-08-27T00:50:14.593+00:00"
+      "lastSeenAt": "2026-08-27T00:53:34.082+00:00"
+    },
+    {
+      "id": "usr_37660f66ae8b16ce83",
+      "deviceId": "5e3b1791b21ebaf74c0d331a36b8f6b7",
+      "label": "Jogador #0027",
+      "isVip": true,
+      "vipSource": "key",
+      "vipKeyId": "key_95b1817fbd3e5f5cdd",
+      "vipSince": "2026-08-27T00:55:59.195+00:00",
+      "createdAt": "2026-08-27T00:54:10.6+00:00",
+      "lastSeenAt": "2026-08-27T01:02:11.689+00:00"
     },
     {
       "id": "usr_4d0213ae24b3227015",
@@ -242,7 +297,7 @@
       "vipKeyId": null,
       "vipSince": "2026-08-26T15:59:06.639+00:00",
       "createdAt": "2026-08-26T15:53:37.421+00:00",
-      "lastSeenAt": "2026-08-27T00:51:27.627+00:00"
+      "lastSeenAt": "2026-08-27T00:57:07.955+00:00"
     },
     {
       "id": "usr_0d806a3448de394584",
@@ -265,39 +320,6 @@
       "vipSince": null,
       "createdAt": "2026-08-26T16:39:40.878+00:00",
       "lastSeenAt": "2026-08-26T16:39:40.878+00:00"
-    },
-    {
-      "id": "usr_a36eea8096918f1c0b",
-      "deviceId": "718d2b2fd4c266c54162a133a7198c8a",
-      "label": "pedro",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-26T17:03:27.086+00:00",
-      "lastSeenAt": "2026-08-26T17:03:41.387+00:00"
-    },
-    {
-      "id": "usr_c40fde66fee98e2249",
-      "deviceId": "testdevice1234",
-      "label": "Jogador #0001",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-25T22:26:45.348+00:00",
-      "lastSeenAt": "2026-08-25T22:26:45.661+00:00"
-    },
-    {
-      "id": "usr_ed6b15b9dcb954e67c",
-      "deviceId": "testdevice5678",
-      "label": "Jogador #0002",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-25T22:30:39.243+00:00",
-      "lastSeenAt": "2026-08-25T22:30:39.243+00:00"
     }
   ],
   "keys": [
@@ -396,345 +418,33 @@
       "activatedByUserId": "usr_03f19f712bde26dac3",
       "activatedByLabel": "Murilo",
       "activatedAt": "2026-08-26T22:17:35.562+00:00"
+    },
+    {
+      "id": "key_95b1817fbd3e5f5cdd",
+      "code": "AIM-VIP-3ZS3-VCGK",
+      "status": "ativa",
+      "createdAt": "2026-08-27T00:55:35.707+00:00",
+      "expiresAt": "2026-09-06T00:55:35.706+00:00",
+      "maxUses": 10,
+      "uses": 1,
+      "activatedByUserId": "usr_37660f66ae8b16ce83",
+      "activatedByLabel": "Jogador #0027",
+      "activatedAt": "2026-08-27T00:55:59.194+00:00"
+    },
+    {
+      "id": "key_c0b9fcc6d135435a40",
+      "code": "AIM-VIP-QQVA-P3AK",
+      "status": "ativa",
+      "createdAt": "2026-08-27T00:59:05.525+00:00",
+      "expiresAt": "2026-09-06T00:59:05.525+00:00",
+      "maxUses": 10,
+      "uses": 0,
+      "activatedByUserId": null,
+      "activatedByLabel": null,
+      "activatedAt": null
     }
   ],
   "sessions": [
-    {
-      "token": "3db2dbaf8f40d2b273115c217183078f3320391d55ed79ed9365277b90e86e22",
-      "userId": "usr_ed6b15b9dcb954e67c",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-25T22:30:39.244+00:00",
-      "expiresAt": "2026-09-24T22:30:39.244+00:00"
-    },
-    {
-      "token": "8edc4c2dc9ffdda507615e7c5ecfd942a2993a3b8f09cd7f0b69dbaaaa29552a",
-      "userId": "usr_eb9f18b71a9f544e3e",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T01:29:53.938+00:00",
-      "expiresAt": "2026-09-25T01:29:53.938+00:00"
-    },
-    {
-      "token": "c878b2ee8b823568aea1dde071b8ca77b797adf8b115223132d7d2f1fff807ef",
-      "userId": "usr_c40fde66fee98e2249",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T13:56:49.643+00:00",
-      "expiresAt": "2026-09-25T13:56:49.643+00:00"
-    },
-    {
-      "token": "3081c13902fa0281e6f20ca61f36a7b81d4774b208a54cb3125a02bc3e78dd46",
-      "userId": "usr_827773347d5c0ab50d",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T14:04:17.541+00:00",
-      "expiresAt": "2026-09-25T14:04:17.541+00:00"
-    },
-    {
-      "token": "c43b3d1496d7e1d99ae7171286ecc44294a2b008f74243c9900313078eca4551",
-      "userId": null,
-      "adminId": "adm_11b249b977fc3a7171",
-      "isAdmin": true,
-      "createdAt": "2026-08-26T14:05:03.631+00:00",
-      "expiresAt": "2026-08-27T02:05:03.631+00:00"
-    },
-    {
-      "token": "e670e6b7440a3efc395bdf22c383ebd02a0474498f634ff5e2f47a7d5fb8d40a",
-      "userId": null,
-      "adminId": "adm_11b249b977fc3a7171",
-      "isAdmin": true,
-      "createdAt": "2026-08-26T14:08:55.055+00:00",
-      "expiresAt": "2026-08-27T02:08:55.055+00:00"
-    },
-    {
-      "token": "445e30aa9cb96b338b7ec0836f03b4d7efd8059b5eb66b68603c881b72d461c2",
-      "userId": null,
-      "adminId": "adm_11b249b977fc3a7171",
-      "isAdmin": true,
-      "createdAt": "2026-08-26T14:09:13.36+00:00",
-      "expiresAt": "2026-08-27T02:09:13.36+00:00"
-    },
-    {
-      "token": "d48da3dc138d603a73080056e6184927800621b591af8df7ee44a93aba7d6475",
-      "userId": null,
-      "adminId": "adm_11b249b977fc3a7171",
-      "isAdmin": true,
-      "createdAt": "2026-08-26T14:09:40.344+00:00",
-      "expiresAt": "2026-08-27T02:09:40.344+00:00"
-    },
-    {
-      "token": "6138a04597a2b99a08e301454e3d1269a051acd0f113b9b402773f1b4317fcd0",
-      "userId": null,
-      "adminId": "adm_11b249b977fc3a7171",
-      "isAdmin": true,
-      "createdAt": "2026-08-26T14:10:01.534+00:00",
-      "expiresAt": "2026-08-27T02:10:01.534+00:00"
-    },
-    {
-      "token": "0555ffa65fc8122b660fae05623cbaa15e4c57ac5d58ab287c838c8f6b51feb2",
-      "userId": "usr_b673199148f864fb95",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T14:27:53.919+00:00",
-      "expiresAt": "2026-09-25T14:27:53.919+00:00"
-    },
-    {
-      "token": "fcf676fd4ccf771da45c5aca31078be8357e7af393233c26a51b35858a85b51a",
-      "userId": null,
-      "adminId": "adm_11b249b977fc3a7171",
-      "isAdmin": true,
-      "createdAt": "2026-08-26T14:27:57.894+00:00",
-      "expiresAt": "2026-08-27T02:27:57.894+00:00"
-    },
-    {
-      "token": "5114bf3eaa63312ffb8f82dc16060f663024243ccbf6f0fedfc67b129d72ccc3",
-      "userId": "usr_b673199148f864fb95",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T14:36:36.569+00:00",
-      "expiresAt": "2026-09-25T14:36:36.569+00:00"
-    },
-    {
-      "token": "b981651fed33476887cf9cdfeba08653a7bc3227bbf806b62a113964c7817231",
-      "userId": "usr_c40fde66fee98e2249",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-25T22:26:45.348+00:00",
-      "expiresAt": "2026-09-24T22:26:45.348+00:00"
-    },
-    {
-      "token": "216d24575a46ea0bcfd2bd53699f562ba1fdf08d4f534591a4f3183b6f31a7e1",
-      "userId": "usr_b673199148f864fb95",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:23:38.475+00:00",
-      "expiresAt": "2026-09-25T15:23:38.475+00:00"
-    },
-    {
-      "token": "9b93bec7186fe62b5d4ebd299609f357d3c48530bf83a7143250c6ca578f8f1a",
-      "userId": "usr_b673199148f864fb95",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:30:07.681+00:00",
-      "expiresAt": "2026-09-25T15:30:07.681+00:00"
-    },
-    {
-      "token": "99fda8cf98fb7e410b385cf60de06fd21bfdec4df83cf21099d2d03c5bddc380",
-      "userId": "usr_b673199148f864fb95",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:29:49.905+00:00",
-      "expiresAt": "2026-09-25T15:29:49.905+00:00"
-    },
-    {
-      "token": "95adeaadf5cf00394be0a3fd31660d37c61bb527b57d4f954312b057cfee8d0a",
-      "userId": "usr_b673199148f864fb95",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:30:23.96+00:00",
-      "expiresAt": "2026-09-25T15:30:23.96+00:00"
-    },
-    {
-      "token": "fa6932d22cb1992a1d2e6e7ffe1624a8ffe59ece22b5191c303cfdb9e47f2e9b",
-      "userId": "usr_b673199148f864fb95",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:30:41.974+00:00",
-      "expiresAt": "2026-09-25T15:30:41.974+00:00"
-    },
-    {
-      "token": "87c841ecd2c0957fa52f2513fbf900fb4247ff4274360cbf649beb16ebeb1cca",
-      "userId": "usr_540e157d0269cc44eb",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:37:35.389+00:00",
-      "expiresAt": "2026-09-25T15:37:35.389+00:00"
-    },
-    {
-      "token": "04e738efbaeef743175bf907554dc24676075a14d763cec983c305b39ea8423a",
-      "userId": null,
-      "adminId": "adm_e99cb1994501ae197d",
-      "isAdmin": true,
-      "createdAt": "2026-08-26T15:38:40.34+00:00",
-      "expiresAt": "2026-08-27T03:38:40.34+00:00"
-    },
-    {
-      "token": "c741a1bcedb38b8efc26e2212da943f458735247f2eaa0ae8aad802364375060",
-      "userId": "usr_540e157d0269cc44eb",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:39:17.638+00:00",
-      "expiresAt": "2026-09-25T15:39:17.638+00:00"
-    },
-    {
-      "token": "f1174ca6e582ae75462c41e23fc33f97e1fab87220d5b4542d1f118f61f63985",
-      "userId": "usr_540e157d0269cc44eb",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:45:57.135+00:00",
-      "expiresAt": "2026-09-25T15:45:57.135+00:00"
-    },
-    {
-      "token": "caca855a4f4c428a98dfa51e6e46ea4c0f07490e36bd4f71482cbc27323c6969",
-      "userId": "usr_4d0213ae24b3227015",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:48:03.345+00:00",
-      "expiresAt": "2026-09-25T15:48:03.345+00:00"
-    },
-    {
-      "token": "1e4a5f329146b3f3bbb68bdb38ee98effb52e2fa8d8f95ff4ebd9f9bc4a7ab88",
-      "userId": "usr_540e157d0269cc44eb",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:50:11.527+00:00",
-      "expiresAt": "2026-09-25T15:50:11.527+00:00"
-    },
-    {
-      "token": "399eea621188166c6349a0e21a457c4eb3df16051b3b29e6bcabd492e11bfcd4",
-      "userId": "usr_717998fa09c4a81b2c",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:53:29.449+00:00",
-      "expiresAt": "2026-09-25T15:53:29.449+00:00"
-    },
-    {
-      "token": "0abcc2a250ed8b11e9fbe94207e4db301271b722c44d97b5a2ff3c4c3ae3afdc",
-      "userId": "usr_523740489ebdaf57f9",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:53:37.421+00:00",
-      "expiresAt": "2026-09-25T15:53:37.421+00:00"
-    },
-    {
-      "token": "c1b57e570cfad222b6fd215bcbb9fe31998c82ef9a9f1bf567f810a5be8345d7",
-      "userId": null,
-      "adminId": "adm_e99cb1994501ae197d",
-      "isAdmin": true,
-      "createdAt": "2026-08-26T15:58:46.145+00:00",
-      "expiresAt": "2026-08-27T03:58:46.145+00:00"
-    },
-    {
-      "token": "54fe8bae224c93530dba118669c29e9d66d20254e143cb5cf75c1e4c58d8b823",
-      "userId": "usr_4d0213ae24b3227015",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:56:48.54+00:00",
-      "expiresAt": "2026-09-25T15:56:48.54+00:00"
-    },
-    {
-      "token": "ce289001a25c72e38deb31cea231dbfff7349dbdd62e3fafcc75b8d824ff3330",
-      "userId": "usr_523740489ebdaf57f9",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:59:54.748+00:00",
-      "expiresAt": "2026-09-25T15:59:54.748+00:00"
-    },
-    {
-      "token": "ec34f54a9decbcdeff84a73c465ad01476488728bdf4aaaff573a0e5b98a5d76",
-      "userId": "usr_523740489ebdaf57f9",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T16:01:09.074+00:00",
-      "expiresAt": "2026-09-25T16:01:09.074+00:00"
-    },
-    {
-      "token": "76ef907536b7d501fdc16fab6d9b40c2cb5f37d8714a5ce6a85d82995750c6d5",
-      "userId": "usr_0d806a3448de394584",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T16:02:30.384+00:00",
-      "expiresAt": "2026-09-25T16:02:30.384+00:00"
-    },
-    {
-      "token": "ae088800464abd61911a523bda223b39ab61d2d118b4bcb90f0f4a94acbda797",
-      "userId": "usr_523740489ebdaf57f9",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T16:03:11.679+00:00",
-      "expiresAt": "2026-09-25T16:03:11.679+00:00"
-    },
-    {
-      "token": "bb6bdc6d306ee80258025cdae9b7f49e2746644475d635d274ca252cf9deb8ce",
-      "userId": "usr_4d0213ae24b3227015",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T16:04:00.315+00:00",
-      "expiresAt": "2026-09-25T16:04:00.315+00:00"
-    },
-    {
-      "token": "f52cf085411b6ba078d5414b08105a8275aee7d3b9d37c2e2b38dfe422790538",
-      "userId": "usr_4d0213ae24b3227015",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T16:11:32.307+00:00",
-      "expiresAt": "2026-09-25T16:11:32.307+00:00"
-    },
-    {
-      "token": "b4e83624a392ef94f3f8194d1fcfb6f7c16ffc415668556a4f9994f8d3dd61fd",
-      "userId": null,
-      "adminId": "adm_e99cb1994501ae197d",
-      "isAdmin": true,
-      "createdAt": "2026-08-26T16:12:29.143+00:00",
-      "expiresAt": "2026-08-27T04:12:29.143+00:00"
-    },
-    {
-      "token": "3d436adfb32f0cbac831793d8cee562540e68548eaed1df35c7f4aa2b47a65b7",
-      "userId": null,
-      "adminId": "adm_e99cb1994501ae197d",
-      "isAdmin": true,
-      "createdAt": "2026-08-26T16:18:57.347+00:00",
-      "expiresAt": "2026-08-27T04:18:57.347+00:00"
-    },
-    {
-      "token": "7b4cc6b684c40e65a86fc233d74ed7fa2243cb8ea975f413fea4be718c9c074a",
-      "userId": "usr_523740489ebdaf57f9",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T16:39:39.074+00:00",
-      "expiresAt": "2026-09-25T16:39:39.074+00:00"
-    },
-    {
-      "token": "ee1873953c6f07b92736aaef0fa38eac64ca35e2a6d999fb9a36fee7052cc102",
-      "userId": "usr_09e2f9c6963e73c5f5",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T16:39:40.878+00:00",
-      "expiresAt": "2026-09-25T16:39:40.878+00:00"
-    },
-    {
-      "token": "fb54f3246577e2cbc086cf3e5c34e940c09fe497c6c12735df8ad4c833a0ec93",
-      "userId": "usr_523740489ebdaf57f9",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T16:48:32.648+00:00",
-      "expiresAt": "2026-09-25T16:48:32.648+00:00"
-    },
-    {
-      "token": "21a7a941ca56e0408829a1fc81d97d3db950a1b4cbfd9b7d3a11b2b25316e39a",
-      "userId": "usr_a36eea8096918f1c0b",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T17:03:27.086+00:00",
-      "expiresAt": "2026-09-25T17:03:27.086+00:00"
-    },
-    {
-      "token": "c18a7a01abab27829d364de8911d72a8071dba96f4b9cbe0c3e03f08ec69f44b",
-      "userId": "usr_a36eea8096918f1c0b",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T17:04:07.831+00:00",
-      "expiresAt": "2026-09-25T17:04:07.831+00:00"
-    },
-    {
-      "token": "8b8a25feb7fe196958e7f6c34a2b41db904033091a06591bc8a67c8bdf2732fd",
-      "userId": "usr_a36eea8096918f1c0b",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T17:04:25.252+00:00",
-      "expiresAt": "2026-09-25T17:04:25.252+00:00"
-    },
     {
       "token": "e7e0d852206573052e37253df6da624a3119979e733b62c362670a484f6dbc51",
       "userId": "usr_4d0213ae24b3227015",
@@ -952,12 +662,412 @@
       "expiresAt": "2026-09-25T22:11:32.205+00:00"
     },
     {
+      "token": "71cb2cdfbb600507cad7b4afe3c91aa1213c2f54006af25fdc8345a30dcadc47",
+      "userId": null,
+      "adminId": "adm_e99cb1994501ae197d",
+      "isAdmin": true,
+      "createdAt": "2026-08-27T00:57:48.703+00:00",
+      "expiresAt": "2026-08-27T12:57:48.703+00:00"
+    },
+    {
+      "token": "6e4743ee44c44c4cd5fb486645dcc2fc76c75014b148ed25cad1bb5f0ce759fa",
+      "userId": null,
+      "adminId": "adm_e99cb1994501ae197d",
+      "isAdmin": true,
+      "createdAt": "2026-08-27T01:04:28.77+00:00",
+      "expiresAt": "2026-08-27T13:04:28.77+00:00"
+    },
+    {
       "token": "117d3ee860ec7a67d204828984f108ae0c744cfa958690d2ad35d3f691e8735b",
       "userId": "usr_03f19f712bde26dac3",
       "adminId": null,
       "isAdmin": false,
       "createdAt": "2026-08-26T22:11:40.276+00:00",
       "expiresAt": "2026-09-25T22:11:40.276+00:00"
+    },
+    {
+      "token": "15e4b83d416cd7963e9a7a1862beb860df381d8dbbb381af246c9b67aaa3d492",
+      "userId": null,
+      "adminId": "adm_e99cb1994501ae197d",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T23:30:49.222+00:00",
+      "expiresAt": "2026-08-27T11:30:49.222+00:00"
+    },
+    {
+      "token": "e399ffbe6b53f68991420cdaf82b18583d53151507d3e483f00a9105f9e9c4e8",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T23:09:31.815+00:00",
+      "expiresAt": "2026-09-25T23:09:31.815+00:00"
+    },
+    {
+      "token": "7bf3a02739154a551bb50e95da8a8c70dfc1b88548d4b7f46b560039552c7bde",
+      "userId": "usr_6f5065e637376d702e",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-27T00:55:02.328+00:00",
+      "expiresAt": "2026-09-26T00:55:02.328+00:00"
+    },
+    {
+      "token": "705a2847ff18db9f76c97cdb73890614bc1c78f8fce83f2da6a38180c34a5cfb",
+      "userId": "usr_1aa4bd1909dd45f97c",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-27T01:03:35.578+00:00",
+      "expiresAt": "2026-09-26T01:03:35.578+00:00"
+    },
+    {
+      "token": "8e3f47f08d89b2bd895fa521db99fb3251d2ca12db35566bb4f0a272992e44a1",
+      "userId": "usr_1aa4bd1909dd45f97c",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-27T01:03:48.589+00:00",
+      "expiresAt": "2026-09-26T01:03:48.589+00:00"
+    },
+    {
+      "token": "3db2dbaf8f40d2b273115c217183078f3320391d55ed79ed9365277b90e86e22",
+      "userId": "usr_ed6b15b9dcb954e67c",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-25T22:30:39.244+00:00",
+      "expiresAt": "2026-09-24T22:30:39.244+00:00"
+    },
+    {
+      "token": "8edc4c2dc9ffdda507615e7c5ecfd942a2993a3b8f09cd7f0b69dbaaaa29552a",
+      "userId": "usr_eb9f18b71a9f544e3e",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T01:29:53.938+00:00",
+      "expiresAt": "2026-09-25T01:29:53.938+00:00"
+    },
+    {
+      "token": "c878b2ee8b823568aea1dde071b8ca77b797adf8b115223132d7d2f1fff807ef",
+      "userId": "usr_c40fde66fee98e2249",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T13:56:49.643+00:00",
+      "expiresAt": "2026-09-25T13:56:49.643+00:00"
+    },
+    {
+      "token": "3081c13902fa0281e6f20ca61f36a7b81d4774b208a54cb3125a02bc3e78dd46",
+      "userId": "usr_827773347d5c0ab50d",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T14:04:17.541+00:00",
+      "expiresAt": "2026-09-25T14:04:17.541+00:00"
+    },
+    {
+      "token": "c43b3d1496d7e1d99ae7171286ecc44294a2b008f74243c9900313078eca4551",
+      "userId": null,
+      "adminId": "adm_11b249b977fc3a7171",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T14:05:03.631+00:00",
+      "expiresAt": "2026-08-27T02:05:03.631+00:00"
+    },
+    {
+      "token": "e670e6b7440a3efc395bdf22c383ebd02a0474498f634ff5e2f47a7d5fb8d40a",
+      "userId": null,
+      "adminId": "adm_11b249b977fc3a7171",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T14:08:55.055+00:00",
+      "expiresAt": "2026-08-27T02:08:55.055+00:00"
+    },
+    {
+      "token": "445e30aa9cb96b338b7ec0836f03b4d7efd8059b5eb66b68603c881b72d461c2",
+      "userId": null,
+      "adminId": "adm_11b249b977fc3a7171",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T14:09:13.36+00:00",
+      "expiresAt": "2026-08-27T02:09:13.36+00:00"
+    },
+    {
+      "token": "d48da3dc138d603a73080056e6184927800621b591af8df7ee44a93aba7d6475",
+      "userId": null,
+      "adminId": "adm_11b249b977fc3a7171",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T14:09:40.344+00:00",
+      "expiresAt": "2026-08-27T02:09:40.344+00:00"
+    },
+    {
+      "token": "6138a04597a2b99a08e301454e3d1269a051acd0f113b9b402773f1b4317fcd0",
+      "userId": null,
+      "adminId": "adm_11b249b977fc3a7171",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T14:10:01.534+00:00",
+      "expiresAt": "2026-08-27T02:10:01.534+00:00"
+    },
+    {
+      "token": "1e4a5f329146b3f3bbb68bdb38ee98effb52e2fa8d8f95ff4ebd9f9bc4a7ab88",
+      "userId": "usr_540e157d0269cc44eb",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:50:11.527+00:00",
+      "expiresAt": "2026-09-25T15:50:11.527+00:00"
+    },
+    {
+      "token": "399eea621188166c6349a0e21a457c4eb3df16051b3b29e6bcabd492e11bfcd4",
+      "userId": "usr_717998fa09c4a81b2c",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:53:29.449+00:00",
+      "expiresAt": "2026-09-25T15:53:29.449+00:00"
+    },
+    {
+      "token": "0abcc2a250ed8b11e9fbe94207e4db301271b722c44d97b5a2ff3c4c3ae3afdc",
+      "userId": "usr_523740489ebdaf57f9",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:53:37.421+00:00",
+      "expiresAt": "2026-09-25T15:53:37.421+00:00"
+    },
+    {
+      "token": "c1b57e570cfad222b6fd215bcbb9fe31998c82ef9a9f1bf567f810a5be8345d7",
+      "userId": null,
+      "adminId": "adm_e99cb1994501ae197d",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T15:58:46.145+00:00",
+      "expiresAt": "2026-08-27T03:58:46.145+00:00"
+    },
+    {
+      "token": "54fe8bae224c93530dba118669c29e9d66d20254e143cb5cf75c1e4c58d8b823",
+      "userId": "usr_4d0213ae24b3227015",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:56:48.54+00:00",
+      "expiresAt": "2026-09-25T15:56:48.54+00:00"
+    },
+    {
+      "token": "0555ffa65fc8122b660fae05623cbaa15e4c57ac5d58ab287c838c8f6b51feb2",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T14:27:53.919+00:00",
+      "expiresAt": "2026-09-25T14:27:53.919+00:00"
+    },
+    {
+      "token": "fcf676fd4ccf771da45c5aca31078be8357e7af393233c26a51b35858a85b51a",
+      "userId": null,
+      "adminId": "adm_11b249b977fc3a7171",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T14:27:57.894+00:00",
+      "expiresAt": "2026-08-27T02:27:57.894+00:00"
+    },
+    {
+      "token": "5114bf3eaa63312ffb8f82dc16060f663024243ccbf6f0fedfc67b129d72ccc3",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T14:36:36.569+00:00",
+      "expiresAt": "2026-09-25T14:36:36.569+00:00"
+    },
+    {
+      "token": "b981651fed33476887cf9cdfeba08653a7bc3227bbf806b62a113964c7817231",
+      "userId": "usr_c40fde66fee98e2249",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-25T22:26:45.348+00:00",
+      "expiresAt": "2026-09-24T22:26:45.348+00:00"
+    },
+    {
+      "token": "216d24575a46ea0bcfd2bd53699f562ba1fdf08d4f534591a4f3183b6f31a7e1",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:23:38.475+00:00",
+      "expiresAt": "2026-09-25T15:23:38.475+00:00"
+    },
+    {
+      "token": "9b93bec7186fe62b5d4ebd299609f357d3c48530bf83a7143250c6ca578f8f1a",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:30:07.681+00:00",
+      "expiresAt": "2026-09-25T15:30:07.681+00:00"
+    },
+    {
+      "token": "99fda8cf98fb7e410b385cf60de06fd21bfdec4df83cf21099d2d03c5bddc380",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:29:49.905+00:00",
+      "expiresAt": "2026-09-25T15:29:49.905+00:00"
+    },
+    {
+      "token": "95adeaadf5cf00394be0a3fd31660d37c61bb527b57d4f954312b057cfee8d0a",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:30:23.96+00:00",
+      "expiresAt": "2026-09-25T15:30:23.96+00:00"
+    },
+    {
+      "token": "fa6932d22cb1992a1d2e6e7ffe1624a8ffe59ece22b5191c303cfdb9e47f2e9b",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:30:41.974+00:00",
+      "expiresAt": "2026-09-25T15:30:41.974+00:00"
+    },
+    {
+      "token": "87c841ecd2c0957fa52f2513fbf900fb4247ff4274360cbf649beb16ebeb1cca",
+      "userId": "usr_540e157d0269cc44eb",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:37:35.389+00:00",
+      "expiresAt": "2026-09-25T15:37:35.389+00:00"
+    },
+    {
+      "token": "04e738efbaeef743175bf907554dc24676075a14d763cec983c305b39ea8423a",
+      "userId": null,
+      "adminId": "adm_e99cb1994501ae197d",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T15:38:40.34+00:00",
+      "expiresAt": "2026-08-27T03:38:40.34+00:00"
+    },
+    {
+      "token": "c741a1bcedb38b8efc26e2212da943f458735247f2eaa0ae8aad802364375060",
+      "userId": "usr_540e157d0269cc44eb",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:39:17.638+00:00",
+      "expiresAt": "2026-09-25T15:39:17.638+00:00"
+    },
+    {
+      "token": "f1174ca6e582ae75462c41e23fc33f97e1fab87220d5b4542d1f118f61f63985",
+      "userId": "usr_540e157d0269cc44eb",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:45:57.135+00:00",
+      "expiresAt": "2026-09-25T15:45:57.135+00:00"
+    },
+    {
+      "token": "caca855a4f4c428a98dfa51e6e46ea4c0f07490e36bd4f71482cbc27323c6969",
+      "userId": "usr_4d0213ae24b3227015",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:48:03.345+00:00",
+      "expiresAt": "2026-09-25T15:48:03.345+00:00"
+    },
+    {
+      "token": "ce289001a25c72e38deb31cea231dbfff7349dbdd62e3fafcc75b8d824ff3330",
+      "userId": "usr_523740489ebdaf57f9",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:59:54.748+00:00",
+      "expiresAt": "2026-09-25T15:59:54.748+00:00"
+    },
+    {
+      "token": "ec34f54a9decbcdeff84a73c465ad01476488728bdf4aaaff573a0e5b98a5d76",
+      "userId": "usr_523740489ebdaf57f9",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T16:01:09.074+00:00",
+      "expiresAt": "2026-09-25T16:01:09.074+00:00"
+    },
+    {
+      "token": "76ef907536b7d501fdc16fab6d9b40c2cb5f37d8714a5ce6a85d82995750c6d5",
+      "userId": "usr_0d806a3448de394584",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T16:02:30.384+00:00",
+      "expiresAt": "2026-09-25T16:02:30.384+00:00"
+    },
+    {
+      "token": "ae088800464abd61911a523bda223b39ab61d2d118b4bcb90f0f4a94acbda797",
+      "userId": "usr_523740489ebdaf57f9",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T16:03:11.679+00:00",
+      "expiresAt": "2026-09-25T16:03:11.679+00:00"
+    },
+    {
+      "token": "bb6bdc6d306ee80258025cdae9b7f49e2746644475d635d274ca252cf9deb8ce",
+      "userId": "usr_4d0213ae24b3227015",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T16:04:00.315+00:00",
+      "expiresAt": "2026-09-25T16:04:00.315+00:00"
+    },
+    {
+      "token": "f52cf085411b6ba078d5414b08105a8275aee7d3b9d37c2e2b38dfe422790538",
+      "userId": "usr_4d0213ae24b3227015",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T16:11:32.307+00:00",
+      "expiresAt": "2026-09-25T16:11:32.307+00:00"
+    },
+    {
+      "token": "b4e83624a392ef94f3f8194d1fcfb6f7c16ffc415668556a4f9994f8d3dd61fd",
+      "userId": null,
+      "adminId": "adm_e99cb1994501ae197d",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T16:12:29.143+00:00",
+      "expiresAt": "2026-08-27T04:12:29.143+00:00"
+    },
+    {
+      "token": "3d436adfb32f0cbac831793d8cee562540e68548eaed1df35c7f4aa2b47a65b7",
+      "userId": null,
+      "adminId": "adm_e99cb1994501ae197d",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T16:18:57.347+00:00",
+      "expiresAt": "2026-08-27T04:18:57.347+00:00"
+    },
+    {
+      "token": "7b4cc6b684c40e65a86fc233d74ed7fa2243cb8ea975f413fea4be718c9c074a",
+      "userId": "usr_523740489ebdaf57f9",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T16:39:39.074+00:00",
+      "expiresAt": "2026-09-25T16:39:39.074+00:00"
+    },
+    {
+      "token": "ee1873953c6f07b92736aaef0fa38eac64ca35e2a6d999fb9a36fee7052cc102",
+      "userId": "usr_09e2f9c6963e73c5f5",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T16:39:40.878+00:00",
+      "expiresAt": "2026-09-25T16:39:40.878+00:00"
+    },
+    {
+      "token": "fb54f3246577e2cbc086cf3e5c34e940c09fe497c6c12735df8ad4c833a0ec93",
+      "userId": "usr_523740489ebdaf57f9",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T16:48:32.648+00:00",
+      "expiresAt": "2026-09-25T16:48:32.648+00:00"
+    },
+    {
+      "token": "21a7a941ca56e0408829a1fc81d97d3db950a1b4cbfd9b7d3a11b2b25316e39a",
+      "userId": "usr_a36eea8096918f1c0b",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T17:03:27.086+00:00",
+      "expiresAt": "2026-09-25T17:03:27.086+00:00"
+    },
+    {
+      "token": "c18a7a01abab27829d364de8911d72a8071dba96f4b9cbe0c3e03f08ec69f44b",
+      "userId": "usr_a36eea8096918f1c0b",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T17:04:07.831+00:00",
+      "expiresAt": "2026-09-25T17:04:07.831+00:00"
+    },
+    {
+      "token": "8b8a25feb7fe196958e7f6c34a2b41db904033091a06591bc8a67c8bdf2732fd",
+      "userId": "usr_a36eea8096918f1c0b",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T17:04:25.252+00:00",
+      "expiresAt": "2026-09-25T17:04:25.252+00:00"
+    },
+    {
+      "token": "da4d8a4115d8ce0e963e778b0147bb18b28f8fd3a44b11151a976008b0d2222b",
+      "userId": "usr_37660f66ae8b16ce83",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-27T00:54:10.601+00:00",
+      "expiresAt": "2026-09-26T00:54:10.601+00:00"
     },
     {
       "token": "4ced585ee5f9ef94956535b906c6d1e72990f991bffea6908f39180429224a35",
@@ -1032,20 +1142,12 @@
       "expiresAt": "2026-09-26T00:48:30.388+00:00"
     },
     {
-      "token": "15e4b83d416cd7963e9a7a1862beb860df381d8dbbb381af246c9b67aaa3d492",
-      "userId": null,
-      "adminId": "adm_e99cb1994501ae197d",
-      "isAdmin": true,
-      "createdAt": "2026-08-26T23:30:49.222+00:00",
-      "expiresAt": "2026-08-27T11:30:49.222+00:00"
-    },
-    {
-      "token": "e399ffbe6b53f68991420cdaf82b18583d53151507d3e483f00a9105f9e9c4e8",
-      "userId": "usr_b673199148f864fb95",
+      "token": "a87135c883e201a7ed8e4c78637fb04778ef170976fdf5dc5c7a375b9a692bb8",
+      "userId": "usr_9ca1533ab2612eeac0",
       "adminId": null,
       "isAdmin": false,
-      "createdAt": "2026-08-26T23:09:31.815+00:00",
-      "expiresAt": "2026-09-25T23:09:31.815+00:00"
+      "createdAt": "2026-08-27T00:52:51.253+00:00",
+      "expiresAt": "2026-09-26T00:52:51.253+00:00"
     },
     {
       "token": "5f19c02731364f38084040371e81053b8c7b1a0ff1938248007cd225acb87956",
@@ -1144,20 +1246,20 @@
       "expiresAt": "2026-08-27T12:07:33.756+00:00"
     },
     {
-      "token": "ab4d314fa6f46a71e8ac2d8888b2e4b8bb97939fb666e289a0e8767992c83555",
-      "userId": null,
-      "adminId": "adm_e99cb1994501ae197d",
-      "isAdmin": true,
-      "createdAt": "2026-08-27T00:32:38.699+00:00",
-      "expiresAt": "2026-08-27T12:32:38.699+00:00"
-    },
-    {
       "token": "69ad40e52a05335a4ca41db725dc3baccd34b5c50db513e18a75332e9807bc1b",
       "userId": "usr_523740489ebdaf57f9",
       "adminId": null,
       "isAdmin": false,
       "createdAt": "2026-08-27T00:39:57.114+00:00",
       "expiresAt": "2026-09-26T00:39:57.114+00:00"
+    },
+    {
+      "token": "ab4d314fa6f46a71e8ac2d8888b2e4b8bb97939fb666e289a0e8767992c83555",
+      "userId": null,
+      "adminId": "adm_e99cb1994501ae197d",
+      "isAdmin": true,
+      "createdAt": "2026-08-27T00:32:38.699+00:00",
+      "expiresAt": "2026-08-27T12:32:38.699+00:00"
     },
     {
       "token": "e05f91244a52a7b91a2f5de22b4b830b6b514dfbd5b9b71d6188fe3719bf1c21",
@@ -1185,84 +1287,6 @@
     }
   ],
   "generations": [
-    {
-      "id": "gen_6b3e54529e04936b4c",
-      "at": "2026-08-26T15:30:52.777+00:00",
-      "userId": "usr_b673199148f864fb95",
-      "mode": "normal",
-      "inputs": {
-        "aim": "equilibrada",
-        "tier": "normal",
-        "level": "intermediario",
-        "style": "eq",
-        "dpiAtual": "",
-        "deviceModel": "Samsung Galaxy A54"
-      },
-      "values": {
-        "geral": 169,
-        "mira2x": 153,
-        "mira4x": 144,
-        "redDot": 162,
-        "miraAwm": 121,
-        "olhadinha": 105
-      },
-      "dpi": 476,
-      "fireButton": 58,
-      "deviceName": "Samsung Galaxy A54",
-      "knownDevice": true
-    },
-    {
-      "id": "gen_2513a641bbec18e641",
-      "at": "2026-08-26T20:33:49.861+00:00",
-      "userId": "usr_8a59ae6918c80dbdca",
-      "mode": "normal",
-      "inputs": {
-        "aim": "cabeca",
-        "tier": "normal",
-        "level": "avancado",
-        "style": "ag",
-        "dpiAtual": "",
-        "deviceModel": "iPhone XR"
-      },
-      "values": {
-        "geral": 193,
-        "mira2x": 177,
-        "mira4x": 159,
-        "redDot": 190,
-        "miraAwm": 131,
-        "olhadinha": 141
-      },
-      "dpi": 501,
-      "fireButton": 68,
-      "deviceName": "iPhone XR",
-      "knownDevice": true
-    },
-    {
-      "id": "gen_51e1a749f4b1bd462f",
-      "at": "2026-08-26T15:39:40.707+00:00",
-      "userId": "usr_540e157d0269cc44eb",
-      "mode": "premium",
-      "inputs": {
-        "aim": "equilibrada",
-        "tier": "premium",
-        "level": "iniciante",
-        "style": "eq",
-        "dpiAtual": "",
-        "deviceModel": "Samsung Galaxy A55"
-      },
-      "values": {
-        "geral": 171,
-        "mira2x": 155,
-        "mira4x": 144,
-        "redDot": 165,
-        "miraAwm": 120,
-        "olhadinha": 108
-      },
-      "dpi": 531,
-      "fireButton": 61,
-      "deviceName": "Samsung Galaxy A55",
-      "knownDevice": true
-    },
     {
       "id": "gen_e79cebd01903bb2ae1",
       "at": "2026-08-26T14:04:17.74+00:00",
@@ -1340,6 +1364,84 @@
       "fireButton": 58,
       "deviceName": null,
       "knownDevice": false
+    },
+    {
+      "id": "gen_6b3e54529e04936b4c",
+      "at": "2026-08-26T15:30:52.777+00:00",
+      "userId": "usr_b673199148f864fb95",
+      "mode": "normal",
+      "inputs": {
+        "aim": "equilibrada",
+        "tier": "normal",
+        "level": "intermediario",
+        "style": "eq",
+        "dpiAtual": "",
+        "deviceModel": "Samsung Galaxy A54"
+      },
+      "values": {
+        "geral": 169,
+        "mira2x": 153,
+        "mira4x": 144,
+        "redDot": 162,
+        "miraAwm": 121,
+        "olhadinha": 105
+      },
+      "dpi": 476,
+      "fireButton": 58,
+      "deviceName": "Samsung Galaxy A54",
+      "knownDevice": true
+    },
+    {
+      "id": "gen_2513a641bbec18e641",
+      "at": "2026-08-26T20:33:49.861+00:00",
+      "userId": "usr_8a59ae6918c80dbdca",
+      "mode": "normal",
+      "inputs": {
+        "aim": "cabeca",
+        "tier": "normal",
+        "level": "avancado",
+        "style": "ag",
+        "dpiAtual": "",
+        "deviceModel": "iPhone XR"
+      },
+      "values": {
+        "geral": 193,
+        "mira2x": 177,
+        "mira4x": 159,
+        "redDot": 190,
+        "miraAwm": 131,
+        "olhadinha": 141
+      },
+      "dpi": 501,
+      "fireButton": 68,
+      "deviceName": "iPhone XR",
+      "knownDevice": true
+    },
+    {
+      "id": "gen_51e1a749f4b1bd462f",
+      "at": "2026-08-26T15:39:40.707+00:00",
+      "userId": "usr_540e157d0269cc44eb",
+      "mode": "premium",
+      "inputs": {
+        "aim": "equilibrada",
+        "tier": "premium",
+        "level": "iniciante",
+        "style": "eq",
+        "dpiAtual": "",
+        "deviceModel": "Samsung Galaxy A55"
+      },
+      "values": {
+        "geral": 171,
+        "mira2x": 155,
+        "mira4x": 144,
+        "redDot": 165,
+        "miraAwm": 120,
+        "olhadinha": 108
+      },
+      "dpi": 531,
+      "fireButton": 61,
+      "deviceName": "Samsung Galaxy A55",
+      "knownDevice": true
     },
     {
       "id": "gen_286a5dfd90dbaae6ca",
@@ -1470,6 +1572,84 @@
       "fireButton": 69,
       "deviceName": null,
       "knownDevice": false
+    },
+    {
+      "id": "gen_ff31e2bf11133ebdd2",
+      "at": "2026-08-27T00:53:27.708+00:00",
+      "userId": "usr_9ca1533ab2612eeac0",
+      "mode": "normal",
+      "inputs": {
+        "aim": "equilibrada",
+        "tier": "normal",
+        "level": "intermediario",
+        "style": "eq",
+        "dpiAtual": "480",
+        "deviceModel": "moto g 24"
+      },
+      "values": {
+        "geral": 174,
+        "mira2x": 159,
+        "mira4x": 144,
+        "redDot": 169,
+        "miraAwm": 123,
+        "olhadinha": 110
+      },
+      "dpi": 498,
+      "fireButton": 64,
+      "deviceName": null,
+      "knownDevice": false
+    },
+    {
+      "id": "gen_48ecf9a879a304b59c",
+      "at": "2026-08-27T00:53:34.082+00:00",
+      "userId": "usr_9ca1533ab2612eeac0",
+      "mode": "normal",
+      "inputs": {
+        "aim": "cabeca",
+        "tier": "normal",
+        "level": "intermediario",
+        "style": "ag",
+        "dpiAtual": "480",
+        "deviceModel": "moto g 24"
+      },
+      "values": {
+        "geral": 187,
+        "mira2x": 169,
+        "mira4x": 157,
+        "redDot": 181,
+        "miraAwm": 126,
+        "olhadinha": 132
+      },
+      "dpi": 454,
+      "fireButton": 65,
+      "deviceName": null,
+      "knownDevice": false
+    },
+    {
+      "id": "gen_0337bcff2dc3f40982",
+      "at": "2026-08-27T00:56:46.627+00:00",
+      "userId": "usr_37660f66ae8b16ce83",
+      "mode": "proibida",
+      "inputs": {
+        "aim": "equilibrada",
+        "tier": "proibida",
+        "level": "intermediario",
+        "style": "eq",
+        "dpiAtual": "",
+        "deviceModel": "Moto g100"
+      },
+      "values": {
+        "geral": 188,
+        "mira2x": 174,
+        "mira4x": 158,
+        "redDot": 186,
+        "miraAwm": 124,
+        "olhadinha": 139
+      },
+      "dpi": 483,
+      "fireButton": 48,
+      "deviceName": null,
+      "knownDevice": false
     }
   ],
   "profiles": [],
@@ -1479,6 +1659,6 @@
   "settings": {
     "contactLink": "",
     "freeDailyLimit": 3,
-    "adminPanelPath": "/painel-df457bed"
+    "adminPanelPath": "/painel-d31b5a12"
   }
 }
