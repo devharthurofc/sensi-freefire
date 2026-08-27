@@ -13,6 +13,7 @@ const devices = require('./src/devices');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const ADMIN_PANEL_PATH = '/painel-admin';
 
 
 // Necessário para o rate limiting funcionar certo atrás de hospedagens
@@ -49,12 +50,9 @@ app.use((req, res, next) => {
     "object-src 'none'"
   );
 
-  const panelPath =
-    store.getSettings().adminPanelPath || '/admin';
-
   if (
     req.path.startsWith('/api/admin') ||
-    req.path === panelPath
+    req.path === ADMIN_PANEL_PATH
   ) {
     res.setHeader(
       'Cache-Control',
@@ -1200,10 +1198,7 @@ app.post(
 
     res.json({
       ok: true,
-      redirect:
-        store.getSettings()
-          .adminPanelPath ||
-        '/admin',
+      redirect: ADMIN_PANEL_PATH,
       admin: {
         username:
           admin.username,
@@ -2241,9 +2236,7 @@ app.get(
       freeDailyLimit:
         settings.freeDailyLimit,
 
-      adminPanelPath:
-        settings.adminPanelPath ||
-        '/admin'
+      adminPanelPath: ADMIN_PANEL_PATH
     });
   }
 );
@@ -2253,27 +2246,18 @@ app.put(
   requireAdmin,
   requireOwner,
   (req, res) => {
-    const oldPath =
-      store.getSettings()
-        .adminPanelPath;
-
     const settings =
       store.updateSettings(
-        req.body || {}
-      );
+        {
+          contactLink:
+            req.body &&
+            req.body.contactLink,
 
-    if (
-      settings.adminPanelPath !==
-      oldPath
-    ) {
-      store.addAudit(
-        'panel_path_changed',
-        oldPath +
-        ' → ' +
-        settings.adminPanelPath,
-        req.ip
+          freeDailyLimit:
+            req.body &&
+            req.body.freeDailyLimit
+        }
       );
-    }
 
     res.json({
       contactLink:
@@ -2282,8 +2266,7 @@ app.put(
       freeDailyLimit:
         settings.freeDailyLimit,
 
-      adminPanelPath:
-        settings.adminPanelPath
+      adminPanelPath: ADMIN_PANEL_PATH
     });
   }
 );
@@ -2514,9 +2497,18 @@ app.post(
 
 function ensurePanelPath() {
   const settings = store.getSettings();
-  settings.adminPanelPath = '/painel-' + crypto.randomBytes(4).toString('hex');
-  store.persistNow();
-  return settings.adminPanelPath;
+
+  if (
+    settings.adminPanelPath !==
+    ADMIN_PANEL_PATH
+  ) {
+    settings.adminPanelPath =
+      ADMIN_PANEL_PATH;
+
+    store.persistNow();
+  }
+
+  return ADMIN_PANEL_PATH;
 }
 
 app.use(
@@ -2529,19 +2521,14 @@ app.use(
 );
 
 /*
- * O painel só existe no endereço secreto.
+ * O painel só existe no endereço fixo definido pela aplicação.
  */
 
 app.use(
   (req, res, next) => {
-    const panelPath =
-      store.getSettings()
-        .adminPanelPath ||
-      '/admin';
-
     if (
       req.path !==
-      panelPath
+      ADMIN_PANEL_PATH
     ) {
       return next();
     }
@@ -2680,7 +2667,7 @@ process.on(
         );
 
         console.log(
-          '  PAINEL ADMIN (endereço secreto): ' +
+          '  PAINEL ADMIN (endereço fixo): ' +
           PANEL_PATH
         );
 
@@ -2691,11 +2678,7 @@ process.on(
         );
 
         console.log(
-          '  /admin comum retorna 404 de propósito.'
-        );
-
-        console.log(
-          '  Você pode mudar esse endereço no painel, em Configurações.'
+          '  Outros endereços de painel retornam 404 de propósito.'
         );
 
         if (

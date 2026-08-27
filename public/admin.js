@@ -487,19 +487,12 @@ async function loadSettings() {
   if (r._status !== 200) return;
   $('cfgContact').value = r.contactLink || '';
   $('cfgLimit').value = r.freeDailyLimit != null ? r.freeDailyLimit : 3;
-  $('cfgPath').value = r.adminPanelPath || '';
 }
 $('saveCfgBtn').addEventListener('click', async () => {
-  const novoCaminho = $('cfgPath').value.trim();
   const r = await api('/api/admin/settings', { method: 'PUT', body: {
-    contactLink: $('cfgContact').value, freeDailyLimit: $('cfgLimit').value,
-    adminPanelPath: novoCaminho
+    contactLink: $('cfgContact').value, freeDailyLimit: $('cfgLimit').value
   }});
   showMsg($('cfgMsg'), r._status === 200 ? 'Configurações salvas!' : 'Erro ao salvar.', r._status === 200);
-  if (r._status === 200 && r.adminPanelPath && r.adminPanelPath !== location.pathname) {
-    alert('Endereço do painel alterado para:\n' + r.adminPanelPath + '\n\nVocê será levado ao novo endereço (login de novo).');
-    location.href = r.adminPanelPath;
-  }
 });
 $('changePwBtn').addEventListener('click', async () => {
   const r = await api('/api/admin/change-password', { body: {

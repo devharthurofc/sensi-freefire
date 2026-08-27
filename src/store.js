@@ -36,7 +36,7 @@ const DEFAULT_DB = {
   settings: {
     contactLink: '',
     freeDailyLimit: 3,
-    adminPanelPath: '',
+    adminPanelPath: '/painel-admin',
     announcement: null,
     prices: {
       premium: {
@@ -715,13 +715,6 @@ function updateSettings(patch) {
   if (patch.freeDailyLimit !== undefined) {
     const n = parseInt(patch.freeDailyLimit, 10);
     if (Number.isInteger(n) && n >= 0) s.freeDailyLimit = n;
-  }
-  if (typeof patch.adminPanelPath === 'string') {
-    let v = patch.adminPanelPath.trim().toLowerCase();
-    if (v && !v.startsWith('/')) v = '/' + v;
-    if (!v || /^\/[a-z0-9_-]{2,60}(?:\/[a-z0-9_-]{1,60})*$/.test(v)) {
-      s.adminPanelPath = v || '/admin';
-    }
   }
   persistNow();
   return s;
