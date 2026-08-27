@@ -170,7 +170,7 @@ async function fetchRemoteSettings() {
 }
 
 async function fetchRemoteSales() {
-  const { data, error } = await supabase.from('sales').select('*');
+  const { data, error } = await supabase.from('vendas').select('*');
   if (error) throw error;
   return (data || []).map(s => ({
     id: s.id,
@@ -292,7 +292,7 @@ async function pushAllRemote() {
     supabase.from('sessions').upsert(d.sessions.map(toSessionRow), { onConflict: 'token' }),
     supabase.from('generations').upsert(d.generations.map(toGenerationRow), { onConflict: 'id' }),
     supabase.from('profiles').upsert(d.profiles.map(toProfileRow), { onConflict: 'id' }),
-    supabase.from('sales').upsert(d.sales.map(toSalesRow), { onConflict: 'id' }),
+    supabase.from('vendas').upsert(d.sales.map(toSalesRow), { onConflict: 'id' }),
     supabase.from('audit_log').upsert(
       d.auditLog.map((a, i) => ({ id: 'log_' + i, at: a.at, action: a.action, detail: a.detail, ip: a.ip })),
       { onConflict: 'id' }
