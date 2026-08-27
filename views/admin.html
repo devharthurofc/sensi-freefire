@@ -370,6 +370,23 @@ tr:hover{background:rgba(239,68,68,.03)}
         <button class="b-green act" id="savePricesBtn">💾 Salvar preços</button>
       </div>
       <div class="msg" id="pricesMsg"></div>
+
+      <div class="card" style="margin-top:20px;border-color:rgba(59,130,246,.35)">
+        <h3 class="sec">➕ Cadastrar planos personalizados</h3>
+        <p style="color:var(--muted);font-size:.85rem;margin-bottom:14px">
+          Crie novas opções de duração/preço além das fixas acima. Planos ativos aparecem na página de preços do site.
+        </p>
+        <table>
+          <thead><tr><th>Tipo</th><th>Nome / Duração</th><th>Preço (R$)</th><th>Ativo</th><th>Ações</th></tr></thead>
+          <tbody id="plansBody"></tbody>
+        </table>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="b-gray act" id="addPlanBtn">+ Adicionar plano</button>
+          <button class="b-green act" id="savePlansBtn">💾 Salvar planos</button>
+          <button class="b-gray act" id="reloadPlansBtn">↻ Recarregar</button>
+        </div>
+        <div class="msg" id="plansMsg"></div>
+      </div>
     </section>
 
     <!-- RELATÓRIOS -->

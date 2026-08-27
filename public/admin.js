@@ -767,6 +767,7 @@ async function loadPrices() {
     renderPricesForm('premium', r.prices.premium || {});
     renderPricesForm('vip', r.prices.vip || {});
   }
+  loadPlans();
 }
 
 function renderPricesForm(type, prices) {
@@ -794,6 +795,81 @@ $('savePricesBtn').addEventListener('click', async () => {
   });
   const r = await api('/api/admin/prices', { method: 'PUT', body: { prices: currentPrices } });
   showMsg($('pricesMsg'), r._status === 200 ? 'Preços salvos com sucesso!' : 'Erro ao salvar.', r._status === 200);
+});
+
+/* ---------- planos personalizados ---------- */
+
+let allPlans = [];
+
+async function loadPlans() {
+  const r = await api('/api/admin/plans');
+  if (r._status === 200 && r.plans) allPlans = r.plans;
+  renderPlans();
+}
+
+function renderPlans() {
+  const tb = $('plansBody');
+  if (!allPlans.length) {
+    tb.innerHTML = '<tr><td colspan="5" style="color:var(--muted)">Nenhum plano personalizado. Clique em "+ Adicionar plano".</td></tr>';
+    return;
+  }
+  tb.innerHTML = '';
+  allPlans.forEach(p => {
+    const tr = document.createElement('tr');
+    tr.dataset.id = p.id;
+    tr.innerHTML =
+      '<td><select class="mini-inp p-type" style="width:auto;padding:8px">' +
+        '<option value="premium"' + (p.type === 'premium' ? ' selected' : '') + '>🟦 Premium</option>' +
+        '<option value="proibida"' + (p.type !== 'premium' ? ' selected' : '') + '>🔴 Proibida</option>' +
+      '</select></td>' +
+      '<td><input class="mini-inp p-name" style="width:150px" maxlength="60" placeholder="ex: Plano 2 dias" value="' + esc(p.name || '') + '"></td>' +
+      '<td><input type="number" step="0.01" min="0" class="mini-inp p-price" style="width:90px" value="' + (Number(p.price) || 0) + '"></td>' +
+      '<td><input type="checkbox" class="p-active"' + (p.active !== false ? ' checked' : '') + '></td>' +
+      '<td><button class="b-red act p-del">Excluir</button></td>';
+    tr.querySelector('.p-del').onclick = () => {
+      allPlans = allPlans.filter(x => x.id !== p.id);
+      renderPlans();
+    };
+    tb.appendChild(tr);
+  });
+}
+
+$('addPlanBtn').addEventListener('click', () => {
+  allPlans.push({
+    id: 'plan_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    type: 'premium',
+    name: '',
+    price: 0,
+    active: true
+  });
+  renderPlans();
+});
+
+$('reloadPlansBtn').addEventListener('click', loadPlans);
+
+$('savePlansBtn').addEventListener('click', async () => {
+  const rows = $('plansBody').querySelectorAll('tr[data-id]');
+  const out = [];
+  rows.forEach(tr => {
+    const name = tr.querySelector('.p-name').value.trim();
+    if (!name) return;
+    out.push({
+      id: tr.dataset.id,
+      type: tr.querySelector('.p-type').value,
+      name: name,
+      price: parseFloat(tr.querySelector('.p-price').value) || 0,
+      active: tr.querySelector('.p-active').checked
+    });
+  });
+
+  const r = await api('/api/admin/plans', { method: 'PUT', body: { plans: out } });
+  if (r._status === 200) {
+    showMsg($('plansMsg'), 'Planos salvos! Já aparecem no site.', true);
+    allPlans = r.plans || out;
+    renderPlans();
+  } else {
+    showMsg($('plansMsg'), r.message || 'Erro ao salvar planos.', false);
+  }
 });
 
 /* ---------- boot ---------- */

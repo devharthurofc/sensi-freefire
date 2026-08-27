@@ -22,6 +22,12 @@ const TIER_INFO = {
     resTitle: 'Sua Sensi Premium',
     lock: true
   },
+  proibida: {
+    label: 'AIMZY VIP',
+    btn: 'Gerar Sensi VIP',
+    resTitle: 'Sua Sensi VIP',
+    lock: true
+  },
   vip: {
     label: 'AIMZY VIP',
     tier: 'proibida',
@@ -227,6 +233,8 @@ document.querySelectorAll("#modes .mode-card").forEach(btn => {
 });
 
 function switchTier(tier) {
+  // normaliza apelidos antigos: 'vip' -> 'proibida'
+  if (tier === 'vip') tier = 'proibida';
   if (!TIER_INFO[tier]) tier = 'normal';
   state.tier = tier;
   localStorage.setItem(LS_TIER, tier);
@@ -996,6 +1004,19 @@ document.getElementById("accPwBtn").addEventListener("click", async function() {
           var labels = {'1d':'1 Dia','7d':'7 Dias','30d':'30 Dias','permanent':'Permanente'};
           return '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--card-border)"><span style="color:var(--muted)">' + (labels[e[0]]||e[0]) + '</span><b style="color:#86efac">R$ ' + e[1].toFixed(2) + '</b></div>';
         }).join('');
+      }
+      // planos personalizados cadastrados pelo admin
+      if (Array.isArray(r.plans) && r.plans.length) {
+        function appendCustomPlans(el, type) {
+          if (!el) return;
+          var list = r.plans.filter(function(p) { return type === 'premium' ? p.type === 'premium' : p.type !== 'premium'; });
+          if (!list.length) return;
+          el.innerHTML += list.map(function(p) {
+            return '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--card-border)"><span style="color:var(--muted)">' + escapeHtml(p.name) + '</span><b style="color:#86efac">R$ ' + Number(p.price).toFixed(2) + '</b></div>';
+          }).join('');
+        }
+        appendCustomPlans(premEl, 'premium');
+        appendCustomPlans(vipEl, 'proibida');
       }
     }
   });

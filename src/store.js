@@ -67,6 +67,37 @@ let db = null;
 let saveTimer = null;
 let writeChain = Promise.resolve();
 
+/* Avisos repetitivos (ex.: colunas ausentes no Supabase) só aparecem
+ * 1x a cada 5 minutos — evita encher o log do Render */
+const _lastWarn = new Map();
+function warnThrottled(key, msg) {
+  const now = Date.now();
+  if (now - (_lastWarn.get(key) || 0) < 5 * 60 * 1000) return;
+  _lastWarn.set(key, now);
+  console.error(msg);
+}
+
+/* Rótulos padrão dos planos fixos (usados ao semear a lista de planos) */
+const PLAN_LABELS = {
+  '1h': '1 Hora', '2h': '2 Horas', '3h': '3 Horas', '6h': '6 Horas', '12h': '12 Horas',
+  '1d': '1 Dia', '3d': '3 Dias', '7d': '7 Dias', '15d': '15 Dias', '30d': '30 Dias',
+  'permanent': 'Permanente'
+};
+
+function seedPlansFromPrices(prices) {
+  const out = [];
+  const build = (type, dict) => Object.entries(dict || {}).forEach(([k, v]) => out.push({
+    id: 'plan_' + type + '_' + k,
+    type,
+    name: PLAN_LABELS[k] || k,
+    price: Number(v) || 0,
+    active: true
+  }));
+  build('premium', prices && prices.premium);
+  build('proibida', prices && prices.vip);
+  return out;
+}
+
 function hydrate(parsed) {
   const merged = Object.assign(structuredClone(DEFAULT_DB), parsed || {});
   for (const key of Object.keys(DEFAULT_DB)) {
@@ -82,6 +113,10 @@ function hydrate(parsed) {
     premium: Object.assign(structuredClone(DEFAULT_DB.settings.prices.premium), prices.premium || {}),
     vip: Object.assign(structuredClone(DEFAULT_DB.settings.prices.vip), prices.vip || {})
   };
+  // planos personalizados: semeia a partir dos preços fixos na primeira carga
+  if (!Array.isArray(merged.settings.plans)) {
+    merged.settings.plans = seedPlansFromPrices(merged.settings.prices);
+  }
   return merged;
 }
 
@@ -207,7 +242,8 @@ async function fetchRemoteSettings() {
     freeDailyLimit: data.free_daily_limit != null ? data.free_daily_limit : 3,
     adminPanelPath: data.admin_panel_path || '',
     announcement: data.announcement || null,
-    prices: data.prices || {}
+    prices: data.prices || {},
+    plans: Array.isArray(data.plans) ? data.plans : undefined
   };
 }
 
@@ -242,7 +278,7 @@ async function fetchRemoteAccounts() {
       createdAt: a.created_at
     }));
   } catch (e) {
-    console.error('[store] tabela accounts indisponível:', e.message);
+    warnThrottled('accounts_fetch', '[store] tabela accounts indisponível (rode corrigir-banco.sql): ' + e.message);
     return [];
   }
 }
@@ -383,7 +419,7 @@ async function pushAllRemote() {
       const rows = d.keys.map(k => { const { type, ...rest } = toKeyRow(k); return rest; });
       const r2 = await supabase.from('keys').upsert(rows, { onConflict: 'id' });
       if (r2.error) throw r2.error;
-      console.error('[store] keys salvos SEM a coluna type (rode corrigir-banco.sql):', e.message);
+      warnThrottled('keys_type', '[store] keys: coluna "type" ausente no Supabase — salvando sem ela. Rode corrigir-banco.sql');
     } catch (e2) {
       throw new Error('keys: ' + e2.message);
     }
@@ -394,7 +430,7 @@ async function pushAllRemote() {
     const r = await supabase.from('accounts').upsert(d.accounts.map(toAccountRow), { onConflict: 'id' });
     if (r.error) throw r.error;
   } catch (e) {
-    console.error('[store] falha ao salvar accounts (rode criar-tabela-accounts.sql):', e.message);
+    warnThrottled('accounts_save', '[store] falha ao salvar accounts — rode criar-tabela-accounts.sql: ' + e.message);
   }
 
   // admins: upsert sem role/must_change (colunas podem não existir)
@@ -421,6 +457,7 @@ async function pushAllRemote() {
       free_daily_limit: d.settings.freeDailyLimit != null ? d.settings.freeDailyLimit : 3
     };
     const variants = [
+      Object.assign({}, base, { admin_panel_path: d.settings.adminPanelPath || '', announcement: d.settings.announcement || null, prices: d.settings.prices || {}, plans: d.settings.plans || [] }),
       Object.assign({}, base, { admin_panel_path: d.settings.adminPanelPath || '', announcement: d.settings.announcement || null, prices: d.settings.prices || {} }),
       Object.assign({}, base, { admin_panel_path: d.settings.adminPanelPath || '', prices: d.settings.prices || {} }),
       Object.assign({}, base, { admin_panel_path: d.settings.adminPanelPath || '' }),
@@ -431,11 +468,11 @@ async function pushAllRemote() {
       const r = await supabase.from('settings').upsert(row, { onConflict: 'id' });
       if (!r.error) { lastErr = null; break; }
       lastErr = r.error;
-      console.error('[store] settings: reduzindo colunas após erro:', r.error.message);
+      warnThrottled('settings_variant', '[store] settings: colunas ausentes no Supabase (' + r.error.message + ') — rode corrigir-banco.sql');
     }
     if (lastErr) throw lastErr;
   } catch (e) {
-    console.error('[store] falha ao salvar settings:', e.message);
+    warnThrottled('settings_save', '[store] falha ao salvar settings: ' + e.message);
   }
 
   const results = await Promise.all(ops);
@@ -510,6 +547,14 @@ async function init() {
         if (t) k.type = t;
       });
     }
+    // planos personalizados: espelho local tem prioridade se o banco remoto
+    // ainda não tiver a coluna plans
+    if (
+      local && local.settings && Array.isArray(local.settings.plans) &&
+      !Array.isArray(remote.settings.plans)
+    ) {
+      remote.settings.plans = local.settings.plans;
+    }
     db = hydrate(remote);
     console.log('[store] Banco carregado do Supabase ✔ (' + db.users.length + ' usuários, ' + db.keys.length + ' keys)');
   } else if (local) {
@@ -535,12 +580,12 @@ function persistNow() {
   if (!db) return Promise.resolve();
 
   try { writeLocalMirror(); } catch (e) {
-    console.error('[store] falha no espelho local:', e.message);
+    warnThrottled('mirror', '[store] falha no espelho local: ' + e.message);
   }
 
   const snapshot = structuredClone(db);
   const job = () => pushAllRemote().then(() => {}).catch(e => {
-    console.error('[store] falha ao salvar no Supabase:', e.message);
+    warnThrottled('push_fail', '[store] falha ao salvar no Supabase: ' + e.message);
   });
   writeChain = writeChain.then(job, job);
   return writeChain;
@@ -833,6 +878,20 @@ function updateSettings(patch) {
   return s;
 }
 
+/* Planos personalizados exibidos na página de preços */
+function listPlans() {
+  const s = getSettings();
+  if (!Array.isArray(s.plans)) s.plans = seedPlansFromPrices(s.prices);
+  return s.plans;
+}
+
+function setPlans(plans) {
+  const s = getSettings();
+  s.plans = plans;
+  persistNow();
+  return s.plans;
+}
+
 /* ============ vendas ============ */
 
 function addSale({ keyId, keyCode, price, buyerLabel, buyerContact, product, plan, paymentMethod, sellerAdminId, sellerAdminName, notes, status }) {
@@ -1110,6 +1169,8 @@ module.exports = {
 
   getSettings,
   updateSettings,
+  listPlans,
+  setPlans,
 
   addSale,
   listSales,

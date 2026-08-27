@@ -1,6 +1,6 @@
 'use strict';
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const path = require('path');
 const crypto = require('crypto');
@@ -885,7 +885,57 @@ app.get(
   '/api/prices',
   (req, res) => {
     const settings = store.getSettings();
-    res.json({ prices: settings.prices || {} });
+    res.json({
+      prices: settings.prices || {},
+      plans: (Array.isArray(settings.plans) ? settings.plans : [])
+        .filter(p => p.active !== false)
+        .map(p => ({ id: p.id, type: p.type, name: p.name, price: p.price }))
+    });
+  }
+);
+
+/* ---------- gerenciador de planos (admin) ---------- */
+
+app.get(
+  '/api/admin/plans',
+  requireAdmin,
+  (req, res) => {
+    res.json({ plans: store.listPlans() });
+  }
+);
+
+app.put(
+  '/api/admin/plans',
+  requireAdmin,
+  (req, res) => {
+    const incoming = (req.body && req.body.plans) || [];
+
+    if (!Array.isArray(incoming)) {
+      return res.status(400).json({ message: 'Dados inválidos.' });
+    }
+
+    const plans = incoming
+      .map((p, i) => ({
+        id: store.clean(p && p.id, 60) || 'plan_' + Date.now().toString(36) + '_' + i,
+        type: store.canonicalKeyType(p && p.type),
+        name: store.clean(p && p.name, 60),
+        price: Math.max(0, Number(p && p.price) || 0),
+        active: !!(p && p.active)
+      }))
+      .filter(p => p.name);
+
+    // evita ids duplicados
+    const seen = new Set();
+    const unique = plans.filter(p => {
+      if (seen.has(p.id)) return false;
+      seen.add(p.id);
+      return true;
+    });
+
+    store.setPlans(unique);
+    store.addAudit('plans_updated', unique.length + ' plano(s) salvos', req.ip);
+
+    res.json({ ok: true, plans: unique });
   }
 );
 

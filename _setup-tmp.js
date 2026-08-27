@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 const postgres = require('postgres');
 
 const sql = postgres(process.env.DATABASE_URL);
