@@ -16,6 +16,19 @@ const crypto = require('crypto');
  * O restante do código continua lendo/escrevendo em `db`.
  */
 
+/* Mescla os itens do 'local' que faltam no 'remote' numa categoria.
+   Evita perda de dados quando o banco remoto vem incompleto no boot. */
+function mergeByUnique(remote, local, category, idKey) {
+  try {
+    const remoteList = remote[category] || [];
+    const localList = (local && Array.isArray(local[category])) ? local[category] : [];
+    if (!localList.length) return;
+    const seen = new Set(remoteList.map(x => x && x[idKey]));
+    const missing = localList.filter(x => x && x[idKey] && !seen.has(x[idKey]));
+    if (missing.length) remote[category] = remoteList.concat(missing);
+  } catch (_) { /* nunca derruba o boot */ }
+}
+
 const DATA_DIR = process.env.DATA_DIR
   ? path.resolve(process.env.DATA_DIR)
   : path.join(__dirname, '..', 'data');
@@ -394,19 +407,19 @@ async function pushAllRemote() {
   const d = getDb();
 
   const ops = [
-    supabase.from('users').upsert(d.users.map(toUserRow), { onConflict: 'id' }),
-    supabase.from('sessions').upsert(d.sessions.map(toSessionRow), { onConflict: 'token' }),
-    supabase.from('generations').upsert(d.generations.map(toGenerationRow), { onConflict: 'id' }),
-    supabase.from('profiles').upsert(d.profiles.map(toProfileRow), { onConflict: 'id' }),
-    supabase.from('vendas').upsert(d.sales.map(toSalesRow), { onConflict: 'id' }),
-    supabase.from('audit_log').upsert(
+    { name: 'users', fn: () => supabase.from('users').upsert(d.users.map(toUserRow), { onConflict: 'id' }) },
+    { name: 'sessions', fn: () => supabase.from('sessions').upsert(d.sessions.map(toSessionRow), { onConflict: 'token' }) },
+    { name: 'generations', fn: () => supabase.from('generations').upsert(d.generations.map(toGenerationRow), { onConflict: 'id' }) },
+    { name: 'profiles', fn: () => supabase.from('profiles').upsert(d.profiles.map(toProfileRow), { onConflict: 'id' }) },
+    { name: 'vendas', fn: () => supabase.from('vendas').upsert(d.sales.map(toSalesRow), { onConflict: 'id' }) },
+    { name: 'audit_log', fn: () => supabase.from('audit_log').upsert(
       d.auditLog.map((a, i) => {
         // id estável por conteúdo: rotação do log não sobrescreve eventos antigos
         const h = crypto.createHash('md5').update(a.at + '|' + a.action + '|' + a.detail + '|' + a.ip).digest('hex').slice(0, 12);
         return { id: a.id || 'logl_' + h, at: a.at, action: a.action, detail: a.detail, ip: a.ip };
       }),
       { onConflict: 'id' }
-    )
+    ) }
   ];
 
   // keys: tenta salvar com a coluna "type"; se o banco ainda não tiver a
@@ -435,14 +448,15 @@ async function pushAllRemote() {
 
   // admins: upsert sem role/must_change (colunas podem não existir)
   for (const a of d.admins) {
-    ops.push(
-      supabase.from('admins').upsert({
+    ops.push({
+      name: 'admins',
+      fn: () => supabase.from('admins').upsert({
         id: a.id,
         username: a.username,
         password_hash: a.passwordHash,
         created_at: a.createdAt
       }, { onConflict: 'id' })
-    );
+    });
   }
 
   // settings: pegar id existente ou inserir. Tenta com todas as colunas e
@@ -475,14 +489,22 @@ async function pushAllRemote() {
     warnThrottled('settings_save', '[store] falha ao salvar settings: ' + e.message);
   }
 
-  const results = await Promise.all(ops);
+  // Executa cada upsert de forma ISOLADA: uma tabela que falha (ex.: coluna
+  // ausente no Supabase) não impede as demais de persistirem. Antes era
+  // Promise.all -> se uma tabela falhava, o erro derrubava o save inteiro
+  // e dava a impressão de que "o dashboard zerou".
+  const failed = [];
+  for (const op of ops) {
+    try {
+      const r = await op.fn();
+      if (r && r.error) failed.push('[' + op.name + '] ' + (r.error.message || 'erro'));
+    } catch (e) {
+      failed.push('[' + op.name + '] ' + String(e.message || e));
+    }
+  }
 
-  // supabase-js RETORNA erro em vez de lançar — sem esta checagem,
-  // falhas de gravação passam em silêncio
-  const failed = results.filter(r => r && r.error);
   if (failed.length) {
-    const msg = failed.map(f => f.error && f.error.message).join(' | ');
-    throw new Error('Supabase rejeitou ' + failed.length + ' op(ões): ' + String(msg).slice(0, 300));
+    throw new Error('Supabase rejeitou ' + failed.length + ' op(ões): ' + failed.join(' | ').slice(0, 300));
   }
 }
 
@@ -555,8 +577,23 @@ async function init() {
     ) {
       remote.settings.plans = local.settings.plans;
     }
+
+    // MERGE DE SEGURANÇA por categoria: se o espelho local tiver MAIS
+    // registros do que o banco remoto numa categoria, mescla os que faltam.
+    // Evita "dashboard zerar" quando o Disco/Render reinicia e o Supabase
+    // estava incompleto (ex.: vendas/gerações ainda não persistidas).
+    if (local) {
+      mergeByUnique(remote, local, 'users', 'id');
+      mergeByUnique(remote, local, 'keys', 'id');
+      mergeByUnique(remote, local, 'generations', 'id');
+      mergeByUnique(remote, local, 'profiles', 'id');
+      mergeByUnique(remote, local, 'sessions', 'token');
+      mergeByUnique(remote, local, 'sales', 'id');
+      mergeByUnique(remote, local, 'accounts', 'id');
+    }
+
     db = hydrate(remote);
-    console.log('[store] Banco carregado do Supabase ✔ (' + db.users.length + ' usuários, ' + db.keys.length + ' keys)');
+    console.log('[store] Banco carregado do Supabase ✔ (' + db.users.length + ' usuários, ' + db.keys.length + ' keys, ' + db.sales.length + ' vendas)');
   } else if (local) {
     db = hydrate(local);
     console.log(
@@ -878,11 +915,25 @@ function updateSettings(patch) {
   return s;
 }
 
-/* Planos personalizados exibidos na página de preços */
+/* Planos personalizados exibidos na página de preços.
+   Faz merge idempotente: planos padrão derivados dos preços + custom. */
 function listPlans() {
   const s = getSettings();
-  if (!Array.isArray(s.plans)) s.plans = seedPlansFromPrices(s.prices);
-  return s.plans;
+  const seeded = seedPlansFromPrices(s.prices);
+  const custom = (Array.isArray(s.plans) ? s.plans : [])
+    .filter(p => p && p.name && !(p.id && String(p.id).startsWith('plan_')));
+  // junta seeded + custom preservando os ids padrão e evitando duplicados
+  const all = seeded.concat(custom);
+  const seen = new Set();
+  const out = all.filter(p => {
+    if (!p || seen.has(p.id)) return false;
+    seen.add(p.id);
+    return true;
+  });
+  if (out.length !== seeded.length || custom.length) {
+    s.plans = out;
+  }
+  return out;
 }
 
 function setPlans(plans) {

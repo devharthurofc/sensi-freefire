@@ -232,9 +232,40 @@ const EMU_STYLE_DELTA = {
   geral: 5, redDot: 5, mira2x: 4, mira4x: 3, miraAwm: -2, sensX: 5, sensY: 4
 };
 
+/*
+ * Presets de emulador (configs consagradas / base conhecida).
+ * Aplicam a base inteira e sobrepõem a base padrão do emulador.
+ */
+const EMU_PRESETS = {
+  padrao: {
+    label: 'Padrão',
+    base: { geral: 90, redDot: 85, mira2x: 78, mira4x: 68, miraAwm: 60, sensX: 90, sensY: 84 }
+  },
+  confortavel: {
+    label: 'Confortável',
+    base: { geral: 80, redDot: 76, mira2x: 70, mira4x: 62, miraAwm: 54, sensX: 82, sensY: 76 }
+  },
+  casual: {
+    label: 'Casual',
+    base: { geral: 86, redDot: 82, mira2x: 76, mira4x: 66, miraAwm: 58, sensX: 88, sensY: 82 }
+  },
+  hipico: {
+    label: 'Hípico (drag)',
+    base: { geral: 100, redDot: 95, mira2x: 86, mira4x: 74, miraAwm: 64, sensX: 100, sensY: 92 }
+  },
+  sensivel: {
+    label: 'Sensível',
+    base: { geral: 108, redDot: 102, mira2x: 92, mira4x: 80, miraAwm: 70, sensX: 106, sensY: 98 }
+  }
+};
+
 function generateEmulator(data) {
   const emuKey = EMULATORS[data.emulator] ? data.emulator : 'bluestacks';
   const emu = EMULATORS[emuKey];
+
+  // aplica o preset escolhido (se existir) como base
+  const presetKey = EMU_PRESETS[data.preset] ? data.preset : null;
+  const base = presetKey ? EMU_PRESETS[presetKey].base : emu.base;
 
   const styleAdj = data.style === 'ag' ? 1 : (data.style === 'pr' ? -1 : 0);
 
@@ -252,23 +283,27 @@ function generateEmulator(data) {
     : 0;
 
   const values = {};
-  for (const k of Object.keys(emu.base)) {
-    const v = emu.base[k] + styleAdj * EMU_STYLE_DELTA[k] + dpiComp + sensComp;
+  for (const k of Object.keys(base)) {
+    const v = base[k] + styleAdj * EMU_STYLE_DELTA[k] + dpiComp + sensComp;
     values[k] = clamp(jitter(v, 2), 1, 200);
   }
 
   const dpi = Number.isInteger(mouseDpi) && mouseDpi >= 100 && mouseDpi <= 16000
-    ? clamp(Math.round(mouseDpi / 10) * 10, 400, 1600)
+    ? clamp(Math.round(mouseDpi / 10) * 10, 400, 1200)
     : 800;
 
   return {
     mode: 'emulador',
     emulator: emuKey,
     emulatorLabel: emu.label,
+    preset: presetKey,
+    presetLabel: presetKey ? EMU_PRESETS[presetKey].label : null,
     values,
     dpi,
     fireButton: null,
-    summary: 'Config para ' + emu.label + ' ajustada ao seu mouse e estilo de jogo. Treine antes das ranqueadas.'
+    summary: 'Config para ' + emu.label
+      + (presetKey ? ' · preset "' + EMU_PRESETS[presetKey].label + '"' : '')
+      + ' ajustada ao seu mouse e estilo. Treine antes das ranqueadas.'
   };
 }
 
@@ -277,6 +312,8 @@ module.exports = {
   generateEmulator,
   EMULATORS,
   EMULATOR_KEYS: Object.keys(EMULATORS),
+  EMU_PRESETS,
+  EMU_PRESET_KEYS: Object.keys(EMU_PRESETS),
   TIERS: Object.keys(TIER_TUNING),
   TIER_TUNING,
   MAX_SENSI

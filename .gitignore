@@ -1,0 +1,9 @@
+# node
+node_modules/
+
+# espelho local (os dados vivem no Supabase)
+data/
+
+# arquivos temporários
+*.log
+_*
