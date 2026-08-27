@@ -89,7 +89,7 @@ async function safeApi(path, opts) {
   return r;
 }
 
-function refreshAll(){ loadDashboard(); loadKeys(); loadUsers(); loadSales(); loadNotifications(); }
+function refreshAll(){ loadDashboard(); loadKeys(); loadUsers(); loadSales(); loadNotifications(); loadPrices(); }
 
 let refreshTimer = null;
 function startAutoRefresh() {
@@ -743,5 +743,51 @@ async function loadAnnouncement() {
 }
 
 function closeAnnounce() { $('announceModal').style.display = 'none'; }
+
+/* ---------- preços ---------- */
+
+const PLAN_LABELS = {
+  '1h': '1 Hora', '2h': '2 Horas', '3h': '3 Horas', '6h': '6 Horas', '12h': '12 Horas',
+  '1d': '1 Dia', '3d': '3 Dias', '7d': '7 Dias', '15d': '15 Dias', '30d': '30 Dias',
+  'permanent': 'Permanente'
+};
+
+let currentPrices = { premium: {}, vip: {} };
+
+async function loadPrices() {
+  const r = await api('/api/prices');
+  if (r._status === 200 && r.prices) {
+    currentPrices = r.prices;
+    renderPricesForm('premium', r.prices.premium || {});
+    renderPricesForm('vip', r.prices.vip || {});
+  }
+}
+
+function renderPricesForm(type, prices) {
+  const el = $(type === 'premium' ? 'premiumPricesForm' : 'vipPricesForm');
+  const keys = type === 'premium'
+    ? ['1h','2h','3h','6h','12h','1d','3d','7d','15d','30d','permanent']
+    : ['1d','7d','30d','permanent'];
+
+  el.innerHTML = keys.map(k => {
+    return '<div style="display:flex;align-items:center;gap:12px">' +
+      '<label style="width:120px;color:var(--muted)">' + PLAN_LABELS[k] + '</label>' +
+      '<span style="color:#86efac">R$</span>' +
+      '<input type="number" class="mini-inp price-input" data-type="' + type + '" data-plan="' + k + '" ' +
+        'value="' + (prices[k] || 0) + '" step="0.01" min="0" style="width:100px">' +
+    '</div>';
+  }).join('');
+}
+
+$('savePricesBtn').addEventListener('click', async () => {
+  document.querySelectorAll('.price-input').forEach(inp => {
+    const type = inp.dataset.type;
+    const plan = inp.dataset.plan;
+    if (!currentPrices[type]) currentPrices[type] = {};
+    currentPrices[type][plan] = parseFloat(inp.value) || 0;
+  });
+  const r = await api('/api/admin/prices', { method: 'PUT', body: { prices: currentPrices } });
+  showMsg($('pricesMsg'), r._status === 200 ? 'Preços salvos com sucesso!' : 'Erro ao salvar.', r._status === 200);
+});
 
 /* ---------- boot ---------- */

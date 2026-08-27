@@ -170,6 +170,9 @@ tr:hover{background:rgba(239,68,68,.03)}
       <button data-sec="sales">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
         Vendas</button>
+      <button data-sec="prices">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Preços</button>
       <button data-sec="reports">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         Relatórios</button>
@@ -343,6 +346,30 @@ tr:hover{background:rgba(239,68,68,.03)}
           <tbody id="usersBody"></tbody>
         </table>
       </div>
+    </section>
+
+    <!-- PREÇOS -->
+    <section class="section" id="sec-prices">
+      <div class="topbar">
+        <div><h2 class="font-display">Preços das Keys</h2><p class="sub">Configure os valores de cada plano.</p></div>
+      </div>
+
+      <div class="card">
+        <h3 class="sec">🟦 AIMZY PREMIUM</h3>
+        <p style="color:var(--muted);font-size:.85rem;margin-bottom:14px">Sensibilidade personalizada completa</p>
+        <div id="premiumPricesForm" style="display:grid;gap:10px"></div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <h3 class="sec">🟨 AIMZY VIP</h3>
+        <p style="color:var(--muted);font-size:.85rem;margin-bottom:14px">Acesso total + Modo Proibido</p>
+        <div id="vipPricesForm" style="display:grid;gap:10px"></div>
+      </div>
+
+      <div style="margin-top:14px">
+        <button class="b-green act" id="savePricesBtn">💾 Salvar preços</button>
+      </div>
+      <div class="msg" id="pricesMsg"></div>
     </section>
 
     <!-- RELATÓRIOS -->

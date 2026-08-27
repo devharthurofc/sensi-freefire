@@ -793,6 +793,15 @@ document.getElementById("nameInput").addEventListener("keydown", function(e) {
       }
     }
   });
+  api("/api/settings").then(function(r) {
+    if (r._status === 200 && r.settings && r.settings.contactLink) {
+      var buyPrem = document.getElementById("buyPremiumBtn");
+      var buyVip = document.getElementById("buyVipBtn");
+      var link = r.settings.contactLink;
+      if (buyPrem) buyPrem.href = link;
+      if (buyVip) buyVip.href = link;
+    }
+  });
   initPWA();
 })();
 

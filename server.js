@@ -686,6 +686,39 @@ app.get(
   }
 );
 
+app.put(
+  '/api/admin/prices',
+  requireAdmin,
+  express.json(),
+  (req, res) => {
+    const { prices } = req.body || {};
+    if (!prices || typeof prices !== 'object') {
+      return res.status(400).json({ message: 'Dados inválidos.' });
+    }
+    const settings = store.getSettings();
+    settings.prices = {
+      premium: prices.premium || {},
+      vip: prices.vip || {}
+    };
+    store.persistNow();
+    store.addAudit('prices_updated', 'Preços atualizados');
+    res.json({ ok: true, prices: settings.prices });
+  }
+);
+
+app.get(
+  '/api/settings',
+  (req, res) => {
+    const s = store.getSettings();
+    res.json({
+      settings: {
+        contactLink: s.contactLink || '',
+        announcement: s.announcement || null
+      }
+    });
+  }
+);
+
 app.post(
   '/api/generate',
   requireUser,

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "createdAt": "2026-08-27T01:15:19.064Z"
+    "createdAt": "2026-08-27T01:33:59.064Z"
   },
   "admins": [
     {
@@ -14,15 +14,15 @@
   ],
   "users": [
     {
-      "id": "usr_0807201bf5d887f41d",
-      "deviceId": "3debff90ec2b0aa8e5c7b3612a2ced38",
-      "label": "Jogador #0015",
+      "id": "usr_8de8e268bf066a0988",
+      "deviceId": "262436be44526eac83d89814b6afec21",
+      "label": "Jogador #0022",
       "isVip": false,
       "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-26T19:09:09.53+00:00",
-      "lastSeenAt": "2026-08-26T19:09:09.53+00:00"
+      "createdAt": "2026-08-26T22:12:40.572+00:00",
+      "lastSeenAt": "2026-08-26T22:12:40.572+00:00"
     },
     {
       "id": "usr_8a59ae6918c80dbdca",
@@ -47,17 +47,6 @@
       "lastSeenAt": "2026-08-26T22:06:03.925+00:00"
     },
     {
-      "id": "usr_280487d7d08a0d3c68",
-      "deviceId": "0ae89974ff232d118d9a05af793c2cec",
-      "label": "Jogador #0018",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-26T22:07:05.134+00:00",
-      "lastSeenAt": "2026-08-26T22:07:05.134+00:00"
-    },
-    {
       "id": "usr_dad3e4a549e70eb82b",
       "deviceId": "a962eee45cbfac743e007bed738561a7",
       "label": "Murilo",
@@ -80,15 +69,15 @@
       "lastSeenAt": "2026-08-26T22:18:23.185+00:00"
     },
     {
-      "id": "usr_2f0cd6460ebaf28c24",
-      "deviceId": "fe27a2cd4fc4d3142b36f278d800be3e",
-      "label": "Jogador #0021",
+      "id": "usr_0807201bf5d887f41d",
+      "deviceId": "3debff90ec2b0aa8e5c7b3612a2ced38",
+      "label": "Jogador #0015",
       "isVip": false,
       "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-26T22:11:50.058+00:00",
-      "lastSeenAt": "2026-08-26T22:11:50.058+00:00"
+      "createdAt": "2026-08-26T19:09:09.53+00:00",
+      "lastSeenAt": "2026-08-26T19:09:09.53+00:00"
     },
     {
       "id": "usr_6f5065e637376d702e",
@@ -102,15 +91,26 @@
       "lastSeenAt": "2026-08-26T23:30:12.868+00:00"
     },
     {
-      "id": "usr_8de8e268bf066a0988",
-      "deviceId": "262436be44526eac83d89814b6afec21",
-      "label": "Jogador #0022",
+      "id": "usr_1aa4bd1909dd45f97c",
+      "deviceId": "db74b42510c5c48b95b3c99c957292b9",
+      "label": "harthur",
       "isVip": false,
       "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-26T22:12:40.572+00:00",
-      "lastSeenAt": "2026-08-26T22:12:40.572+00:00"
+      "createdAt": "2026-08-27T01:03:35.578+00:00",
+      "lastSeenAt": "2026-08-27T01:03:52.974+00:00"
+    },
+    {
+      "id": "usr_2f0cd6460ebaf28c24",
+      "deviceId": "fe27a2cd4fc4d3142b36f278d800be3e",
+      "label": "Jogador #0021",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T22:11:50.058+00:00",
+      "lastSeenAt": "2026-08-26T22:11:50.058+00:00"
     },
     {
       "id": "usr_cddcdcb72fb0e47259",
@@ -124,6 +124,17 @@
       "lastSeenAt": "2026-08-26T17:38:43.793+00:00"
     },
     {
+      "id": "usr_280487d7d08a0d3c68",
+      "deviceId": "0ae89974ff232d118d9a05af793c2cec",
+      "label": "Jogador #0018",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T22:07:05.134+00:00",
+      "lastSeenAt": "2026-08-26T22:07:05.134+00:00"
+    },
+    {
       "id": "usr_b8c7279ce287936d4d",
       "deviceId": "f0fc94acbd8a632e6a17478e5dcc6d89",
       "label": "Jogador #0014",
@@ -133,61 +144,6 @@
       "vipSince": null,
       "createdAt": "2026-08-26T17:43:25.171+00:00",
       "lastSeenAt": "2026-08-26T17:43:25.171+00:00"
-    },
-    {
-      "id": "usr_1aa4bd1909dd45f97c",
-      "deviceId": "db74b42510c5c48b95b3c99c957292b9",
-      "label": "harthur",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-27T01:03:35.578+00:00",
-      "lastSeenAt": "2026-08-27T01:03:52.974+00:00"
-    },
-    {
-      "id": "usr_a36eea8096918f1c0b",
-      "deviceId": "718d2b2fd4c266c54162a133a7198c8a",
-      "label": "pedro",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-26T17:03:27.086+00:00",
-      "lastSeenAt": "2026-08-26T17:03:41.387+00:00"
-    },
-    {
-      "id": "usr_c40fde66fee98e2249",
-      "deviceId": "testdevice1234",
-      "label": "Jogador #0001",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-25T22:26:45.348+00:00",
-      "lastSeenAt": "2026-08-25T22:26:45.661+00:00"
-    },
-    {
-      "id": "usr_ed6b15b9dcb954e67c",
-      "deviceId": "testdevice5678",
-      "label": "Jogador #0002",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-25T22:30:39.243+00:00",
-      "lastSeenAt": "2026-08-25T22:30:39.243+00:00"
-    },
-    {
-      "id": "usr_616556ff0ce8680426",
-      "deviceId": "68f7e2b93fec0c046adf36e8d01a18d2",
-      "label": "Bn",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-26T22:24:33.166+00:00",
-      "lastSeenAt": "2026-08-26T22:25:38.512+00:00"
     },
     {
       "id": "usr_eb9f18b71a9f544e3e",
@@ -201,15 +157,26 @@
       "lastSeenAt": "2026-08-26T01:29:53.938+00:00"
     },
     {
-      "id": "usr_827773347d5c0ab50d",
-      "deviceId": "testuser9999",
-      "label": "Jogador #0004",
+      "id": "usr_ed6b15b9dcb954e67c",
+      "deviceId": "testdevice5678",
+      "label": "Jogador #0002",
       "isVip": false,
       "vipSource": null,
       "vipKeyId": null,
       "vipSince": null,
-      "createdAt": "2026-08-26T14:04:17.54+00:00",
-      "lastSeenAt": "2026-08-26T14:04:17.739+00:00"
+      "createdAt": "2026-08-25T22:30:39.243+00:00",
+      "lastSeenAt": "2026-08-25T22:30:39.243+00:00"
+    },
+    {
+      "id": "usr_09e2f9c6963e73c5f5",
+      "deviceId": "6cbc88d53c55737061afe26448a29edf",
+      "label": "Jogador #0011",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T16:39:40.878+00:00",
+      "lastSeenAt": "2026-08-26T16:39:40.878+00:00"
     },
     {
       "id": "usr_b673199148f864fb95",
@@ -221,6 +188,72 @@
       "vipSince": null,
       "createdAt": "2026-08-26T14:27:53.919+00:00",
       "lastSeenAt": "2026-08-26T15:30:52.776+00:00"
+    },
+    {
+      "id": "usr_717998fa09c4a81b2c",
+      "deviceId": "9ceb93d16a82694b8df998ba382e7cf7",
+      "label": "Jogador #0008",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T15:53:29.449+00:00",
+      "lastSeenAt": "2026-08-26T15:53:29.449+00:00"
+    },
+    {
+      "id": "usr_c40fde66fee98e2249",
+      "deviceId": "testdevice1234",
+      "label": "Jogador #0001",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-25T22:26:45.348+00:00",
+      "lastSeenAt": "2026-08-25T22:26:45.661+00:00"
+    },
+    {
+      "id": "usr_4d0213ae24b3227015",
+      "deviceId": "9fa717fae9da257f1e568f4f98bd7395",
+      "label": "Pedro",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T15:48:03.345+00:00",
+      "lastSeenAt": "2026-08-26T15:48:07.139+00:00"
+    },
+    {
+      "id": "usr_a36eea8096918f1c0b",
+      "deviceId": "718d2b2fd4c266c54162a133a7198c8a",
+      "label": "pedro",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T17:03:27.086+00:00",
+      "lastSeenAt": "2026-08-26T17:03:41.387+00:00"
+    },
+    {
+      "id": "usr_616556ff0ce8680426",
+      "deviceId": "68f7e2b93fec0c046adf36e8d01a18d2",
+      "label": "Bn",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T22:24:33.166+00:00",
+      "lastSeenAt": "2026-08-26T22:25:38.512+00:00"
+    },
+    {
+      "id": "usr_827773347d5c0ab50d",
+      "deviceId": "testuser9999",
+      "label": "Jogador #0004",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T14:04:17.54+00:00",
+      "lastSeenAt": "2026-08-26T14:04:17.739+00:00"
     },
     {
       "id": "usr_540e157d0269cc44eb",
@@ -267,28 +300,6 @@
       "lastSeenAt": "2026-08-27T01:02:11.689+00:00"
     },
     {
-      "id": "usr_4d0213ae24b3227015",
-      "deviceId": "9fa717fae9da257f1e568f4f98bd7395",
-      "label": "Pedro",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-26T15:48:03.345+00:00",
-      "lastSeenAt": "2026-08-26T15:48:07.139+00:00"
-    },
-    {
-      "id": "usr_717998fa09c4a81b2c",
-      "deviceId": "9ceb93d16a82694b8df998ba382e7cf7",
-      "label": "Jogador #0008",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-26T15:53:29.449+00:00",
-      "lastSeenAt": "2026-08-26T15:53:29.449+00:00"
-    },
-    {
       "id": "usr_523740489ebdaf57f9",
       "deviceId": "13511395944dd158dc8208442d9a1c03",
       "label": "Neguin",
@@ -309,17 +320,6 @@
       "vipSince": null,
       "createdAt": "2026-08-26T16:02:30.384+00:00",
       "lastSeenAt": "2026-08-26T16:02:36.682+00:00"
-    },
-    {
-      "id": "usr_09e2f9c6963e73c5f5",
-      "deviceId": "6cbc88d53c55737061afe26448a29edf",
-      "label": "Jogador #0011",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-26T16:39:40.878+00:00",
-      "lastSeenAt": "2026-08-26T16:39:40.878+00:00"
     }
   ],
   "keys": [
@@ -670,6 +670,14 @@
       "expiresAt": "2026-08-27T12:57:48.703+00:00"
     },
     {
+      "token": "ab468c45b69838f93694d02bbc493516983fadcf641551c811650555b9b4694f",
+      "userId": null,
+      "adminId": "adm_e99cb1994501ae197d",
+      "isAdmin": true,
+      "createdAt": "2026-08-27T01:24:15.77+00:00",
+      "expiresAt": "2026-08-27T13:24:15.77+00:00"
+    },
+    {
       "token": "6e4743ee44c44c4cd5fb486645dcc2fc76c75014b148ed25cad1bb5f0ce759fa",
       "userId": null,
       "adminId": "adm_e99cb1994501ae197d",
@@ -724,6 +732,22 @@
       "isAdmin": false,
       "createdAt": "2026-08-27T01:03:48.589+00:00",
       "expiresAt": "2026-09-26T01:03:48.589+00:00"
+    },
+    {
+      "token": "1af4909ddb5ecf35c0268689b30234de7b1fe9cdd898e27c6ce1affb2a1c8f95",
+      "userId": "usr_1aa4bd1909dd45f97c",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-27T01:22:16.064+00:00",
+      "expiresAt": "2026-09-26T01:22:16.064+00:00"
+    },
+    {
+      "token": "125248f5dc6d47d684d92b25a02b69e5f4b98df747ca90ab5137f0c039035c39",
+      "userId": "usr_1aa4bd1909dd45f97c",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-27T01:22:24.387+00:00",
+      "expiresAt": "2026-09-26T01:22:24.387+00:00"
     },
     {
       "token": "3db2dbaf8f40d2b273115c217183078f3320391d55ed79ed9365277b90e86e22",
@@ -796,78 +820,6 @@
       "isAdmin": true,
       "createdAt": "2026-08-26T14:10:01.534+00:00",
       "expiresAt": "2026-08-27T02:10:01.534+00:00"
-    },
-    {
-      "token": "1e4a5f329146b3f3bbb68bdb38ee98effb52e2fa8d8f95ff4ebd9f9bc4a7ab88",
-      "userId": "usr_540e157d0269cc44eb",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:50:11.527+00:00",
-      "expiresAt": "2026-09-25T15:50:11.527+00:00"
-    },
-    {
-      "token": "399eea621188166c6349a0e21a457c4eb3df16051b3b29e6bcabd492e11bfcd4",
-      "userId": "usr_717998fa09c4a81b2c",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:53:29.449+00:00",
-      "expiresAt": "2026-09-25T15:53:29.449+00:00"
-    },
-    {
-      "token": "0abcc2a250ed8b11e9fbe94207e4db301271b722c44d97b5a2ff3c4c3ae3afdc",
-      "userId": "usr_523740489ebdaf57f9",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:53:37.421+00:00",
-      "expiresAt": "2026-09-25T15:53:37.421+00:00"
-    },
-    {
-      "token": "c1b57e570cfad222b6fd215bcbb9fe31998c82ef9a9f1bf567f810a5be8345d7",
-      "userId": null,
-      "adminId": "adm_e99cb1994501ae197d",
-      "isAdmin": true,
-      "createdAt": "2026-08-26T15:58:46.145+00:00",
-      "expiresAt": "2026-08-27T03:58:46.145+00:00"
-    },
-    {
-      "token": "54fe8bae224c93530dba118669c29e9d66d20254e143cb5cf75c1e4c58d8b823",
-      "userId": "usr_4d0213ae24b3227015",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:56:48.54+00:00",
-      "expiresAt": "2026-09-25T15:56:48.54+00:00"
-    },
-    {
-      "token": "0555ffa65fc8122b660fae05623cbaa15e4c57ac5d58ab287c838c8f6b51feb2",
-      "userId": "usr_b673199148f864fb95",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T14:27:53.919+00:00",
-      "expiresAt": "2026-09-25T14:27:53.919+00:00"
-    },
-    {
-      "token": "fcf676fd4ccf771da45c5aca31078be8357e7af393233c26a51b35858a85b51a",
-      "userId": null,
-      "adminId": "adm_11b249b977fc3a7171",
-      "isAdmin": true,
-      "createdAt": "2026-08-26T14:27:57.894+00:00",
-      "expiresAt": "2026-08-27T02:27:57.894+00:00"
-    },
-    {
-      "token": "5114bf3eaa63312ffb8f82dc16060f663024243ccbf6f0fedfc67b129d72ccc3",
-      "userId": "usr_b673199148f864fb95",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T14:36:36.569+00:00",
-      "expiresAt": "2026-09-25T14:36:36.569+00:00"
-    },
-    {
-      "token": "b981651fed33476887cf9cdfeba08653a7bc3227bbf806b62a113964c7817231",
-      "userId": "usr_c40fde66fee98e2249",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-25T22:26:45.348+00:00",
-      "expiresAt": "2026-09-24T22:26:45.348+00:00"
     },
     {
       "token": "216d24575a46ea0bcfd2bd53699f562ba1fdf08d4f534591a4f3183b6f31a7e1",
@@ -948,6 +900,78 @@
       "isAdmin": false,
       "createdAt": "2026-08-26T15:48:03.345+00:00",
       "expiresAt": "2026-09-25T15:48:03.345+00:00"
+    },
+    {
+      "token": "1e4a5f329146b3f3bbb68bdb38ee98effb52e2fa8d8f95ff4ebd9f9bc4a7ab88",
+      "userId": "usr_540e157d0269cc44eb",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:50:11.527+00:00",
+      "expiresAt": "2026-09-25T15:50:11.527+00:00"
+    },
+    {
+      "token": "399eea621188166c6349a0e21a457c4eb3df16051b3b29e6bcabd492e11bfcd4",
+      "userId": "usr_717998fa09c4a81b2c",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:53:29.449+00:00",
+      "expiresAt": "2026-09-25T15:53:29.449+00:00"
+    },
+    {
+      "token": "0abcc2a250ed8b11e9fbe94207e4db301271b722c44d97b5a2ff3c4c3ae3afdc",
+      "userId": "usr_523740489ebdaf57f9",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:53:37.421+00:00",
+      "expiresAt": "2026-09-25T15:53:37.421+00:00"
+    },
+    {
+      "token": "c1b57e570cfad222b6fd215bcbb9fe31998c82ef9a9f1bf567f810a5be8345d7",
+      "userId": null,
+      "adminId": "adm_e99cb1994501ae197d",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T15:58:46.145+00:00",
+      "expiresAt": "2026-08-27T03:58:46.145+00:00"
+    },
+    {
+      "token": "54fe8bae224c93530dba118669c29e9d66d20254e143cb5cf75c1e4c58d8b823",
+      "userId": "usr_4d0213ae24b3227015",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:56:48.54+00:00",
+      "expiresAt": "2026-09-25T15:56:48.54+00:00"
+    },
+    {
+      "token": "0555ffa65fc8122b660fae05623cbaa15e4c57ac5d58ab287c838c8f6b51feb2",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T14:27:53.919+00:00",
+      "expiresAt": "2026-09-25T14:27:53.919+00:00"
+    },
+    {
+      "token": "fcf676fd4ccf771da45c5aca31078be8357e7af393233c26a51b35858a85b51a",
+      "userId": null,
+      "adminId": "adm_11b249b977fc3a7171",
+      "isAdmin": true,
+      "createdAt": "2026-08-26T14:27:57.894+00:00",
+      "expiresAt": "2026-08-27T02:27:57.894+00:00"
+    },
+    {
+      "token": "5114bf3eaa63312ffb8f82dc16060f663024243ccbf6f0fedfc67b129d72ccc3",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T14:36:36.569+00:00",
+      "expiresAt": "2026-09-25T14:36:36.569+00:00"
+    },
+    {
+      "token": "b981651fed33476887cf9cdfeba08653a7bc3227bbf806b62a113964c7817231",
+      "userId": "usr_c40fde66fee98e2249",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-25T22:26:45.348+00:00",
+      "expiresAt": "2026-09-24T22:26:45.348+00:00"
     },
     {
       "token": "ce289001a25c72e38deb31cea231dbfff7349dbdd62e3fafcc75b8d824ff3330",
@@ -1288,84 +1312,6 @@
   ],
   "generations": [
     {
-      "id": "gen_e79cebd01903bb2ae1",
-      "at": "2026-08-26T14:04:17.74+00:00",
-      "userId": "usr_827773347d5c0ab50d",
-      "mode": "normal",
-      "inputs": {
-        "aim": "equilibrada",
-        "tier": "normal",
-        "level": "intermediario",
-        "style": "eq",
-        "deviceModel": "Samsung Galaxy A55"
-      },
-      "values": {
-        "geral": 165,
-        "mira2x": 154,
-        "mira4x": 142,
-        "redDot": 161,
-        "miraAwm": 121,
-        "olhadinha": 110
-      },
-      "dpi": 483,
-      "fireButton": 61,
-      "deviceName": "Samsung Galaxy A55",
-      "knownDevice": true
-    },
-    {
-      "id": "gen_080ddd8e96da1aaa2b",
-      "at": "2026-08-25T22:26:45.649+00:00",
-      "userId": "usr_c40fde66fee98e2249",
-      "mode": "normal",
-      "inputs": {
-        "aim": "equilibrada",
-        "fps": "60",
-        "tier": "normal",
-        "level": "intermediario",
-        "style": "eq",
-        "refreshHz": "120",
-        "deviceModel": "Redmi Note 13"
-      },
-      "values": {
-        "geral": 171,
-        "mira2x": 158,
-        "mira4x": 146,
-        "redDot": 163,
-        "miraAwm": 121,
-        "olhadinha": 113
-      },
-      "dpi": 520,
-      "fireButton": 63,
-      "deviceName": "Redmi Note 13",
-      "knownDevice": true
-    },
-    {
-      "id": "gen_32add6fd13e5134d3b",
-      "at": "2026-08-26T22:08:41.538+00:00",
-      "userId": "usr_dad3e4a549e70eb82b",
-      "mode": "proibida",
-      "inputs": {
-        "aim": "cabeca",
-        "tier": "proibida",
-        "level": "competitivo",
-        "style": "ag",
-        "dpiAtual": "480",
-        "deviceModel": "Samsung a05s"
-      },
-      "values": {
-        "geral": 200,
-        "mira2x": 199,
-        "mira4x": 176,
-        "redDot": 200,
-        "miraAwm": 138,
-        "olhadinha": 165
-      },
-      "dpi": 512,
-      "fireButton": 58,
-      "deviceName": null,
-      "knownDevice": false
-    },
-    {
       "id": "gen_6b3e54529e04936b4c",
       "at": "2026-08-26T15:30:52.777+00:00",
       "userId": "usr_b673199148f864fb95",
@@ -1442,6 +1388,84 @@
       "fireButton": 61,
       "deviceName": "Samsung Galaxy A55",
       "knownDevice": true
+    },
+    {
+      "id": "gen_e79cebd01903bb2ae1",
+      "at": "2026-08-26T14:04:17.74+00:00",
+      "userId": "usr_827773347d5c0ab50d",
+      "mode": "normal",
+      "inputs": {
+        "aim": "equilibrada",
+        "tier": "normal",
+        "level": "intermediario",
+        "style": "eq",
+        "deviceModel": "Samsung Galaxy A55"
+      },
+      "values": {
+        "geral": 165,
+        "mira2x": 154,
+        "mira4x": 142,
+        "redDot": 161,
+        "miraAwm": 121,
+        "olhadinha": 110
+      },
+      "dpi": 483,
+      "fireButton": 61,
+      "deviceName": "Samsung Galaxy A55",
+      "knownDevice": true
+    },
+    {
+      "id": "gen_080ddd8e96da1aaa2b",
+      "at": "2026-08-25T22:26:45.649+00:00",
+      "userId": "usr_c40fde66fee98e2249",
+      "mode": "normal",
+      "inputs": {
+        "aim": "equilibrada",
+        "fps": "60",
+        "tier": "normal",
+        "level": "intermediario",
+        "style": "eq",
+        "refreshHz": "120",
+        "deviceModel": "Redmi Note 13"
+      },
+      "values": {
+        "geral": 171,
+        "mira2x": 158,
+        "mira4x": 146,
+        "redDot": 163,
+        "miraAwm": 121,
+        "olhadinha": 113
+      },
+      "dpi": 520,
+      "fireButton": 63,
+      "deviceName": "Redmi Note 13",
+      "knownDevice": true
+    },
+    {
+      "id": "gen_32add6fd13e5134d3b",
+      "at": "2026-08-26T22:08:41.538+00:00",
+      "userId": "usr_dad3e4a549e70eb82b",
+      "mode": "proibida",
+      "inputs": {
+        "aim": "cabeca",
+        "tier": "proibida",
+        "level": "competitivo",
+        "style": "ag",
+        "dpiAtual": "480",
+        "deviceModel": "Samsung a05s"
+      },
+      "values": {
+        "geral": 200,
+        "mira2x": 199,
+        "mira4x": 176,
+        "redDot": 200,
+        "miraAwm": 138,
+        "olhadinha": 165
+      },
+      "dpi": 512,
+      "fireButton": 58,
+      "deviceName": null,
+      "knownDevice": false
     },
     {
       "id": "gen_286a5dfd90dbaae6ca",
@@ -1659,6 +1683,6 @@
   "settings": {
     "contactLink": "",
     "freeDailyLimit": 3,
-    "adminPanelPath": "/painel-d31b5a12"
+    "adminPanelPath": "/painel-71780f89"
   }
 }
