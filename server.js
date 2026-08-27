@@ -618,7 +618,8 @@ app.post(
       req.user,
       true,
       'key',
-      key.id
+      key.id,
+      key.type || 'premium'
     );
 
     res.json({
@@ -627,6 +628,7 @@ app.post(
         '✅ KEY ativada com sucesso!',
       user: {
         isVip: true,
+        vipType: key.type || 'premium',
         vipExpiresAt:
           vipExpiresAtOf(req.user)
       }
@@ -756,28 +758,21 @@ app.post(
       aim: body.aim
     };
 
-    if (
-      tier !== 'normal' &&
-      !req.user.isVip
-    ) {
+    if (tier !== 'normal' && !req.user.isVip) {
       return res.status(403).json({
         error: 'vip_required',
         upsell: true,
-        title:
-          'Sensi ' +
-          (
-            tier === 'premium'
-              ? 'Premium'
-              : 'Proibida'
-          ),
-        message:
-          'Ative uma KEY VIP para gerar a Sensi ' +
-          (
-            tier === 'premium'
-              ? 'Premium'
-              : 'Proibida'
-          ) +
-          '.'
+        title: 'Sensi ' + (tier === 'premium' ? 'Premium' : 'VIP'),
+        message: 'Ative uma KEY para gerar a Sensi ' + (tier === 'premium' ? 'Premium' : 'VIP') + '.'
+      });
+    }
+
+    if (tier === 'proibida' && req.user.vipType === 'premium') {
+      return res.status(403).json({
+        error: 'vip_required',
+        upsell: true,
+        title: 'Sensi VIP',
+        message: 'A Sensi VIP requer uma KEY VIP. Sua KEY é Premium.'
       });
     }
 

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "createdAt": "2026-08-27T01:33:59.064Z"
+    "createdAt": "2026-08-27T01:57:43.285Z"
   },
   "admins": [
     {
@@ -144,6 +144,39 @@
       "vipSince": null,
       "createdAt": "2026-08-26T17:43:25.171+00:00",
       "lastSeenAt": "2026-08-26T17:43:25.171+00:00"
+    },
+    {
+      "id": "usr_8cf0ce182419532215",
+      "deviceId": "3091318416928bb928844290f507a157",
+      "label": "harthur",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-27T01:38:59.349+00:00",
+      "lastSeenAt": "2026-08-27T01:43:30.244+00:00"
+    },
+    {
+      "id": "usr_523740489ebdaf57f9",
+      "deviceId": "13511395944dd158dc8208442d9a1c03",
+      "label": "Neguin",
+      "isVip": true,
+      "vipSource": "admin",
+      "vipKeyId": null,
+      "vipSince": "2026-08-26T15:59:06.639+00:00",
+      "createdAt": "2026-08-26T15:53:37.421+00:00",
+      "lastSeenAt": "2026-08-27T00:57:07.955+00:00"
+    },
+    {
+      "id": "usr_0d806a3448de394584",
+      "deviceId": "2016ef98ab75c1aa3d4c09c913bc03dd",
+      "label": "Neguin",
+      "isVip": false,
+      "vipSource": null,
+      "vipKeyId": null,
+      "vipSince": null,
+      "createdAt": "2026-08-26T16:02:30.384+00:00",
+      "lastSeenAt": "2026-08-26T16:02:36.682+00:00"
     },
     {
       "id": "usr_eb9f18b71a9f544e3e",
@@ -291,38 +324,28 @@
     {
       "id": "usr_37660f66ae8b16ce83",
       "deviceId": "5e3b1791b21ebaf74c0d331a36b8f6b7",
-      "label": "Jogador #0027",
+      "label": "Neguin",
       "isVip": true,
       "vipSource": "key",
       "vipKeyId": "key_95b1817fbd3e5f5cdd",
       "vipSince": "2026-08-27T00:55:59.195+00:00",
       "createdAt": "2026-08-27T00:54:10.6+00:00",
-      "lastSeenAt": "2026-08-27T01:02:11.689+00:00"
-    },
-    {
-      "id": "usr_523740489ebdaf57f9",
-      "deviceId": "13511395944dd158dc8208442d9a1c03",
-      "label": "Neguin",
-      "isVip": true,
-      "vipSource": "admin",
-      "vipKeyId": null,
-      "vipSince": "2026-08-26T15:59:06.639+00:00",
-      "createdAt": "2026-08-26T15:53:37.421+00:00",
-      "lastSeenAt": "2026-08-27T00:57:07.955+00:00"
-    },
-    {
-      "id": "usr_0d806a3448de394584",
-      "deviceId": "2016ef98ab75c1aa3d4c09c913bc03dd",
-      "label": "Neguin",
-      "isVip": false,
-      "vipSource": null,
-      "vipKeyId": null,
-      "vipSince": null,
-      "createdAt": "2026-08-26T16:02:30.384+00:00",
-      "lastSeenAt": "2026-08-26T16:02:36.682+00:00"
+      "lastSeenAt": "2026-08-27T01:54:26.426+00:00"
     }
   ],
   "keys": [
+    {
+      "id": "key_c0b9fcc6d135435a40",
+      "code": "AIM-VIP-QQVA-P3AK",
+      "status": "ativa",
+      "createdAt": "2026-08-27T00:59:05.525+00:00",
+      "expiresAt": "2026-09-06T00:59:05.525+00:00",
+      "maxUses": 10,
+      "uses": 0,
+      "activatedByUserId": null,
+      "activatedByLabel": null,
+      "activatedAt": null
+    },
     {
       "id": "key_5206ec7a01cdc8e9a5",
       "code": "AIM-PREM-8AMB-D33Z",
@@ -432,16 +455,16 @@
       "activatedAt": "2026-08-27T00:55:59.194+00:00"
     },
     {
-      "id": "key_c0b9fcc6d135435a40",
-      "code": "AIM-VIP-QQVA-P3AK",
-      "status": "ativa",
-      "createdAt": "2026-08-27T00:59:05.525+00:00",
-      "expiresAt": "2026-09-06T00:59:05.525+00:00",
-      "maxUses": 10,
-      "uses": 0,
-      "activatedByUserId": null,
-      "activatedByLabel": null,
-      "activatedAt": null
+      "id": "key_f8fa802269e64e5969",
+      "code": "AIM-PREM-3BRD-S2QV",
+      "status": "inativa",
+      "createdAt": "2026-08-27T01:40:26.513+00:00",
+      "expiresAt": "2026-08-27T02:40:26.512+00:00",
+      "maxUses": 1,
+      "uses": 1,
+      "activatedByUserId": "usr_8cf0ce182419532215",
+      "activatedByLabel": "harthur",
+      "activatedAt": "2026-08-27T01:40:31.639+00:00"
     }
   ],
   "sessions": [
@@ -750,6 +773,46 @@
       "expiresAt": "2026-09-26T01:22:24.387+00:00"
     },
     {
+      "token": "5ec0a0820210a9b213657772b637c5d587b5cad9b12280a3e0606428571ce0e0",
+      "userId": "usr_8cf0ce182419532215",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-27T01:38:59.35+00:00",
+      "expiresAt": "2026-09-26T01:38:59.35+00:00"
+    },
+    {
+      "token": "e3f9db0f99fda1f73c18ac11a760bda562ab92f583049ce3bc3427a15b016d8b",
+      "userId": "usr_8cf0ce182419532215",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-27T01:40:13.375+00:00",
+      "expiresAt": "2026-09-26T01:40:13.375+00:00"
+    },
+    {
+      "token": "fb44ceb166c1716ca7335fe7bdaeb42e135087c380dff2d8de72d200cb217457",
+      "userId": "usr_8cf0ce182419532215",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-27T01:43:33.375+00:00",
+      "expiresAt": "2026-09-26T01:43:33.376+00:00"
+    },
+    {
+      "token": "52f81a92283868fd03b91f6ce8ea18252274bf86c65dc2a3b6a21f6b8b9247d5",
+      "userId": "usr_c9b5a313f5c6e01138",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-27T01:49:29.258+00:00",
+      "expiresAt": "2026-09-26T01:49:29.258+00:00"
+    },
+    {
+      "token": "8f18e82988bbbea8954c292d20c9e90c141efb16fc70d4f59639d561250af12a",
+      "userId": "usr_37660f66ae8b16ce83",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-27T01:53:25.699+00:00",
+      "expiresAt": "2026-09-26T01:53:25.699+00:00"
+    },
+    {
       "token": "3db2dbaf8f40d2b273115c217183078f3320391d55ed79ed9365277b90e86e22",
       "userId": "usr_ed6b15b9dcb954e67c",
       "adminId": null,
@@ -822,36 +885,12 @@
       "expiresAt": "2026-08-27T02:10:01.534+00:00"
     },
     {
-      "token": "216d24575a46ea0bcfd2bd53699f562ba1fdf08d4f534591a4f3183b6f31a7e1",
-      "userId": "usr_b673199148f864fb95",
+      "token": "574a999cdd213fe65bcde48dae4ac9925c80d1ab5978a925322b3cb34b6e8950",
+      "userId": "usr_c9b5a313f5c6e01138",
       "adminId": null,
       "isAdmin": false,
-      "createdAt": "2026-08-26T15:23:38.475+00:00",
-      "expiresAt": "2026-09-25T15:23:38.475+00:00"
-    },
-    {
-      "token": "9b93bec7186fe62b5d4ebd299609f357d3c48530bf83a7143250c6ca578f8f1a",
-      "userId": "usr_b673199148f864fb95",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:30:07.681+00:00",
-      "expiresAt": "2026-09-25T15:30:07.681+00:00"
-    },
-    {
-      "token": "99fda8cf98fb7e410b385cf60de06fd21bfdec4df83cf21099d2d03c5bddc380",
-      "userId": "usr_b673199148f864fb95",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:29:49.905+00:00",
-      "expiresAt": "2026-09-25T15:29:49.905+00:00"
-    },
-    {
-      "token": "95adeaadf5cf00394be0a3fd31660d37c61bb527b57d4f954312b057cfee8d0a",
-      "userId": "usr_b673199148f864fb95",
-      "adminId": null,
-      "isAdmin": false,
-      "createdAt": "2026-08-26T15:30:23.96+00:00",
-      "expiresAt": "2026-09-25T15:30:23.96+00:00"
+      "createdAt": "2026-08-27T01:49:31.777+00:00",
+      "expiresAt": "2026-09-26T01:49:31.777+00:00"
     },
     {
       "token": "fa6932d22cb1992a1d2e6e7ffe1624a8ffe59ece22b5191c303cfdb9e47f2e9b",
@@ -972,6 +1011,38 @@
       "isAdmin": false,
       "createdAt": "2026-08-25T22:26:45.348+00:00",
       "expiresAt": "2026-09-24T22:26:45.348+00:00"
+    },
+    {
+      "token": "216d24575a46ea0bcfd2bd53699f562ba1fdf08d4f534591a4f3183b6f31a7e1",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:23:38.475+00:00",
+      "expiresAt": "2026-09-25T15:23:38.475+00:00"
+    },
+    {
+      "token": "9b93bec7186fe62b5d4ebd299609f357d3c48530bf83a7143250c6ca578f8f1a",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:30:07.681+00:00",
+      "expiresAt": "2026-09-25T15:30:07.681+00:00"
+    },
+    {
+      "token": "99fda8cf98fb7e410b385cf60de06fd21bfdec4df83cf21099d2d03c5bddc380",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:29:49.905+00:00",
+      "expiresAt": "2026-09-25T15:29:49.905+00:00"
+    },
+    {
+      "token": "95adeaadf5cf00394be0a3fd31660d37c61bb527b57d4f954312b057cfee8d0a",
+      "userId": "usr_b673199148f864fb95",
+      "adminId": null,
+      "isAdmin": false,
+      "createdAt": "2026-08-26T15:30:23.96+00:00",
+      "expiresAt": "2026-09-25T15:30:23.96+00:00"
     },
     {
       "token": "ce289001a25c72e38deb31cea231dbfff7349dbdd62e3fafcc75b8d824ff3330",
@@ -1312,84 +1383,6 @@
   ],
   "generations": [
     {
-      "id": "gen_6b3e54529e04936b4c",
-      "at": "2026-08-26T15:30:52.777+00:00",
-      "userId": "usr_b673199148f864fb95",
-      "mode": "normal",
-      "inputs": {
-        "aim": "equilibrada",
-        "tier": "normal",
-        "level": "intermediario",
-        "style": "eq",
-        "dpiAtual": "",
-        "deviceModel": "Samsung Galaxy A54"
-      },
-      "values": {
-        "geral": 169,
-        "mira2x": 153,
-        "mira4x": 144,
-        "redDot": 162,
-        "miraAwm": 121,
-        "olhadinha": 105
-      },
-      "dpi": 476,
-      "fireButton": 58,
-      "deviceName": "Samsung Galaxy A54",
-      "knownDevice": true
-    },
-    {
-      "id": "gen_2513a641bbec18e641",
-      "at": "2026-08-26T20:33:49.861+00:00",
-      "userId": "usr_8a59ae6918c80dbdca",
-      "mode": "normal",
-      "inputs": {
-        "aim": "cabeca",
-        "tier": "normal",
-        "level": "avancado",
-        "style": "ag",
-        "dpiAtual": "",
-        "deviceModel": "iPhone XR"
-      },
-      "values": {
-        "geral": 193,
-        "mira2x": 177,
-        "mira4x": 159,
-        "redDot": 190,
-        "miraAwm": 131,
-        "olhadinha": 141
-      },
-      "dpi": 501,
-      "fireButton": 68,
-      "deviceName": "iPhone XR",
-      "knownDevice": true
-    },
-    {
-      "id": "gen_51e1a749f4b1bd462f",
-      "at": "2026-08-26T15:39:40.707+00:00",
-      "userId": "usr_540e157d0269cc44eb",
-      "mode": "premium",
-      "inputs": {
-        "aim": "equilibrada",
-        "tier": "premium",
-        "level": "iniciante",
-        "style": "eq",
-        "dpiAtual": "",
-        "deviceModel": "Samsung Galaxy A55"
-      },
-      "values": {
-        "geral": 171,
-        "mira2x": 155,
-        "mira4x": 144,
-        "redDot": 165,
-        "miraAwm": 120,
-        "olhadinha": 108
-      },
-      "dpi": 531,
-      "fireButton": 61,
-      "deviceName": "Samsung Galaxy A55",
-      "knownDevice": true
-    },
-    {
       "id": "gen_e79cebd01903bb2ae1",
       "at": "2026-08-26T14:04:17.74+00:00",
       "userId": "usr_827773347d5c0ab50d",
@@ -1466,6 +1459,84 @@
       "fireButton": 58,
       "deviceName": null,
       "knownDevice": false
+    },
+    {
+      "id": "gen_6b3e54529e04936b4c",
+      "at": "2026-08-26T15:30:52.777+00:00",
+      "userId": "usr_b673199148f864fb95",
+      "mode": "normal",
+      "inputs": {
+        "aim": "equilibrada",
+        "tier": "normal",
+        "level": "intermediario",
+        "style": "eq",
+        "dpiAtual": "",
+        "deviceModel": "Samsung Galaxy A54"
+      },
+      "values": {
+        "geral": 169,
+        "mira2x": 153,
+        "mira4x": 144,
+        "redDot": 162,
+        "miraAwm": 121,
+        "olhadinha": 105
+      },
+      "dpi": 476,
+      "fireButton": 58,
+      "deviceName": "Samsung Galaxy A54",
+      "knownDevice": true
+    },
+    {
+      "id": "gen_2513a641bbec18e641",
+      "at": "2026-08-26T20:33:49.861+00:00",
+      "userId": "usr_8a59ae6918c80dbdca",
+      "mode": "normal",
+      "inputs": {
+        "aim": "cabeca",
+        "tier": "normal",
+        "level": "avancado",
+        "style": "ag",
+        "dpiAtual": "",
+        "deviceModel": "iPhone XR"
+      },
+      "values": {
+        "geral": 193,
+        "mira2x": 177,
+        "mira4x": 159,
+        "redDot": 190,
+        "miraAwm": 131,
+        "olhadinha": 141
+      },
+      "dpi": 501,
+      "fireButton": 68,
+      "deviceName": "iPhone XR",
+      "knownDevice": true
+    },
+    {
+      "id": "gen_51e1a749f4b1bd462f",
+      "at": "2026-08-26T15:39:40.707+00:00",
+      "userId": "usr_540e157d0269cc44eb",
+      "mode": "premium",
+      "inputs": {
+        "aim": "equilibrada",
+        "tier": "premium",
+        "level": "iniciante",
+        "style": "eq",
+        "dpiAtual": "",
+        "deviceModel": "Samsung Galaxy A55"
+      },
+      "values": {
+        "geral": 171,
+        "mira2x": 155,
+        "mira4x": 144,
+        "redDot": 165,
+        "miraAwm": 120,
+        "olhadinha": 108
+      },
+      "dpi": 531,
+      "fireButton": 61,
+      "deviceName": "Samsung Galaxy A55",
+      "knownDevice": true
     },
     {
       "id": "gen_286a5dfd90dbaae6ca",
@@ -1683,6 +1754,8 @@
   "settings": {
     "contactLink": "",
     "freeDailyLimit": 3,
-    "adminPanelPath": "/painel-71780f89"
+    "adminPanelPath": "/painel-71de9aab",
+    "announcement": null,
+    "prices": {}
   }
 }

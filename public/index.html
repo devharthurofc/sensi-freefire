@@ -74,10 +74,10 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;ma
 .mb-key{background:rgba(239,68,68,.18);color:#fca5a5;border:1px solid rgba(239,68,68,.5)}
 .mode-card.premium.active{border-color:var(--gold);box-shadow:0 0 34px rgba(245,158,11,.35)}
 .mode-card.premium h3{background:linear-gradient(90deg,#fde68a,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
-.mode-card.proibida{background:linear-gradient(160deg,rgba(127,29,29,.25),rgba(0,0,0,.2))}
-.mode-card.proibida:hover{box-shadow:0 14px 40px rgba(220,38,38,.3)}
-.mode-card.proibida.active{border-color:var(--red1);box-shadow:0 0 36px rgba(220,38,38,.45)}
-.mode-card.proibida h3{background:linear-gradient(90deg,#ef4444,#fecaca);-webkit-background-clip:text;background-clip:text;color:transparent}
+.mode-card.vip{background:linear-gradient(160deg,rgba(127,29,29,.25),rgba(0,0,0,.2))}
+.mode-card.vip:hover{box-shadow:0 14px 40px rgba(220,38,38,.3)}
+.mode-card.vip.active{border-color:var(--red1);box-shadow:0 0 36px rgba(220,38,38,.45)}
+.mode-card.vip h3{background:linear-gradient(90deg,#ef4444,#fecaca);-webkit-background-clip:text;background-clip:text;color:transparent}
 .mb-proib{background:repeating-linear-gradient(45deg,rgba(220,38,38,.28),rgba(220,38,38,.28) 6px,rgba(0,0,0,.3) 6px,rgba(0,0,0,.3) 12px);color:#fecaca;border:1px solid rgba(220,38,38,.6)}
 
 .panel{animation:fadeUp .45s ease both}
@@ -294,10 +294,10 @@ footer b{color:var(--muted)}
     <h3>AIMZY PREMIUM</h3>
     <p>Refinada com o perfil do seu aparelho e o seu estilo de jogo.</p>
   </button>
-  <button class="mode-card proibida" data-tier="proibida">
+  <button class="mode-card vip" data-tier="proibida">
     <span class="mode-badge mb-proib">Key VIP</span>
-    <span class="emoji">☠️</span>
-    <h3>AIMZY PROIBIDA</h3>
+    <span class="emoji">🔥</span>
+    <h3>AIMZY VIP</h3>
     <p>AGRESSIVA. Drag insano pra quem já tem controle. Exige treino.</p>
   </button>
 </nav>
@@ -321,8 +321,8 @@ footer b{color:var(--muted)}
         <button class="btn btn-red btn-sm activate-btn">Ativar KEY</button>
       </div>
       <div class="lock-divider"></div>
-      <p>Quer acesso VIP?<br>Envie uma mensagem para um administrador solicitando sua KEY.</p>
-      <button class="btn btn-ghost btn-sm contact-btn">📩 Solicitar acesso VIP</button>
+      <p>Quer acesso Premium ou VIP?<br>Envie uma mensagem para um administrador solicitando sua KEY.</p>
+      <button class="btn btn-ghost btn-sm contact-btn">📩 Solicitar acesso</button>
     </div>
 
     <div id="genBox">
@@ -492,16 +492,16 @@ footer b{color:var(--muted)}
   <div class="section-title">Perguntas Frequentes</div>
   <div class="faq-list">
     <div class="faq-item">
-      <button class="faq-q">Qual a diferença entre Sensi Normal, Premium e Proibida?
+      <button class="faq-q">Qual a diferença entre Sensi Normal, Premium e VIP?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
-      <div class="faq-a"><div class="faq-a-inner">A <b>Normal</b> é equilibrada, grátis e ideal para começar. A <b>Premium</b> analisa seu aparelho e preferências para uma config refinada. A <b>Proibida</b> é a mais agressiva: mira alta e drag insano — recomendada para quem já tem bom controle e vai treinar bastante.</div></div>
+      <div class="faq-a"><div class="faq-a-inner">A <b>Normal</b> é equilibrada, grátis e ideal para começar. A <b>Premium</b> analisa seu aparelho e preferências para uma config refinada. A <b>VIP</b> é a mais agressiva: mira alta e drag insano — recomendada para quem já tem bom controle e vai treinar bastante.</div></div>
     </div>
     <div class="faq-item">
       <button class="faq-q">Como funciona o limite de gerações?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
-      <div class="faq-a"><div class="faq-a-inner">A Sensi Normal tem algumas gerações por dia. Com uma KEY VIP ativa, você libera também a Premium e a Proibida, com gerações ilimitadas.</div></div>
+      <div class="faq-a"><div class="faq-a-inner">A Sensi Normal tem algumas gerações por dia. Com uma KEY ativa, você libera também a Premium e a VIP, com gerações ilimitadas.</div></div>
     </div>
     <div class="faq-item">
       <button class="faq-q">Quanto tempo leva para me acostumar com a sensi?
@@ -513,7 +513,7 @@ footer b{color:var(--muted)}
       <button class="faq-q">Como consigo uma KEY VIP?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
-      <div class="faq-a"><div class="faq-a-inner">Nas áreas Premium/Proibida, toque em "📩 Solicitar acesso VIP" para falar com um administrador. Ele vai te enviar uma KEY única. Depois é só digitar no campo "Digite sua KEY" e ativar.</div></div>
+      <div class="faq-a"><div class="faq-a-inner">Nas áreas Premium/VIP, toque em "📩 Solicitar acesso" para falar com um administrador. Ele vai te enviar uma KEY única. Depois é só digitar no campo "Digite sua KEY" e ativar.</div></div>
     </div>
     <div class="faq-item">
       <button class="faq-q">Minha mira treme com sensibilidade alta. E agora?
@@ -547,7 +547,7 @@ footer b{color:var(--muted)}
   <div class="modal">
     <div class="lock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></div>
     <h3>Recurso VIP</h3>
-    <p>Desbloqueie a Sensi Premium e Proibida com gerações ilimitadas.</p>
+    <p>Desbloqueie a Sensi Premium e VIP com gerações ilimitadas.</p>
     <div class="modal-actions">
       <button class="btn btn-red" id="upsellGo">DESBLOQUEAR VIP</button>
       <button class="btn btn-ghost btn-sm" id="upsellClose">Agora não</button>

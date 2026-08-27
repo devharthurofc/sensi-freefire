@@ -22,11 +22,11 @@ const TIER_INFO = {
     resTitle: 'Sua Sensi Premium',
     lock: true
   },
-  proibida: {
-    label: 'AIMZY PROIBIDA',
-    desc: 'O modo mais agressivo. Mira alta, drag rápido e controle total — treine bastante!',
-    btn: 'Gerar Sensi Proibida',
-    resTitle: 'Sua Sensi Proibida',
+  vip: {
+    label: 'AIMZY VIP',
+    tier: 'proibida',
+    btn: 'Gerar Sensi VIP',
+    resTitle: 'Sua Sensi VIP',
     lock: true
   }
 };
@@ -162,7 +162,7 @@ async function copyText(text, msg) {
 
 function tierLabelOf(mode) {
   return (TIER_INFO[mode] && TIER_INFO[mode].label.replace('AIMZY ', '')) ||
-    { normal: 'Normal', premium: 'Premium', proibida: 'Proibida' }[mode] || mode.toUpperCase();
+    { normal: 'Normal', premium: 'Premium', vip: 'VIP' }[mode] || mode.toUpperCase();
 }
 
 function fmtResult(r) {
@@ -204,7 +204,7 @@ function switchTier(tier) {
   document.getElementById("tierLock").classList.toggle("hide-lock", !locked);
   document.getElementById("genBox").classList.toggle("blur-lock", locked);
 
-  // ícone do cadeado: ouro no premium, vermelho na proibida
+  // ícone do cadeado: ouro no premium, vermelho na vip
   document.getElementById("lockIcon").className = "lock-icon" + (tier === 'premium' ? ' gold' : '');
   document.getElementById("lockTitle").textContent =
     "🔒 Sensi " + tierLabelOf(tier) + " · Área VIP";

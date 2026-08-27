@@ -586,16 +586,28 @@ async function loadReports() {
 
   const sales = (salesR._status === 200 && salesR.sales) ? salesR.sales : [];
   const paymentCount = {};
+  const dayCount = {};
   sales.forEach(s => {
     if (s.paymentMethod) paymentCount[s.paymentMethod] = (paymentCount[s.paymentMethod] || 0) + 1;
+    if (s.soldAt) {
+      const d = s.soldAt.slice(0, 10);
+      dayCount[d] = (dayCount[d] || 0) + 1;
+    }
   });
 
   const topPayments = Object.entries(paymentCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const topDays = Object.entries(dayCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const avgTicket = s.totalSales > 0 ? (s.totalRevenue / s.totalSales) : 0;
 
   $('reportTop').innerHTML =
-    '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">' +
-    '<div><h4 style="margin-bottom:8px;color:var(--muted)">Formas de pagamento</h4>' +
-    (topPayments.length ? topPayments.map(([k, v]) => '<div style="padding:6px 0;border-bottom:1px solid var(--border)">' + esc(k) + ' · <b>' + v + ' vendas</b></div>').join('') : '<p style="color:var(--muted)">Sem dados</p>') + '</div>' +
+    '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">' +
+    '<div class="card" style="padding:16px"><h4 style="margin-bottom:10px;color:var(--muted)">💰 Ticket Médio</h4>' +
+    '<div style="font-size:1.5rem;font-weight:700;color:#86efac">R$ ' + avgTicket.toFixed(2) + '</div>' +
+    '<p style="color:var(--muted);font-size:.8rem;margin-top:4px">Média por venda</p></div>' +
+    '<div class="card" style="padding:16px"><h4 style="margin-bottom:10px;color:var(--muted)">📅 Dias com mais vendas</h4>' +
+    (topDays.length ? topDays.map(([k, v]) => '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">' + new Date(k + 'T12:00:00').toLocaleDateString('pt-BR') + '</span><b>' + v + ' vendas</b></div>').join('') : '<p style="color:var(--muted)">Sem dados</p>') + '</div>' +
+    '<div class="card" style="padding:16px"><h4 style="margin-bottom:10px;color:var(--muted)">💳 Formas de pagamento</h4>' +
+    (topPayments.length ? topPayments.map(([k, v]) => '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">' + esc(k) + '</span><b>' + v + ' vendas</b></div>').join('') : '<p style="color:var(--muted)">Sem dados</p>') + '</div>' +
     '</div>';
 }
 

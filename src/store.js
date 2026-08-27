@@ -183,11 +183,13 @@ async function fetchRemoteAudit() {
 async function fetchRemoteSettings() {
   const { data, error } = await supabase.from('settings').select('*').limit(1).maybeSingle();
   if (error) throw error;
-  if (!data) return { contactLink: '', freeDailyLimit: 3, adminPanelPath: '' };
+  if (!data) return { contactLink: '', freeDailyLimit: 3, adminPanelPath: '', announcement: null, prices: {} };
   return {
     contactLink: data.contact_link || '',
     freeDailyLimit: data.free_daily_limit != null ? data.free_daily_limit : 3,
-    adminPanelPath: data.admin_panel_path || ''
+    adminPanelPath: data.admin_panel_path || '',
+    announcement: data.announcement || null,
+    prices: data.prices || {}
   };
 }
 
@@ -342,7 +344,9 @@ async function pushAllRemote() {
         ...(settingsId ? { id: settingsId } : {}),
         contact_link: d.settings.contactLink || '',
         free_daily_limit: d.settings.freeDailyLimit != null ? d.settings.freeDailyLimit : 3,
-        admin_panel_path: d.settings.adminPanelPath || ''
+        admin_panel_path: d.settings.adminPanelPath || '',
+        announcement: d.settings.announcement || null,
+        prices: d.settings.prices || {}
       }, { onConflict: 'id' })
     );
   } catch (_) {}
@@ -492,11 +496,12 @@ function touchUser(user) {
   scheduleSave();
 }
 
-function setUserVip(user, isVip, source, keyId) {
+function setUserVip(user, isVip, source, keyId, vipType) {
   user.isVip = !!isVip;
   user.vipSource = isVip ? source || 'admin' : null;
   user.vipKeyId = isVip ? keyId || null : null;
   user.vipSince = isVip ? new Date().toISOString() : null;
+  user.vipType = isVip ? (vipType || 'premium') : null;
   persistNow();
 }
 
