@@ -28,8 +28,17 @@ alter table public.settings add column if not exists admin_panel_path text defau
 -- 3) Coluna type na tabela keys (Premium / Proibida)
 alter table public.keys add column if not exists type text default 'premium';
 
+-- 3) Coluna type na tabela keys (Premium / Proibida)
+alter table public.keys add column if not exists type text default 'premium';
+
 -- 3.1) Coluna plans na tabela settings (planos personalizados)
 alter table public.settings add column if not exists plans jsonb default '[]'::jsonb;
+
+-- 3.2) Colunas extras da tabela vendas (persistência completa das vendas)
+alter table public.vendas add column if not exists key_id text;
+alter table public.vendas add column if not exists product text default '';
+alter table public.vendas add column if not exists plan text default '';
+alter table public.vendas add column if not exists seller_admin_id text default '';
 
 -- 4) Tabela de produtos (caso ainda não exista)
 create table if not exists public.products (

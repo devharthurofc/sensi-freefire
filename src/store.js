@@ -403,6 +403,15 @@ function toAccountRow(a) {
   };
 }
 
+let _warnLast = {};
+function warnThrottled(key, msg) {
+  const now = Date.now();
+  if (!_warnLast[key] || now - _warnLast[key] > 60000) {
+    _warnLast[key] = now;
+    console.warn('[store] ' + msg);
+  }
+}
+
 async function pushAllRemote() {
   const d = getDb();
 
@@ -411,7 +420,6 @@ async function pushAllRemote() {
     { name: 'sessions', fn: () => supabase.from('sessions').upsert(d.sessions.map(toSessionRow), { onConflict: 'token' }) },
     { name: 'generations', fn: () => supabase.from('generations').upsert(d.generations.map(toGenerationRow), { onConflict: 'id' }) },
     { name: 'profiles', fn: () => supabase.from('profiles').upsert(d.profiles.map(toProfileRow), { onConflict: 'id' }) },
-    { name: 'vendas', fn: () => supabase.from('vendas').upsert(d.sales.map(toSalesRow), { onConflict: 'id' }) },
     { name: 'audit_log', fn: () => supabase.from('audit_log').upsert(
       d.auditLog.map((a, i) => {
         // id estável por conteúdo: rotação do log não sobrescreve eventos antigos
@@ -419,7 +427,30 @@ async function pushAllRemote() {
         return { id: a.id || 'logl_' + h, at: a.at, action: a.action, detail: a.detail, ip: a.ip };
       }),
       { onConflict: 'id' }
-    ) }
+    ) },
+    // vendas: tenta com todas as colunas; se a tabela for antiga (sem
+    // key_id/product/plan/etc), salva só as colunas que existem.
+    { name: 'vendas', fn: async () => {
+      if (!d.sales.length) return { error: null };
+      const rows = d.sales.map(toSalesRow);
+      const r = await supabase.from('vendas').upsert(rows, { onConflict: 'id' });
+      if (!r.error) return r;
+      const minimal = rows.map(v => ({
+        id: v.id,
+        key_code: v.key_code,
+        buyer_label: v.buyer_label,
+        buyer_contact: v.buyer_contact,
+        price: v.price,
+        payment_method: v.payment_method,
+        status: v.status || 'pago',
+        seller_admin_name: v.seller_admin_name,
+        notes: v.notes,
+        sold_at: v.sold_at
+      }));
+      const r2 = await supabase.from('vendas').upsert(minimal, { onConflict: 'id' });
+      if (!r2.error) warnThrottled('vendas_minimal', '[store] vendas salvas sem colunas extras — rode corrigir-banco.sql');
+      return r2;
+    } }
   ];
 
   // keys: tenta salvar com a coluna "type"; se o banco ainda não tiver a
