@@ -656,6 +656,28 @@ function recordGen(
   });
 }
 
+/* ================= produtos públicos ================= */
+
+app.get(
+  '/api/products',
+  (req, res) => {
+    const products = store.listProducts()
+      .filter(p => p.active)
+      .map(p => ({
+        id: p.id,
+        name: p.name,
+        description: p.description,
+        plans: (p.plans || []).filter(pl => pl.active).map(pl => ({
+          id: pl.id,
+          name: pl.name,
+          duration: pl.duration,
+          price: pl.price
+        }))
+      }));
+    res.json({ products });
+  }
+);
+
 app.post(
   '/api/generate',
   requireUser,
@@ -2239,6 +2261,9 @@ app.post(
     const buyerLabel = store.clean(body.buyerLabel, 60);
     const buyerContact = store.clean(body.buyerContact, 120);
     const price = parseFloat(body.price) || 0;
+    const product = store.clean(body.product, 80);
+    const plan = store.clean(body.plan, 60);
+    const paymentMethod = store.clean(body.paymentMethod, 30);
     const notes = store.clean(body.notes, 200);
     const status = body.status === 'pendente' ? 'pendente' : 'pago';
 
@@ -2257,6 +2282,9 @@ app.post(
       price,
       buyerLabel,
       buyerContact,
+      product,
+      plan,
+      paymentMethod,
       sellerAdminId: req.adminId,
       sellerAdminName: admin ? admin.username : '',
       notes,
@@ -2303,6 +2331,102 @@ app.get(
   requireAdmin,
   (req, res) => {
     res.json(store.getSalesStats());
+  }
+);
+
+/* ================= produtos / planos ================= */
+
+app.get(
+  '/api/admin/products',
+  requireAdmin,
+  (req, res) => {
+    res.json({ products: store.listProducts() });
+  }
+);
+
+app.post(
+  '/api/admin/products',
+  requireAdmin,
+  express.json(),
+  (req, res) => {
+    const { name, description, plans } = req.body || {};
+    if (!name) return res.status(400).json({ message: 'Nome do produto é obrigatório.' });
+    const product = store.addProduct({ name, description, plans });
+    store.addAudit('produto_criado', `Produto "${product.name}" criado`);
+    res.json({ product });
+  }
+);
+
+app.patch(
+  '/api/admin/products/:id',
+  requireAdmin,
+  express.json(),
+  (req, res) => {
+    const product = store.updateProduct(req.params.id, req.body || {});
+    if (!product) return res.status(404).json({ message: 'Produto não encontrado.' });
+    store.addAudit('produto_atualizado', `Produto "${product.name}" atualizado`);
+    res.json({ product });
+  }
+);
+
+app.delete(
+  '/api/admin/products/:id',
+  requireAdmin,
+  (req, res) => {
+    const product = store.findProduct(req.params.id);
+    const ok = store.deleteProduct(req.params.id);
+    if (!ok) return res.status(404).json({ message: 'Produto não encontrado.' });
+    store.addAudit('produto_excluido', `Produto "${product.name}" excluído`);
+    res.json({ ok: true });
+  }
+);
+
+/* ================= audit / atividades ================= */
+
+app.get(
+  '/api/admin/audit',
+  requireAdmin,
+  (req, res) => {
+    const limit = parseInt(req.query.limit) || 60;
+    res.json({ events: store.listAudit(limit) });
+  }
+);
+
+/* ================= notificações ================= */
+
+app.get(
+  '/api/admin/notifications',
+  requireAdmin,
+  (req, res) => {
+    const db = store.getDb();
+    const now = new Date();
+    const today = now.toISOString().slice(0, 10);
+    const in3days = new Date(now.getTime() + 3 * 86400000).toISOString().slice(0, 10);
+    const in7days = new Date(now.getTime() + 7 * 86400000).toISOString().slice(0, 10);
+
+    const notifications = [];
+
+    const keys = db.keys || [];
+    keys.forEach(k => {
+      if (!k.expiresAt) return;
+      const exp = k.expiresAt.slice(0, 10);
+      if (exp <= today && k.status === 'ativa') {
+        notifications.push({ type: 'warning', msg: 'KEY ' + k.code + ' expirou hoje.', at: now.toISOString() });
+      } else if (exp === today) {
+        notifications.push({ type: 'warning', msg: 'KEY ' + k.code + ' expira hoje.', at: now.toISOString() });
+      } else if (exp <= in3days && k.status === 'ativa') {
+        notifications.push({ type: 'info', msg: 'KEY ' + k.code + ' expira em ' + exp + '.', at: now.toISOString() });
+      }
+    });
+
+    const sales = db.sales || [];
+    const recentSales = sales.filter(s => s.soldAt && s.soldAt.slice(0, 10) === today);
+    if (recentSales.length > 0) {
+      notifications.push({ type: 'success', msg: recentSales.length + ' venda(s) registrada(s) hoje.', at: now.toISOString() });
+    }
+
+    notifications.sort((a, b) => b.at.localeCompare(a.at));
+    res.json({ notifications: notifications.slice(0, 20) });
   }
 );
 
@@ -2480,7 +2604,7 @@ process.on(
       PORT,
       () => {
         console.log(
-          `SENSI PRO rodando em http://localhost:${PORT}`
+          `AIMZY rodando em http://localhost:${PORT}`
         );
 
         console.log(

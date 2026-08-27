@@ -1,7 +1,7 @@
 {
   "name": "sensi-pro",
   "version": "2.0.0",
-  "description": "SENSI PRO — Gerador de sensibilidade Free Fire com modos FREE / VIP / GERADO VIP e acesso por KEY",
+  "description": "AIMZY — Gerador de sensibilidade Free Fire com modos FREE / VIP / GERADO VIP e acesso por KEY",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

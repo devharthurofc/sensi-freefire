@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SENSI PRO — Painel Administrativo</title>
+<title>AIMZY — Painel Administrativo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -150,9 +150,13 @@ tr:hover{background:rgba(239,68,68,.03)}
       <div class="brand-mark">
         <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
       </div>
-      <div>
-        <h1>SENSI<span>PRO</span></h1>
+      <div style="flex:1">
+        <h1>AIMZY</h1>
         <p>Admin</p>
+      </div>
+      <div id="notifBell" style="cursor:pointer;position:relative" title="Notificações">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span id="notifCount" style="display:none;position:absolute;top:-4px;right:-6px;background:var(--red2);color:#fff;font-size:.65rem;padding:2px 5px;border-radius:10px;font-weight:700">0</span>
       </div>
     </div>
 
@@ -166,6 +170,18 @@ tr:hover{background:rgba(239,68,68,.03)}
       <button data-sec="sales">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
         Vendas</button>
+      <button data-sec="products">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        Produtos</button>
+      <button data-sec="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Relatórios</button>
+      <button data-sec="activity">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Atividades</button>
+      <button data-sec="notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        Notificações</button>
       <button data-sec="users">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
         Usuários</button>
@@ -191,7 +207,7 @@ tr:hover{background:rgba(239,68,68,.03)}
     <!-- DASHBOARD -->
     <section class="section on" id="sec-dash">
       <div class="topbar">
-        <div><h2 class="font-display">Dashboard</h2><p class="sub">Visão geral do SENSI PRO em tempo real.</p></div>
+        <div><h2 class="font-display">Dashboard</h2><p class="sub">Visão geral do AIMZY em tempo real.</p></div>
         <button class="b-gray act" id="refreshBtn">↻ Atualizar</button>
       </div>
       <div class="stats" id="statsBox"></div>
@@ -263,10 +279,28 @@ tr:hover{background:rgba(239,68,68,.03)}
       <div class="card">
         <h3 class="sec">Nova Venda</h3>
         <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
-          <div><label>Código da KEY</label><input class="mini-inp" id="saleKey" style="width:200px" placeholder="SENSI-XXXX-XXXX-XXXX"></div>
+          <div><label>Código da KEY</label><input class="mini-inp" id="saleKey" style="width:200px" placeholder="AIMZY-XXXX-XXXX-XXXX"></div>
+          <div><label>Produto</label>
+            <select class="mini-inp" id="saleProduct" style="width:auto;padding:9px 10px">
+              <option value="">Selecionar...</option>
+            </select>
+          </div>
+          <div><label>Plano</label>
+            <select class="mini-inp" id="salePlan" style="width:auto;padding:9px 10px">
+              <option value="">Selecionar...</option>
+            </select>
+          </div>
           <div><label>Valor (R$)</label><input type="number" class="mini-inp" id="salePrice" step="0.01" min="0" placeholder="ex: 25.00"></div>
           <div><label>Nome do comprador</label><input class="mini-inp" id="saleBuyer" style="width:170px" placeholder="ex: João"></div>
           <div><label>Contato</label><input class="mini-inp" id="saleContact" style="width:170px" placeholder="ex: @joao"></div>
+          <div><label>Pagamento</label>
+            <select class="mini-inp" id="salePayment" style="width:auto;padding:9px 10px">
+              <option value="pix">Pix</option>
+              <option value="dinheiro">Dinheiro</option>
+              <option value="cartao">Cartão</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
           <div><label>Status</label>
             <select class="mini-inp" id="saleStatus" style="width:auto;padding:9px 10px">
               <option value="pago">Pago</option>
@@ -288,7 +322,7 @@ tr:hover{background:rgba(239,68,68,.03)}
           <button class="b-gray act" id="reloadSalesBtn">Recarregar</button>
         </div>
         <table>
-          <thead><tr><th>KEY</th><th>Comprador</th><th>Valor</th><th>Status</th><th>Vendedor</th><th>Data</th><th>Ações</th></tr></thead>
+          <thead><tr><th>KEY</th><th>Comprador</th><th>Produto</th><th>Plano</th><th>Valor</th><th>Pagamento</th><th>Status</th><th>Data</th><th>Ações</th></tr></thead>
           <tbody id="salesBody"></tbody>
         </table>
       </div>
@@ -315,6 +349,75 @@ tr:hover{background:rgba(239,68,68,.03)}
           <thead><tr><th>Jogador</th><th>Situação</th><th>VIP</th><th>Origem</th><th>Visto por último</th><th>Ações</th></tr></thead>
           <tbody id="usersBody"></tbody>
         </table>
+      </div>
+    </section>
+
+    <!-- PRODUTOS E PLANOS -->
+    <section class="section" id="sec-products">
+      <div class="topbar">
+        <div><h2 class="font-display">Produtos e Planos</h2><p class="sub">Gerencie os produtos e planos disponíveis para venda.</p></div>
+      </div>
+      <div class="card">
+        <h3 class="sec">Novo Produto</h3>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
+          <div><label>Nome do produto</label><input class="mini-inp" id="prodName" style="width:200px" placeholder="ex: Aimzy Premium"></div>
+          <div><label>Descrição</label><input class="mini-inp" id="prodDesc" style="width:250px" placeholder="Descrição opcional"></div>
+          <button class="b-green act" id="addProdBtn">+ Criar produto</button>
+        </div>
+      </div>
+
+      <div class="card" id="prodPlanCard" style="display:none">
+        <h3 class="sec">Adicionar plano ao produto: <span id="prodPlanName"></span></h3>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
+          <div><label>Nome do plano</label><input class="mini-inp" id="planName" style="width:150px" placeholder="ex: 7 Dias"></div>
+          <div><label>Duração</label><input class="mini-inp" id="planDuration" style="width:120px" placeholder="ex: 7 dias"></div>
+          <div><label>Preço (R$)</label><input type="number" class="mini-inp" id="planPrice" style="width:100px" step="0.01" placeholder="0.00"></div>
+          <button class="b-green act" id="addPlanBtn">+ Adicionar plano</button>
+          <button class="b-gray" id="cancelPlanBtn">Cancelar</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="sec">Produtos cadastrados</h3>
+        <div id="productsList"></div>
+      </div>
+    </section>
+
+    <!-- RELATÓRIOS -->
+    <section class="section" id="sec-reports">
+      <div class="topbar">
+        <div><h2 class="font-display">Relatórios</h2><p class="sub">Análise de vendas e desempenho.</p></div>
+      </div>
+      <div class="stats" id="reportStats"></div>
+      <div class="card" style="margin-top:18px">
+        <h3 class="sec">📊 Vendas por período</h3>
+        <div id="reportChart"></div>
+      </div>
+      <div class="card" style="margin-top:18px">
+        <h3 class="sec">🏆 Mais vendidos</h3>
+        <div id="reportTop"></div>
+      </div>
+    </section>
+
+    <!-- ATIVIDADES -->
+    <section class="section" id="sec-activity">
+      <div class="topbar">
+        <div><h2 class="font-display">Atividades</h2><p class="sub">Registro de ações realizadas no painel.</p></div>
+        <button class="b-gray act" id="reloadAuditBtn">↻ Atualizar</button>
+      </div>
+      <div class="card">
+        <div id="auditList"></div>
+      </div>
+    </section>
+
+    <!-- NOTIFICAÇÕES -->
+    <section class="section" id="sec-notifications">
+      <div class="topbar">
+        <div><h2 class="font-display">Notificações</h2><p class="sub">Alertas importantes do sistema.</p></div>
+        <button class="b-gray act" id="reloadNotifBtn">↻ Atualizar</button>
+      </div>
+      <div class="card">
+        <div id="notifList"></div>
       </div>
     </section>
 

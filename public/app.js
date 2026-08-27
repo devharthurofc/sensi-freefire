@@ -9,21 +9,21 @@ const LS_NAME = 'sensipro_user_name';
 
 const TIER_INFO = {
   normal: {
-    label: 'SENSI NORMAL',
+    label: 'AIMZY NORMAL',
     desc: 'Configuração equilibrada gerada na hora. Informe o modelo do seu celular e comece.',
     btn: 'Gerar Sensi Normal',
     resTitle: 'Sua Sensi Normal',
     lock: false
   },
   premium: {
-    label: 'SENSI PREMIUM',
+    label: 'AIMZY PREMIUM',
     desc: 'Análise do seu aparelho + suas preferências para uma config refinada.',
     btn: 'Gerar Sensi Premium',
     resTitle: 'Sua Sensi Premium',
     lock: true
   },
   proibida: {
-    label: 'SENSI PROIBIDA',
+    label: 'AIMZY PROIBIDA',
     desc: 'O modo mais agressivo. Mira alta, drag rápido e controle total — treine bastante!',
     btn: 'Gerar Sensi Proibida',
     resTitle: 'Sua Sensi Proibida',
@@ -161,12 +161,12 @@ async function copyText(text, msg) {
 }
 
 function tierLabelOf(mode) {
-  return (TIER_INFO[mode] && TIER_INFO[mode].label.replace('SENSI ', '')) ||
+  return (TIER_INFO[mode] && TIER_INFO[mode].label.replace('AIMZY ', '')) ||
     { normal: 'Normal', premium: 'Premium', proibida: 'Proibida' }[mode] || mode.toUpperCase();
 }
 
 function fmtResult(r) {
-  let s = "=== SENSI PRO | FREE FIRE ===\n";
+  let s = "=== AIMZY | FREE FIRE ===\n";
   s += "Sensi: " + tierLabelOf(r.mode || r.tier) + "\n";
   if (r.deviceName) s += "Aparelho: " + r.deviceName + "\n";
   const values = (state.dpiSel && r.valuesByDpi) ? r.valuesByDpi[state.dpiSel] : r.values;
@@ -662,7 +662,7 @@ function escapeHtml(s) {
 }
 
 async function shareSite() {
-  const data = { title: "SENSI PRO", text: "Olha esse gerador de sensibilidade do Free Fire! 🔥", url: location.origin };
+  const data = { title: "AIMZY", text: "Olha esse gerador de sensibilidade do Free Fire! 🔥", url: location.origin };
   if (navigator.share) {
     try { await navigator.share(data); } catch (e) {}
   } else {

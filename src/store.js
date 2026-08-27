@@ -31,6 +31,7 @@ const DEFAULT_DB = {
   generations: [],
   profiles: [],
   sales: [],
+  products: [],
   auditLog: [],
   settings: {
     contactLink: '',
@@ -571,7 +572,7 @@ function generateKeyCode() {
   const block = () => Array.from(crypto.randomBytes(4)).map(b => alphabet[b % alphabet.length]).join('');
   let code;
   let tries = 0;
-  do { code = 'SENSI-' + block() + '-' + block() + '-' + block(); tries++; }
+  do { code = 'AIMZY-' + block() + '-' + block() + '-' + block(); tries++; }
   while (findKeyByCode(code) && tries < 50);
   return code;
 }
@@ -697,7 +698,7 @@ function updateSettings(patch) {
 
 /* ============ vendas ============ */
 
-function addSale({ keyId, keyCode, price, buyerLabel, buyerContact, sellerAdminId, sellerAdminName, notes, status }) {
+function addSale({ keyId, keyCode, price, buyerLabel, buyerContact, product, plan, paymentMethod, sellerAdminId, sellerAdminName, notes, status }) {
   const sale = {
     id: id('sale'),
     keyId: keyId || null,
@@ -705,6 +706,9 @@ function addSale({ keyId, keyCode, price, buyerLabel, buyerContact, sellerAdminI
     price: Number(price) || 0,
     buyerLabel: buyerLabel || '',
     buyerContact: buyerContact || '',
+    product: product || '',
+    plan: plan || '',
+    paymentMethod: paymentMethod || '',
     sellerAdminId: sellerAdminId || '',
     sellerAdminName: sellerAdminName || '',
     soldAt: new Date().toISOString(),
@@ -722,14 +726,59 @@ function listSales(limit = 200) {
 
 function getSalesStats() {
   const sales = getDb().sales;
+  const now = new Date();
+  const today = now.toISOString().slice(0, 10);
+
+  const yesterday = new Date(now);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().slice(0, 10);
+
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - now.getDay());
+  const weekStr = startOfWeek.toISOString().slice(0, 10);
+
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const monthStr = startOfMonth.toISOString().slice(0, 10);
+
   const totalRevenue = sales.reduce((sum, s) => sum + (s.price || 0), 0);
   const totalSales = sales.length;
   const paidSales = sales.filter(s => s.status === 'pago').length;
   const pendingSales = sales.filter(s => s.status === 'pendente').length;
-  const today = new Date().toISOString().slice(0, 10);
+
   const salesToday = sales.filter(s => s.soldAt && s.soldAt.slice(0, 10) === today);
   const revenueToday = salesToday.reduce((sum, s) => sum + (s.price || 0), 0);
-  return { totalRevenue, totalSales, paidSales, pendingSales, salesToday: salesToday.length, revenueToday };
+
+  const salesYesterday = sales.filter(s => s.soldAt && s.soldAt.slice(0, 10) === yesterdayStr);
+  const revenueYesterday = salesYesterday.reduce((sum, s) => sum + (s.price || 0), 0);
+
+  const salesWeek = sales.filter(s => s.soldAt && s.soldAt.slice(0, 10) >= weekStr);
+  const revenueWeek = salesWeek.reduce((sum, s) => sum + (s.price || 0), 0);
+
+  const salesMonth = sales.filter(s => s.soldAt && s.soldAt.slice(0, 10) >= monthStr);
+  const revenueMonth = salesMonth.reduce((sum, s) => sum + (s.price || 0), 0);
+
+  const last7 = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const dStr = d.toISOString().slice(0, 10);
+    const daySales = sales.filter(s => s.soldAt && s.soldAt.slice(0, 10) === dStr);
+    last7.push({
+      date: dStr,
+      label: d.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' }),
+      count: daySales.length,
+      revenue: daySales.reduce((sum, s) => sum + (s.price || 0), 0)
+    });
+  }
+
+  return {
+    totalRevenue, totalSales, paidSales, pendingSales,
+    salesToday: salesToday.length, revenueToday,
+    salesYesterday: salesYesterday.length, revenueYesterday,
+    salesWeek: salesWeek.length, revenueWeek,
+    salesMonth: salesMonth.length, revenueMonth,
+    last7Days: last7
+  };
 }
 
 function updateSale(saleId, patch) {
@@ -740,6 +789,9 @@ function updateSale(saleId, patch) {
   if (patch.price !== undefined) sale.price = Number(patch.price) || 0;
   if (patch.buyerLabel !== undefined) sale.buyerLabel = patch.buyerLabel;
   if (patch.buyerContact !== undefined) sale.buyerContact = patch.buyerContact;
+  if (patch.product !== undefined) sale.product = clean(patch.product, 80);
+  if (patch.plan !== undefined) sale.plan = clean(patch.plan, 60);
+  if (patch.paymentMethod !== undefined) sale.paymentMethod = clean(patch.paymentMethod, 30);
   if (patch.notes !== undefined) sale.notes = patch.notes;
   if (patch.status !== undefined) sale.status = patch.status;
   persistNow();
@@ -750,6 +802,64 @@ function deleteSale(saleId) {
   const d = getDb();
   const i = d.sales.findIndex(s => s.id === saleId);
   if (i >= 0) { d.sales.splice(i, 1); persistNow(); return true; }
+  return false;
+}
+
+/* ============ products / planos ============ */
+
+function listProducts() {
+  return [...getDb().products].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+}
+
+function findProduct(productId) {
+  return getDb().products.find(p => p.id === productId) || null;
+}
+
+function addProduct(data) {
+  const d = getDb();
+  const product = {
+    id: id(),
+    name: clean(data.name, 80),
+    description: clean(data.description, 300),
+    active: data.active !== false,
+    plans: Array.isArray(data.plans) ? data.plans.map(p => ({
+      id: id(),
+      name: clean(p.name, 60),
+      duration: clean(p.duration, 40),
+      price: Number(p.price) || 0,
+      active: p.active !== false
+    })) : [],
+    createdAt: new Date().toISOString()
+  };
+  d.products.push(product);
+  persistNow();
+  return product;
+}
+
+function updateProduct(productId, patch) {
+  const d = getDb();
+  const product = d.products.find(p => p.id === productId);
+  if (!product) return null;
+  if (patch.name !== undefined) product.name = clean(patch.name, 80);
+  if (patch.description !== undefined) product.description = clean(patch.description, 300);
+  if (patch.active !== undefined) product.active = patch.active;
+  if (patch.plans !== undefined && Array.isArray(patch.plans)) {
+    product.plans = patch.plans.map(p => ({
+      id: p.id || id(),
+      name: clean(p.name, 60),
+      duration: clean(p.duration, 40),
+      price: Number(p.price) || 0,
+      active: p.active !== false
+    }));
+  }
+  persistNow();
+  return product;
+}
+
+function deleteProduct(productId) {
+  const d = getDb();
+  const i = d.products.findIndex(p => p.id === productId);
+  if (i >= 0) { d.products.splice(i, 1); persistNow(); return true; }
   return false;
 }
 
@@ -800,6 +910,12 @@ module.exports = {
   getSalesStats,
   updateSale,
   deleteSale,
+
+  listProducts,
+  findProduct,
+  addProduct,
+  updateProduct,
+  deleteProduct,
 
   addAudit,
   listAudit

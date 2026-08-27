@@ -4,6 +4,7 @@ let myRole = 'mod';
 const allKeys = [];
 const allUsers = [];
 const allSales = [];
+const allProducts = [];
 
 function $(id){ return document.getElementById(id); }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -89,7 +90,7 @@ async function safeApi(path, opts) {
   return r;
 }
 
-function refreshAll(){ loadDashboard(); loadKeys(); loadUsers(); loadSales(); }
+function refreshAll(){ loadDashboard(); loadKeys(); loadUsers(); loadSales(); loadProducts(); loadNotifications(); }
 
 let refreshTimer = null;
 function startAutoRefresh() {
@@ -238,11 +239,40 @@ function renderKeys() {
 $('keySearch').addEventListener('input', renderKeys);
 
 /* ---------- vendas ---------- */
+
+function buildChart(days) {
+  const maxCount = Math.max(...days.map(d => d.count), 1);
+  const maxRevenue = Math.max(...days.map(d => d.revenue), 1);
+
+  let barsHtml = days.map(d => {
+    const hCount = Math.round((d.count / maxCount) * 100);
+    const hRevenue = Math.round((d.revenue / maxRevenue) * 100);
+    return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">' +
+      '<div style="width:100%;height:80px;display:flex;align-items:flex-end;justify-content:center;gap:3px">' +
+        '<div style="width:12px;height:' + hCount + '%;background:var(--red2);border-radius:4px 4px 0 0;transition:height .3s" title="' + d.count + ' vendas"></div>' +
+        '<div style="width:12px;height:' + hRevenue + '%;background:#22c55e;border-radius:4px 4px 0 0;transition:height .3s" title="R$ ' + d.revenue.toFixed(2) + '"></div>' +
+      '</div>' +
+      '<span style="font-size:.6rem;color:var(--muted);text-transform:uppercase">' + d.label + '</span>' +
+      '<span style="font-size:.65rem;font-weight:700">' + d.count + '</span>' +
+    '</div>';
+  }).join('');
+
+  return '<div class="card" style="margin-top:12px"><h3 class="sec">📊 Últimos 7 dias</h3>' +
+    '<div style="display:flex;gap:8px;align-items:flex-end">' + barsHtml + '</div>' +
+    '<div style="display:flex;gap:16px;margin-top:10px;justify-content:center">' +
+      '<span style="font-size:.65rem;color:var(--muted)"><span style="display:inline-block;width:10px;height:10px;background:var(--red2);border-radius:2px;margin-right:4px"></span>Vendas</span>' +
+      '<span style="font-size:.65rem;color:var(--muted)"><span style="display:inline-block;width:10px;height:10px;background:#22c55e;border-radius:2px;margin-right:4px"></span>Receita</span>' +
+    '</div></div>';
+}
+
 $('addSaleBtn').addEventListener('click', async () => {
   const key = $('saleKey').value.trim();
   const price = $('salePrice').value;
   const buyer = $('saleBuyer').value.trim();
   const contact = $('saleContact').value.trim();
+  const product = $('saleProduct').value;
+  const plan = $('salePlan').value;
+  const paymentMethod = $('salePayment').value;
   const status = $('saleStatus').value;
   const notes = $('saleNotes').value.trim();
 
@@ -252,7 +282,7 @@ $('addSaleBtn').addEventListener('click', async () => {
   const btn = $('addSaleBtn'); btn.disabled = true;
   const r = await api('/api/admin/sales', { body: {
     keyCode: key, price: parseFloat(price) || 0, buyerLabel: buyer,
-    buyerContact: contact, status, notes
+    buyerContact: contact, product, plan, paymentMethod, status, notes
   }});
   btn.disabled = false;
 
@@ -260,6 +290,7 @@ $('addSaleBtn').addEventListener('click', async () => {
     toast('Venda registrada! R$ ' + (parseFloat(price) || 0).toFixed(2));
     $('saleKey').value = ''; $('salePrice').value = ''; $('saleBuyer').value = '';
     $('saleContact').value = ''; $('saleNotes').value = '';
+    $('saleProduct').value = ''; $('salePlan').value = '';
     loadSales(); loadDashboard();
   } else {
     toast(r.message || 'Erro ao registrar venda.', true);
@@ -273,11 +304,19 @@ async function loadSales() {
 
   if (r._status === 200 && r.stats) {
     const s = r.stats;
+    const chartHtml = s.last7Days ? buildChart(s.last7Days) : '';
     $('salesStatsBox').innerHTML =
       '<div class="stat"><b>' + s.totalSales + '</b><span>Total de vendas</span></div>' +
       '<div class="stat revenue"><b>R$ ' + s.totalRevenue.toFixed(2) + '</b><span>Receita total</span></div>' +
       '<div class="stat"><b>' + s.salesToday + '</b><span>Vendas hoje</span></div>' +
-      '<div class="stat revenue"><b>R$ ' + s.revenueToday.toFixed(2) + '</b><span>Receita hoje</span></div>';
+      '<div class="stat revenue"><b>R$ ' + s.revenueToday.toFixed(2) + '</b><span>Receita hoje</span></div>' +
+      '<div class="stat"><b>' + s.salesYesterday + '</b><span>Vendas ontem</span></div>' +
+      '<div class="stat revenue"><b>R$ ' + s.revenueYesterday.toFixed(2) + '</b><span>Receita ontem</span></div>' +
+      '<div class="stat"><b>' + s.salesWeek + '</b><span>Vendas esta semana</span></div>' +
+      '<div class="stat revenue"><b>R$ ' + s.revenueWeek.toFixed(2) + '</b><span>Receita semana</span></div>' +
+      '<div class="stat"><b>' + s.salesMonth + '</b><span>Vendas este mês</span></div>' +
+      '<div class="stat revenue"><b>R$ ' + s.revenueMonth.toFixed(2) + '</b><span>Receita mês</span></div>' +
+      chartHtml;
   }
 
   renderSales();
@@ -287,10 +326,11 @@ function renderSales() {
   const tb = $('salesBody');
   const q = ($('saleSearch').value || '').toLowerCase().trim();
   const list = allSales.filter(s =>
-    !q || s.keyCode.toLowerCase().includes(q) || (s.buyerLabel || '').toLowerCase().includes(q));
+    !q || s.keyCode.toLowerCase().includes(q) || (s.buyerLabel || '').toLowerCase().includes(q) ||
+    (s.product || '').toLowerCase().includes(q) || (s.plan || '').toLowerCase().includes(q));
 
   if (!list.length) {
-    tb.innerHTML = '<tr><td colspan="7" style="color:var(--muted)">' +
+    tb.innerHTML = '<tr><td colspan="9" style="color:var(--muted)">' +
       (q ? 'Nenhuma venda encontrada.' : 'Nenhuma venda registrada ainda.') + '</td></tr>';
     return;
   }
@@ -301,12 +341,15 @@ function renderSales() {
       ? '<span class="badge bg-ok">pago</span>'
       : '<span class="badge bg-warn">pendente</span>';
     const date = s.soldAt ? new Date(s.soldAt).toLocaleString('pt-BR') : '—';
+    const paymentLabels = { pix: 'Pix', dinheiro: 'Dinheiro', cartao: 'Cartão', outro: 'Outro' };
     tr.innerHTML =
       '<td><span class="code">' + esc(s.keyCode) + '</span></td>' +
       '<td><b>' + esc(s.buyerLabel) + '</b></td>' +
+      '<td style="color:var(--muted)">' + esc(s.product || '—') + '</td>' +
+      '<td style="color:var(--muted)">' + esc(s.plan || '—') + '</td>' +
       '<td style="color:#86efac;font-weight:700">R$ ' + (s.price || 0).toFixed(2) + '</td>' +
+      '<td style="color:var(--muted)">' + esc(paymentLabels[s.paymentMethod] || s.paymentMethod || '—') + '</td>' +
       '<td>' + statusBadge + '</td>' +
-      '<td style="color:var(--muted)">' + esc(s.sellerAdminName || '—') + '</td>' +
       '<td style="color:var(--muted)">' + date + '</td>' +
       '<td><div class="actions">' +
         '<button class="b-gray act cp">Copiar KEY</button>' +
@@ -499,4 +542,255 @@ async function loadSecurity() {
   });
 }
 
-boot();
+/* ---------- produtos / planos ---------- */
+
+let editingProductId = null;
+
+async function loadProducts() {
+  const r = await api('/api/admin/products');
+  allProducts.length = 0;
+  if (r._status === 200 && r.products) allProducts.push(...r.products);
+  renderProducts();
+  updateProductSelects();
+}
+
+function renderProducts() {
+  const el = $('productsList');
+  if (!allProducts.length) {
+    el.innerHTML = '<p style="color:var(--muted)">Nenhum produto cadastrado.</p>';
+    return;
+  }
+  el.innerHTML = '';
+  allProducts.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.marginBottom = '12px';
+    card.style.borderLeft = '3px solid ' + (p.active ? 'var(--red2)' : 'var(--muted)');
+    let plansHtml = '';
+    if (p.plans && p.plans.length) {
+      plansHtml = '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">' +
+        p.plans.map(pl =>
+          '<div style="background:var(--bg2);padding:8px 12px;border-radius:8px;font-size:.85rem">' +
+          '<b>' + esc(pl.name) + '</b> · ' + esc(pl.duration) + ' · <span style="color:#86efac">R$ ' + pl.price.toFixed(2) + '</span>' +
+          (pl.active ? '' : ' <span style="color:var(--muted)">(inativo)</span>') +
+          '</div>'
+        ).join('') + '</div>';
+    }
+    card.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:start">' +
+        '<div><h3 class="sec" style="margin:0">' + esc(p.name) + '</h3>' +
+        '<p style="color:var(--muted);font-size:.85rem;margin:4px 0">' + esc(p.description || 'Sem descrição') + '</p>' +
+        (p.active ? '<span class="badge bg-ok">ativo</span>' : '<span class="badge bg-off">inativo</span>') +
+        '</div>' +
+        '<div style="display:flex;gap:6px">' +
+          '<button class="b-gray act prod-toggle" data-id="' + p.id + '">' + (p.active ? 'Desativar' : 'Ativar') + '</button>' +
+          '<button class="b-gray act prod-addplan" data-id="' + p.id + '">+ Plano</button>' +
+          '<button class="b-red act prod-del" data-id="' + p.id + '">Excluir</button>' +
+        '</div>' +
+      '</div>' + plansHtml;
+    el.appendChild(card);
+
+    card.querySelector('.prod-toggle').onclick = async () => {
+      await api('/api/admin/products/' + p.id, { method: 'PATCH', body: { active: !p.active } });
+      toast(p.active ? 'Produto desativado.' : 'Produto ativado.');
+      loadProducts();
+    };
+    card.querySelector('.prod-addplan').onclick = () => {
+      editingProductId = p.id;
+      $('prodPlanCard').style.display = '';
+      $('prodPlanName').textContent = p.name;
+    };
+    card.querySelector('.prod-del').onclick = async () => {
+      if (!confirm('Excluir o produto "' + p.name + '"?')) return;
+      await api('/api/admin/products/' + p.id, { method: 'DELETE' });
+      toast('Produto excluído.');
+      loadProducts();
+    };
+  });
+}
+
+function updateProductSelects() {
+  const sel = $('saleProduct');
+  if (!sel) return;
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">Selecionar...</option>';
+  allProducts.filter(p => p.active).forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.name;
+    opt.textContent = p.name;
+    sel.appendChild(opt);
+  });
+  sel.value = prev;
+  updatePlanSelects();
+}
+
+function updatePlanSelects() {
+  const prodName = $('saleProduct').value;
+  const planSel = $('salePlan');
+  if (!planSel) return;
+  const prev = planSel.value;
+  planSel.innerHTML = '<option value="">Selecionar...</option>';
+  const product = allProducts.find(p => p.name === prodName);
+  if (product && product.plans) {
+    product.plans.filter(pl => pl.active).forEach(pl => {
+      const opt = document.createElement('option');
+      opt.value = pl.name;
+      opt.textContent = pl.name + ' · R$ ' + pl.price.toFixed(2);
+      planSel.appendChild(opt);
+    });
+  }
+  planSel.value = prev;
+}
+
+if ($('saleProduct')) $('saleProduct').addEventListener('change', updatePlanSelects);
+
+$('addProdBtn').addEventListener('click', async () => {
+  const name = $('prodName').value.trim();
+  if (!name) { toast('Informe o nome do produto.', true); return; }
+  const r = await api('/api/admin/products', { body: { name, description: $('prodDesc').value.trim() } });
+  if (r._status === 200) { toast('Produto criado!'); $('prodName').value = ''; $('prodDesc').value = ''; loadProducts(); }
+  else toast(r.message || 'Erro ao criar produto.', true);
+});
+
+$('addPlanBtn').addEventListener('click', async () => {
+  if (!editingProductId) return;
+  const product = allProducts.find(p => p.id === editingProductId);
+  if (!product) return;
+  const planName = $('planName').value.trim();
+  const duration = $('planDuration').value.trim();
+  const price = parseFloat($('planPrice').value) || 0;
+  if (!planName) { toast('Informe o nome do plano.', true); return; }
+  const plans = (product.plans || []).concat([{ name: planName, duration, price, active: true }]);
+  await api('/api/admin/products/' + editingProductId, { method: 'PATCH', body: { plans } });
+  toast('Plano adicionado!');
+  $('planName').value = ''; $('planDuration').value = ''; $('planPrice').value = '';
+  $('prodPlanCard').style.display = 'none';
+  editingProductId = null;
+  loadProducts();
+});
+
+$('cancelPlanBtn').addEventListener('click', () => {
+  $('prodPlanCard').style.display = 'none';
+  editingProductId = null;
+});
+
+/* ---------- relatórios ---------- */
+
+async function loadReports() {
+  const salesR = await api('/api/admin/sales');
+  const statsR = await api('/api/admin/sales/stats');
+  if (statsR._status !== 200) return;
+
+  const s = statsR;
+  $('reportStats').innerHTML =
+    '<div class="stat"><b>' + s.salesToday + '</b><span>Vendas hoje</span></div>' +
+    '<div class="stat revenue"><b>R$ ' + s.revenueToday.toFixed(2) + '</b><span>Receita hoje</span></div>' +
+    '<div class="stat"><b>' + s.salesWeek + '</b><span>Vendas semana</span></div>' +
+    '<div class="stat revenue"><b>R$ ' + s.revenueWeek.toFixed(2) + '</b><span>Receita semana</span></div>' +
+    '<div class="stat"><b>' + s.salesMonth + '</b><span>Vendas mês</span></div>' +
+    '<div class="stat revenue"><b>R$ ' + s.revenueMonth.toFixed(2) + '</b><span>Receita mês</span></div>' +
+    '<div class="stat"><b>' + s.totalSales + '</b><span>Total vendas</span></div>' +
+    '<div class="stat revenue"><b>R$ ' + s.totalRevenue.toFixed(2) + '</b><span>Receita total</span></div>';
+
+  if (s.last7Days) {
+    $('reportChart').innerHTML = buildChart(s.last7Days);
+  }
+
+  const sales = (salesR._status === 200 && salesR.sales) ? salesR.sales : [];
+  const productCount = {};
+  const planCount = {};
+  const paymentCount = {};
+  sales.forEach(s => {
+    if (s.product) productCount[s.product] = (productCount[s.product] || 0) + 1;
+    if (s.plan) planCount[s.plan] = (planCount[s.plan] || 0) + 1;
+    if (s.paymentMethod) paymentCount[s.paymentMethod] = (paymentCount[s.paymentMethod] || 0) + 1;
+  });
+
+  const topProducts = Object.entries(productCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const topPlans = Object.entries(planCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const topPayments = Object.entries(paymentCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
+
+  $('reportTop').innerHTML =
+    '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">' +
+    '<div><h4 style="margin-bottom:8px;color:var(--muted)">Produtos mais vendidos</h4>' +
+    (topProducts.length ? topProducts.map(([k, v]) => '<div style="padding:6px 0;border-bottom:1px solid var(--border)">' + esc(k) + ' · <b>' + v + ' vendas</b></div>').join('') : '<p style="color:var(--muted)">Sem dados</p>') + '</div>' +
+    '<div><h4 style="margin-bottom:8px;color:var(--muted)">Planos mais vendidos</h4>' +
+    (topPlans.length ? topPlans.map(([k, v]) => '<div style="padding:6px 0;border-bottom:1px solid var(--border)">' + esc(k) + ' · <b>' + v + ' vendas</b></div>').join('') : '<p style="color:var(--muted)">Sem dados</p>') + '</div>' +
+    '<div><h4 style="margin-bottom:8px;color:var(--muted)">Formas de pagamento</h4>' +
+    (topPayments.length ? topPayments.map(([k, v]) => '<div style="padding:6px 0;border-bottom:1px solid var(--border)">' + esc(k) + ' · <b>' + v + ' vendas</b></div>').join('') : '<p style="color:var(--muted)">Sem dados</p>') + '</div>' +
+    '</div>';
+}
+
+/* ---------- atividades ---------- */
+
+async function loadActivity() {
+  const r = await api('/api/admin/audit');
+  const el = $('auditList');
+  if (r._status !== 200 || !r.events || !r.events.length) {
+    el.innerHTML = '<p style="color:var(--muted)">Nenhuma atividade registrada.</p>';
+    return;
+  }
+  const names = {
+    sale_created: ['Venda registrada', 'bg-purple'],
+    sale_deleted: ['Venda excluída', 'bg-off'],
+    produto_criado: ['Produto criado', 'bg-ok'],
+    produto_atualizado: ['Produto atualizado', 'bg-warn'],
+    produto_excluido: ['Produto excluído', 'bg-off'],
+    key_created: ['KEY criada', 'bg-owner'],
+    key_deleted: ['KEY excluída', 'bg-off'],
+    vip_granted: ['VIP liberado', 'bg-ok'],
+    password_changed: ['Senha alterada', 'bg-warn']
+  };
+  el.innerHTML = r.events.map(e => {
+    const n = names[e.action] || [e.action, 'bg-warn'];
+    return '<div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:center">' +
+      '<span class="badge ' + n[1] + '">' + n[0] + '</span>' +
+      '<span style="flex:1">' + esc(e.detail) + '</span>' +
+      '<span style="color:var(--muted);font-size:.8rem">' + new Date(e.at).toLocaleString('pt-BR') + '</span>' +
+    '</div>';
+  }).join('');
+}
+
+$('reloadAuditBtn').addEventListener('click', loadActivity);
+
+/* ---------- notificações ---------- */
+
+async function loadNotifications() {
+  const r = await api('/api/admin/notifications');
+  const el = $('notifList');
+  const countEl = $('notifCount');
+
+  if (r._status !== 200 || !r.notifications || !r.notifications.length) {
+    el.innerHTML = '<p style="color:var(--muted)">Nenhuma notificação no momento.</p>';
+    if (countEl) countEl.style.display = 'none';
+    return;
+  }
+
+  if (countEl) {
+    countEl.textContent = r.notifications.length;
+    countEl.style.display = '';
+  }
+
+  el.innerHTML = r.notifications.map(n => {
+    const colors = { warning: '#fde047', info: '#7dd3fc', success: '#86efac' };
+    const icons = { warning: '⚠️', info: 'ℹ️', success: '✅' };
+    return '<div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);align-items:center">' +
+      '<span style="font-size:1.2rem">' + (icons[n.type] || 'ℹ️') + '</span>' +
+      '<span style="flex:1;color:' + (colors[n.type] || 'var(--text)') + '">' + esc(n.msg) + '</span>' +
+      '<span style="color:var(--muted);font-size:.75rem">' + new Date(n.at).toLocaleString('pt-BR') + '</span>' +
+    '</div>';
+  }).join('');
+}
+
+$('reloadNotifBtn').addEventListener('click', loadNotifications);
+
+$('notifBell').addEventListener('click', () => showSection('notifications'));
+
+/* ---------- atualizar vendas (selects) ---------- */
+const origAddSale = loadSales;
+loadSales = async function() {
+  await origAddSale.call ? origAddSale.call(this) : origAddSale();
+  updateProductSelects();
+};
+
+/* ---------- boot ---------- */
