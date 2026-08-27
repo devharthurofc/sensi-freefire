@@ -775,6 +775,24 @@ document.getElementById("nameInput").addEventListener("keydown", function(e) {
       if (el) el.style.display = "flex";
     }
   });
+  api("/api/prices").then(function(r) {
+    if (r._status === 200 && r.prices) {
+      var premEl = document.getElementById("premiumPrices");
+      var vipEl = document.getElementById("vipPrices");
+      if (premEl && r.prices.premium) {
+        premEl.innerHTML = Object.entries(r.prices.premium).map(function(e) {
+          var labels = {'1h':'1 Hora','2h':'2 Horas','3h':'3 Horas','6h':'6 Horas','12h':'12 Horas','1d':'1 Dia','3d':'3 Dias','7d':'7 Dias','15d':'15 Dias','30d':'30 Dias','permanent':'Permanente'};
+          return '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--card-border)"><span style="color:var(--muted)">' + (labels[e[0]]||e[0]) + '</span><b style="color:#86efac">R$ ' + e[1].toFixed(2) + '</b></div>';
+        }).join('');
+      }
+      if (vipEl && r.prices.vip) {
+        vipEl.innerHTML = Object.entries(r.prices.vip).map(function(e) {
+          var labels = {'1d':'1 Dia','7d':'7 Dias','30d':'30 Dias','permanent':'Permanente'};
+          return '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--card-border)"><span style="color:var(--muted)">' + (labels[e[0]]||e[0]) + '</span><b style="color:#86efac">R$ ' + e[1].toFixed(2) + '</b></div>';
+        }).join('');
+      }
+    }
+  });
   initPWA();
 })();
 

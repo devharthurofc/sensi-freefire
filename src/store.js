@@ -36,7 +36,29 @@ const DEFAULT_DB = {
   settings: {
     contactLink: '',
     freeDailyLimit: 3,
-    adminPanelPath: ''
+    adminPanelPath: '',
+    announcement: null,
+    prices: {
+      premium: {
+        '1h': 1.50,
+        '2h': 2.00,
+        '3h': 2.50,
+        '6h': 3.50,
+        '12h': 3.50,
+        '1d': 5.00,
+        '3d': 6.00,
+        '7d': 8.00,
+        '15d': 10.00,
+        '30d': 15.00,
+        'permanent': 17.00
+      },
+      vip: {
+        '1d': 1.00,
+        '7d': 1.00,
+        '30d': 1.00,
+        'permanent': 1.00
+      }
+    }
   }
 };
 

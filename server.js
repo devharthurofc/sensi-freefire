@@ -678,6 +678,14 @@ app.get(
   }
 );
 
+app.get(
+  '/api/prices',
+  (req, res) => {
+    const settings = store.getSettings();
+    res.json({ prices: settings.prices || {} });
+  }
+);
+
 app.post(
   '/api/generate',
   requireUser,

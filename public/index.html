@@ -467,6 +467,27 @@ footer b{color:var(--muted)}
   </div>
 </section>
 
+<section style="margin-top:44px" id="pricingSection">
+  <div class="section-title">Planos e Preços</div>
+  <p style="text-align:center;color:var(--muted);margin-bottom:24px">Escolha o plano ideal para você. Acesso liberado na hora!</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:700px;margin:0 auto">
+    <div style="background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:28px;text-align:center">
+      <div style="font-size:1.2rem;margin-bottom:8px">🟦</div>
+      <h3 style="margin-bottom:4px;color:var(--red3)">AIMZY PREMIUM</h3>
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:20px">Sensibilidade personalizada</p>
+      <div id="premiumPrices" style="text-align:left"></div>
+      <button class="btn btn-red" style="width:100%;margin-top:20px" onclick="document.querySelector('.contact-btn').click()">📩 Solicitar agora</button>
+    </div>
+    <div style="background:var(--card);border:1px solid rgba(245,158,11,.3);border-radius:16px;padding:28px;text-align:center">
+      <div style="font-size:1.2rem;margin-bottom:8px">🟨</div>
+      <h3 style="margin-bottom:4px;color:#f59e0b">AIMZY VIP</h3>
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:20px">Acesso completo + Proibida</p>
+      <div id="vipPrices" style="text-align:left"></div>
+      <button class="btn btn-red" style="width:100%;margin-top:20px" onclick="document.querySelector('.contact-btn').click()">📩 Solicitar agora</button>
+    </div>
+  </div>
+</section>
+
 <section style="margin-top:40px">
   <div class="section-title">Perguntas Frequentes</div>
   <div class="faq-list">
