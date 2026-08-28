@@ -725,6 +725,7 @@ footer b{color:var(--text-secondary)}
     </div>
     <div style="margin-top:18px;text-align:center">
       <button class="btn btn-red" onclick="confirmName()" id="nameConfirm">COMEÇAR</button>
+      <button class="btn btn-ghost btn-sm" onclick="hideNameModal(); document.getElementById('generator').scrollIntoView({behavior:'smooth',block:'start'});" style="margin-top:10px">Fechar sem nome</button>
     </div>
   </div>
 </div>
@@ -805,6 +806,9 @@ document.getElementById('welcomeEnter').addEventListener('click', function() {
   ws.classList.add('hidden');
   setTimeout(function() { ws.style.display = 'none'; }, 500);
   window.__welcomeDismissed = true;
+  
+  // Rolar direto para o gerador após entrar
+  document.getElementById('generator').scrollIntoView({ behavior: 'smooth', block: 'start' });
   
   // Restore cursor elements
   var hideStyle = document.getElementById('hideCursorOnWelcome');
