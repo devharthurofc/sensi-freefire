@@ -269,7 +269,7 @@ footer{text-align:center;margin-top:44px;color:var(--text-muted);font-size:.82re
 footer b{color:var(--text-secondary)}
 
 /* Welcome Screen */
-.welcome-screen{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s ease, visibility .5s ease;overflow:hidden}
+.welcome-screen{position:fixed;inset:0;z-index:10001;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s ease, visibility .5s ease}
 .welcome-screen.hidden{opacity:0;visibility:hidden;pointer-events:none}
 
 /* Animated orbs */
@@ -293,7 +293,7 @@ footer b{color:var(--text-secondary)}
 
 .welcome-logo{font-size:clamp(3rem,8vw,6rem);font-weight:900;color:#fff;margin-bottom:16px;opacity:0;transform:translateY(20px);animation:welcomeFadeIn .8s ease .2s forwards;position:relative;z-index:1;text-shadow:0 0 60px rgba(255,255,255,0.15)}
 .welcome-sub{color:#71717A;font-size:1rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:40px;opacity:0;animation:welcomeFadeIn .8s ease .4s forwards;position:relative;z-index:1}
-.welcome-enter{background:#fff;color:#000;border:none;padding:16px 40px;border-radius:14px;font-weight:700;font-size:1rem;cursor:pointer;transition:all .3s;opacity:0;animation:welcomeFadeIn .8s ease .6s forwards;letter-spacing:.06em;position:relative;z-index:1}
+.welcome-enter{background:#fff;color:#000;border:none;padding:16px 40px;border-radius:14px;font-weight:700;font-size:1rem;cursor:pointer;transition:all .3s;opacity:0;animation:welcomeFadeIn .8s ease .6s forwards;letter-spacing:.06em;position:relative;z-index:10}
 .welcome-enter:hover{box-shadow:0 8px 30px rgba(255,255,255,0.25);transform:translateY(-2px)}
 @keyframes welcomeFadeIn{to{opacity:1;transform:translateY(0)}}
 
@@ -784,6 +784,14 @@ footer b{color:var(--text-secondary)}
 // Block app.js from showing name modal until welcome is dismissed
 window.__welcomeDismissed = false;
 window.__pendingShowNameModal = false;
+
+// Hide cursor elements while welcome is showing
+(function() {
+  var style = document.createElement('style');
+  style.textContent = '.custom-cursor,.cursor-glow{display:none !important}';
+  style.id = 'hideCursorOnWelcome';
+  document.head.appendChild(style);
+})();
 </script>
 <script src="/particles.js"></script>
 <script src="/js/cursor.js"></script>
@@ -797,12 +805,24 @@ document.getElementById('welcomeEnter').addEventListener('click', function() {
   ws.classList.add('hidden');
   setTimeout(function() { ws.style.display = 'none'; }, 500);
   window.__welcomeDismissed = true;
+  
+  // Restore cursor elements
+  var hideStyle = document.getElementById('hideCursorOnWelcome');
+  if (hideStyle) hideStyle.remove();
+  
   if (window.AIMZYVoice) {
     AIMZYVoice.playSound();
     AIMZYVoice.playWelcome();
   }
   if (window.__pendingShowNameModal) {
     setTimeout(function() { showNameModal(); }, 600);
+  }
+});
+
+// Also allow clicking anywhere on welcome screen to enter
+document.getElementById('welcomeScreen').addEventListener('click', function(e) {
+  if (e.target === this || e.target.classList.contains('welcome-logo') || e.target.classList.contains('welcome-sub')) {
+    document.getElementById('welcomeEnter').click();
   }
 });
 

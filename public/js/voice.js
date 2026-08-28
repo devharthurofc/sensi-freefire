@@ -109,17 +109,18 @@ class VoiceWelcome {
     
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'pt-BR';
-    utterance.rate = 0.9;
-    utterance.pitch = 1.1;
-    utterance.volume = 0.8;
+    utterance.rate = 0.75;
+    utterance.pitch = 0.6;
+    utterance.volume = 0.9;
     
-    // Try to find a Brazilian Portuguese voice
+    // Try to find a male Brazilian Portuguese voice
     const voices = this.synth.getVoices();
-    const ptBrVoice = voices.find(v => v.lang === 'pt-BR') || 
+    const maleVoice = voices.find(v => v.lang === 'pt-BR' && (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('ricardo') || v.name.toLowerCase().includes('antonio'))) ||
+                      voices.find(v => v.lang === 'pt-BR') || 
                       voices.find(v => v.lang.startsWith('pt'));
     
-    if (ptBrVoice) {
-      utterance.voice = ptBrVoice;
+    if (maleVoice) {
+      utterance.voice = maleVoice;
     }
     
     utterance.onend = () => {
