@@ -255,7 +255,9 @@ function switchTier(tier) {
   document.getElementById("emuBox").style.display = isEmu ? "" : "none";
   document.getElementById("genWarn").classList.remove("show");
 
-  const locked = info.lock && !state.user.isVip;
+  const vipType = (state.user.vipType || '').toLowerCase();
+  const tierKey = tier === 'proibida' ? 'proibida' : tier;
+  const locked = info.lock && (!state.user.isVip || (vipType && vipType !== tierKey) || (!vipType && state.user.isVip));
   document.getElementById("tierLock").classList.toggle("hide-lock", !locked);
   document.getElementById("genBox").classList.toggle("blur-lock", locked);
 

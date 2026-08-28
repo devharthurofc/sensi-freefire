@@ -214,6 +214,7 @@ function renderKeys() {
         '<button class="b-gray act cp">Copiar</button>' +
         '<button class="' + (k.status === 'ativa' ? 'b-red act tg' : 'b-green act tg') + '">' + (k.status === 'ativa' ? 'Desativar' : 'Ativar') + '</button>' +
         '<button class="b-gold act sv">Salvar data/usos</button>' +
+        '<button class="b-green act ren">Renovar (+horas/min)</button>' +
         '<button class="b-red act del">Excluir</button>' +
       '</div></td>';
     tr.querySelector('.cp').onclick = async () => {
@@ -235,6 +236,24 @@ function renderKeys() {
       const rr = await api('/api/admin/keys/' + k.id, { method: 'PATCH', body });
       if (rr._status === 200) { toast('KEY atualizada!'); loadKeys(); loadDashboard(); }
       else toast(rr.message || 'Erro ao salvar.', true);
+    };
+    tr.querySelector('.ren').onclick = async () => {
+      const dStr = prompt('Dias a adicionar (ex: 7):', '0');
+      const hStr = prompt('Horas a adicionar (ex: 12):', '0');
+      const mStr = prompt('Minutos a adicionar (ex: 30):', '0');
+      if (dStr === null && hStr === null && mStr === null) return;
+      const days = parseInt(dStr || '0', 10);
+      const hours = parseInt(hStr || '0', 10);
+      const minutes = parseInt(mStr || '0', 10);
+      if (isNaN(days) || isNaN(hours) || isNaN(minutes)) { toast('Valores inválidos.', true); return; }
+      const current = k.expiresAt ? new Date(k.expiresAt) : new Date();
+      current.setUTCDate(current.getUTCDate() + days);
+      current.setUTCHours(current.getUTCHours() + hours);
+      current.setUTCMinutes(current.getUTCMinutes() + minutes);
+      const newExpires = current.toISOString();
+      const rr = await api('/api/admin/keys/' + k.id, { method: 'PATCH', body: { expiresAt: newExpires } });
+      if (rr._status === 200) { toast('KEY renovada! Nova expiração: ' + newExpires.slice(0,19).replace('T',' ')); loadKeys(); loadDashboard(); }
+      else toast(rr.message || 'Erro ao renovar.', true);
     };
     tr.querySelector('.del').onclick = async () => {
       if (!confirm('Excluir a KEY ' + k.code + '?')) return;
