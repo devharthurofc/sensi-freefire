@@ -4,6 +4,7 @@ let myRole = 'mod';
 const allKeys = [];
 const allUsers = [];
 const allSales = [];
+let currentPrices = { premium: {}, vip: {} };
 
 function $(id){ return document.getElementById(id); }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -49,6 +50,8 @@ document.querySelectorAll('[data-go]').forEach(btn => {
 function showSection(sec) {
   document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.sec === sec));
   document.querySelectorAll('.section').forEach(s => s.classList.toggle('on', s.id === 'sec-' + sec));
+  if (sec === 'reports') loadReports();
+  if (sec === 'activity') loadActivity();
 }
 
 let bootRetries = 0;
@@ -77,6 +80,7 @@ async function boot() {
   }
   refreshAll();
   startAutoRefresh();
+  loadAnnouncement();
 }
 
 async function safeApi(path, opts) {
@@ -262,13 +266,59 @@ function buildChart(days) {
     '</div>';
   }).join('');
 
-  return '<div class="card" style="margin-top:12px"><h3 class="sec">📊 Últimos 7 dias</h3>' +
+  return '<h3 class="sec">📊 Últimos 7 dias</h3>' +
     '<div style="display:flex;gap:8px;align-items:flex-end">' + barsHtml + '</div>' +
     '<div style="display:flex;gap:16px;margin-top:10px;justify-content:center">' +
       '<span style="font-size:.65rem;color:var(--muted)"><span style="display:inline-block;width:10px;height:10px;background:var(--red2);border-radius:2px;margin-right:4px"></span>Vendas</span>' +
       '<span style="font-size:.65rem;color:var(--muted)"><span style="display:inline-block;width:10px;height:10px;background:#22c55e;border-radius:2px;margin-right:4px"></span>Receita</span>' +
-    '</div></div>';
+    '</div>';
 }
+
+/* ---------- auto-preço ao mudar plano/duração ---------- */
+
+function getPlanPrice(planType, duration) {
+  const dict = currentPrices[planType] || {};
+  return dict[duration] || 0;
+}
+
+function updateSalePrice() {
+  const planType = $('salePlanType').value;
+  const duration = $('salePlanDuration').value;
+  const price = getPlanPrice(planType, duration);
+  $('salePrice').value = price > 0 ? price.toFixed(2) : '';
+  $('salePriceHint').textContent = price > 0 ? 'Preço do plano: R$ ' + price.toFixed(2) : 'Defina o preço manualmente';
+}
+
+if ($('salePlanType')) $('salePlanType').addEventListener('change', updateSalePrice);
+if ($('salePlanDuration')) $('salePlanDuration').addEventListener('change', updateSalePrice);
+
+/* ---------- validação de WhatsApp ---------- */
+
+function normalizeWhatsApp(val) {
+  let s = (val || '').replace(/\D/g, '');
+  if (s.startsWith('55') && s.length > 12) s = s.slice(2);
+  if (s.length === 11 && s[2] === '9') return '+55' + s;
+  if (s.length === 10) return '+55' + s.slice(0,2) + '9' + s.slice(2);
+  return s.length >= 10 ? '+55' + s : s;
+}
+
+function formatWhatsApp(val) {
+  const raw = (val || '').replace(/\D/g, '');
+  if (raw.length < 10) return val;
+  const ddd = raw.slice(0,2);
+  const num = raw.slice(2);
+  if (num.length === 9) return '+55 (' + ddd + ') ' + num.slice(0,5) + '-' + num.slice(5);
+  if (num.length === 8) return '+55 (' + ddd + ') ' + num.slice(0,4) + '-' + num.slice(4);
+  return '+55 ' + raw;
+}
+
+if ($('saleContact')) {
+  $('saleContact').addEventListener('blur', function() {
+    this.value = formatWhatsApp(this.value);
+  });
+}
+
+/* ---------- registrar venda ---------- */
 
 $('addSaleBtn').addEventListener('click', async () => {
   const key = $('saleKey').value.trim();
@@ -278,14 +328,22 @@ $('addSaleBtn').addEventListener('click', async () => {
   const paymentMethod = $('salePayment').value;
   const status = $('saleStatus').value;
   const notes = $('saleNotes').value.trim();
+  const planType = $('salePlanType').value;
+  const planDuration = $('salePlanDuration').value;
 
-  if (!key) { toast('Informe o código da KEY.', true); return; }
-  if (!buyer) { toast('Informe o nome do comprador.', true); return; }
+  if (!buyer) { toast('Informe o nome do cliente.', true); return; }
+  if (!contact) { toast('Informe o WhatsApp do cliente.', true); return; }
+
+  const whatsapp = normalizeWhatsApp(contact);
+  if (whatsapp.replace(/\D/g, '').length < 12) { toast('WhatsApp inválido. Use: +55 (DDD) 9XXXX-XXXX', true); return; }
+
+  const finalPrice = parseFloat(price) || getPlanPrice(planType, planDuration) || 0;
 
   const btn = $('addSaleBtn'); btn.disabled = true;
   const r = await api('/api/admin/sales', { body: {
-    keyCode: key, price: parseFloat(price) || 0, buyerLabel: buyer,
-    buyerContact: contact, paymentMethod, status, notes
+    keyCode: key, price: finalPrice, buyerLabel: buyer,
+    buyerContact: whatsapp, paymentMethod, status, notes,
+    product: 'Aimzy', plan: planType + ' · ' + planDuration, planType: planType
   }});
   btn.disabled = false;
 
@@ -293,6 +351,7 @@ $('addSaleBtn').addEventListener('click', async () => {
     toast('Venda registrada com sucesso!');
     $('saleKey').value = ''; $('salePrice').value = ''; $('saleBuyer').value = '';
     $('saleContact').value = ''; $('saleNotes').value = '';
+    $('salePriceHint').textContent = '';
     if (r.sale) showReceipt(r.sale);
     loadSales(); loadDashboard();
   } else {
@@ -328,12 +387,21 @@ async function loadSales() {
 function renderSales() {
   const tb = $('salesBody');
   const q = ($('saleSearch').value || '').toLowerCase().trim();
-  const list = allSales.filter(s =>
-    !q || s.keyCode.toLowerCase().includes(q) || (s.buyerLabel || '').toLowerCase().includes(q));
+  const filterPlan = $('saleFilterPlan') ? $('saleFilterPlan').value : '';
+  const filterStatus = $('saleFilterStatus') ? $('saleFilterStatus').value : '';
+  const filterPayment = $('saleFilterPayment') ? $('saleFilterPayment').value : '';
+
+  let list = allSales.filter(s => {
+    if (q && !(s.keyCode || '').toLowerCase().includes(q) && !(s.buyerLabel || '').toLowerCase().includes(q) && !(s.buyerContact || '').toLowerCase().includes(q) && !(s.id || '').toLowerCase().includes(q)) return false;
+    if (filterPlan && s.planType !== filterPlan) return false;
+    if (filterStatus && s.status !== filterStatus) return false;
+    if (filterPayment && s.paymentMethod !== filterPayment) return false;
+    return true;
+  });
 
   if (!list.length) {
-    tb.innerHTML = '<tr><td colspan="7" style="color:var(--muted)">' +
-      (q ? 'Nenhuma venda encontrada.' : 'Nenhuma venda registrada ainda.') + '</td></tr>';
+    tb.innerHTML = '<tr><td colspan="9" style="color:var(--muted)">' +
+      (q || filterPlan || filterStatus || filterPayment ? 'Nenhuma venda encontrada para esse filtro.' : 'Nenhuma venda registrada ainda.') + '</td></tr>';
     return;
   }
   tb.innerHTML = '';
@@ -344,22 +412,29 @@ function renderSales() {
       : '<span class="badge bg-warn">pendente</span>';
     const date = s.soldAt ? new Date(s.soldAt).toLocaleString('pt-BR') : '—';
     const paymentLabels = { pix: 'Pix', dinheiro: 'Dinheiro', cartao: 'Cartão', outro: 'Outro' };
+    const planLabels = { premium: '🟦 Premium', proibida: '🔴 VIP' };
+    const planName = s.plan || '—';
     tr.innerHTML =
-      '<td><span class="code">' + esc(s.keyCode) + '</span></td>' +
+      '<td style="font-size:.82rem"><b>' + esc(planLabels[s.planType] || s.planType || '—') + '</b><br><span style="color:var(--muted);font-size:.75rem">' + esc(planName) + '</span></td>' +
       '<td><b>' + esc(s.buyerLabel) + '</b></td>' +
+      '<td style="font-size:.82rem;color:var(--muted)">' + esc(s.buyerContact || '—') + '</td>' +
+      '<td><span class="code">' + esc(s.keyCode || '—') + '</span></td>' +
       '<td style="color:#86efac;font-weight:700">R$ ' + (s.price || 0).toFixed(2) + '</td>' +
-      '<td style="color:var(--muted)">' + esc(paymentLabels[s.paymentMethod] || s.paymentMethod || '—') + '</td>' +
+      '<td style="color:var(--muted);font-size:.82rem">' + esc(paymentLabels[s.paymentMethod] || s.paymentMethod || '—') + '</td>' +
       '<td>' + statusBadge + '</td>' +
-      '<td style="color:var(--muted)">' + date + '</td>' +
+      '<td style="color:var(--muted);font-size:.82rem">' + date + '</td>' +
       '<td><div class="actions">' +
-        '<button class="b-gray act cp">Copiar KEY</button>' +
-        (s.status === 'pendente' ? '<button class="b-green act pg">Marcar pago</button>' : '') +
-        '<button class="b-red act del">Excluir</button>' +
+        (s.keyCode ? '<button class="b-gray act cp">Copiar KEY</button>' : '') +
+        '<button class="b-gray act wpp">WhatsApp</button>' +
+        (s.status === 'pendente' ? '<button class="b-green act pg">Pagar</button>' : '') +
+        '<button class="b-red act del">🗑️</button>' +
       '</div></td>';
-    tr.querySelector('.cp').onclick = async () => {
+    const cpBtn = tr.querySelector('.cp');
+    if (cpBtn) cpBtn.onclick = async () => {
       try { await navigator.clipboard.writeText(s.keyCode); toast('KEY copiada!'); }
       catch(_) { prompt('Copie a KEY:', s.keyCode); }
     };
+    tr.querySelector('.wpp').onclick = () => sendWhatsAppReceipt(s);
     const pgBtn = tr.querySelector('.pg');
     if (pgBtn) pgBtn.onclick = async () => {
       await api('/api/admin/sales/' + s.id, { method: 'PATCH', body: { status: 'pago' } });
@@ -376,6 +451,9 @@ function renderSales() {
   });
 }
 $('saleSearch').addEventListener('input', renderSales);
+if ($('saleFilterPlan')) $('saleFilterPlan').addEventListener('change', renderSales);
+if ($('saleFilterStatus')) $('saleFilterStatus').addEventListener('change', renderSales);
+if ($('saleFilterPayment')) $('saleFilterPayment').addEventListener('change', renderSales);
 
 /* ---------- usuários ---------- */
 async function loadUsers() {
@@ -674,24 +752,40 @@ let lastReceiptData = null;
 function showReceipt(sale) {
   lastReceiptData = sale;
   const d = new Date(sale.soldAt);
-  const dateStr = d.toLocaleDateString('pt-BR');
+  const dateStr = d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
   const paymentLabels = { pix: 'Pix', dinheiro: 'Dinheiro', cartao: 'Cartão', outro: 'Outro' };
   const payment = paymentLabels[sale.paymentMethod] || sale.paymentMethod || '—';
+  const statusBadge = sale.status === 'pago'
+    ? '<span style="background:#22c55e;color:#fff;padding:3px 10px;border-radius:20px;font-size:.8rem;font-weight:700">PAGO</span>'
+    : '<span style="background:#f59e0b;color:#000;padding:3px 10px;border-radius:20px;font-size:.8rem;font-weight:700">PENDENTE</span>';
 
   $('receiptBody').innerHTML =
-    '<div style="border-bottom:1px dashed var(--border);padding-bottom:12px;margin-bottom:12px">' +
-      '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Produto</span><b>' + esc(sale.product || 'Aimzy') + '</b></div>' +
+    '<div style="text-align:center;border-bottom:2px dashed var(--border);padding-bottom:14px;margin-bottom:14px">' +
+      '<div style="font-size:1.3rem;font-weight:900;letter-spacing:.04em;color:var(--red3)">AIMZY</div>' +
+      '<div style="font-size:.85rem;color:var(--muted);font-weight:600">COMPROVANTE DE COMPRA</div>' +
+    '</div>' +
+    '<div style="display:flex;flex-direction:column;gap:10px;border-bottom:1px dashed var(--border);padding-bottom:14px;margin-bottom:14px">' +
+      '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Cliente</span><b>' + esc(sale.buyerLabel || '—') + '</b></div>' +
+      '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">WhatsApp</span><b>' + esc(sale.buyerContact || '—') + '</b></div>' +
       '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Plano</span><b>' + esc(sale.plan || '—') + '</b></div>' +
+      '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Duração</span><b>' + esc((sale.planDuration || sale.plan || '—')) + '</b></div>' +
       '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Valor</span><b style="color:#86efac">R$ ' + (sale.price || 0).toFixed(2) + '</b></div>' +
       '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Pagamento</span><b>' + payment + '</b></div>' +
+      (sale.keyCode ? '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Key</span><b style="color:var(--red3);font-size:.95rem">' + esc(sale.keyCode) + '</b></div>' : '') +
       '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Data</span><b>' + dateStr + '</b></div>' +
+      '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">ID da venda</span><b style="font-size:.82rem">' + esc(sale.id) + '</b></div>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center"><span style="color:var(--muted)">Status</span>' + statusBadge + '</div>' +
     '</div>' +
-    '<div style="text-align:center;padding:8px 0;border-bottom:1px dashed var(--border);margin-bottom:12px">' +
-      '<span style="color:var(--muted);font-size:.8rem">Sua Key</span><br>' +
-      '<b style="font-size:1.1rem;letter-spacing:.05em;color:var(--red3)">' + esc(sale.keyCode) + '</b>' +
-    '</div>' +
-    '<p style="text-align:center;color:var(--muted);font-size:.8rem">Obrigado pela compra! ❤️<br>Acesse seu painel para acompanhar sua licença.</p>';
+    '<p style="text-align:center;color:var(--muted);font-size:.8rem;margin-bottom:14px">Obrigado pela compra! ❤️</p>' +
+    '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">' +
+      '<button class="b-green act" id="receiptWppBtn">📱 Enviar pelo WhatsApp</button>' +
+      '<button class="b-gray act" id="receiptCopyBtn">📋 Copiar texto</button>' +
+      '<button class="b-red act" id="receiptCloseBtn">✖ Fechar</button>' +
+    '</div>';
 
+  $('receiptWppBtn').onclick = () => sendWhatsAppReceipt(sale);
+  $('receiptCopyBtn').onclick = () => copyReceipt();
+  $('receiptCloseBtn').onclick = () => closeReceipt();
   $('receiptModal').style.display = 'flex';
 }
 
@@ -701,24 +795,42 @@ function copyReceipt() {
   if (!lastReceiptData) return;
   const s = lastReceiptData;
   const d = new Date(s.soldAt);
-  const paymentLabels = { pix: 'Pix', dinheiro: 'Dinheiro', cartao: 'Cartão', outro: 'Outro' };
+  const dateStr = d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
   const txt =
     '╔══════════════════════════════╗\n' +
     '║            AIMZY             ║\n' +
-    '║     COMPROVANTE DE VENDA     ║\n' +
+    '║     COMPROVANTE DE COMPRA    ║\n' +
     '╠══════════════════════════════╣\n' +
-    '║ Produto: ' + (s.product || 'Aimzy') + '\n' +
+    '║ Cliente: ' + (s.buyerLabel || '—') + '\n' +
+    '║ WhatsApp: ' + (s.buyerContact || '—') + '\n' +
     '║ Plano: ' + (s.plan || '—') + '\n' +
     '║ Valor: R$ ' + (s.price || 0).toFixed(2) + '\n' +
-    '║ Pagamento: ' + (paymentLabels[s.paymentMethod] || '—') + '\n' +
-    '║ Data: ' + d.toLocaleDateString('pt-BR') + '\n' +
-    '╠══════════════════════════════╣\n' +
-    '║ Sua Key:\n' +
-    '║ ' + s.keyCode + '\n' +
-    '╠══════════════════════════════╣\n' +
-    '║ Obrigado pela compra! ❤️\n' +
-    '╚══════════════════════════════╝';
-  navigator.clipboard.writeText(txt).then(() => toast('Comprovante copiado!'));
+    '║ Pagamento: ' + (s.paymentMethod || '—') + '\n' +
+    '║ Key: ' + (s.keyCode || '—') + '\n' +
+    '║ Data: ' + dateStr + '\n' +
+    '║ ID: ' + s.id + '\n' +
+    '║ Status: ' + (s.status === 'pago' ? 'PAGO' : 'PENDENTE') + '\n' +
+    '╚══════════════════════════════╝\n' +
+    'Obrigado pela compra!';
+  navigator.clipboard.writeText(txt).then(() => toast('Comprovante copiado!')).catch(() => prompt('Copie:', txt));
+}
+
+function sendWhatsAppReceipt(sale) {
+  if (!sale || !sale.buyerContact) { toast('Número de WhatsApp não disponível.', true); return; }
+  const d = new Date(sale.soldAt);
+  const dateStr = d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  const phone = sale.buyerContact.replace(/\D/g, '');
+  const msg = encodeURIComponent(
+    'Olá, ' + (sale.buyerLabel || 'Cliente') + '! 👋\n\n' +
+    'Sua compra foi registrada com sucesso.\n\n' +
+    '📦 Plano: ' + (sale.plan || '—') + '\n' +
+    '💰 Valor: R$ ' + (sale.price || 0).toFixed(2) + '\n' +
+    (sale.keyCode ? '🔑 Key: ' + sale.keyCode + '\n' : '') +
+    '🧾 ID da venda: ' + sale.id + '\n' +
+    '📅 Data: ' + dateStr + '\n\n' +
+    'Obrigado pela compra! ❤️'
+  );
+  window.open('https://wa.me/' + phone + '?text=' + msg, '_blank');
 }
 
 function copyReceiptKey() {
@@ -757,8 +869,6 @@ const PLAN_LABELS = {
   '1d': '1 Dia', '3d': '3 Dias', '7d': '7 Dias', '15d': '15 Dias', '30d': '30 Dias',
   'permanent': 'Permanente'
 };
-
-let currentPrices = { premium: {}, vip: {} };
 
 async function loadPrices() {
   const r = await api('/api/prices');
@@ -873,3 +983,4 @@ $('savePlansBtn').addEventListener('click', async () => {
 });
 
 /* ---------- boot ---------- */
+boot();

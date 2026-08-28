@@ -87,7 +87,7 @@ function warnThrottled(key, msg) {
   const now = Date.now();
   if (now - (_lastWarn.get(key) || 0) < 5 * 60 * 1000) return;
   _lastWarn.set(key, now);
-  console.error(msg);
+  console.warn('[store] ' + msg);
 }
 
 /* Rótulos padrão dos planos fixos (usados ao semear a lista de planos) */
@@ -274,7 +274,12 @@ async function fetchRemoteSales() {
     sellerAdminName: s.seller_admin_name || '',
     soldAt: s.sold_at,
     notes: s.notes || '',
-    status: s.status || 'pago'
+    status: s.status || 'pago',
+    plan: s.plan || '',
+    planType: s.plan_type || '',
+    expiresAt: s.expires_at || null,
+    receipt: s.receipt || '',
+    paidAt: s.paid_at || null
   }));
 }
 
@@ -389,7 +394,12 @@ function toSalesRow(s) {
     seller_admin_name: s.sellerAdminName || '',
     sold_at: s.soldAt,
     notes: s.notes || '',
-    status: s.status || 'pago'
+    status: s.status || 'pago',
+    plan: s.plan || '',
+    plan_type: s.planType || '',
+    expires_at: s.expiresAt || null,
+    receipt: s.receipt || '',
+    paid_at: s.paidAt || null
   };
 }
 
@@ -403,14 +413,7 @@ function toAccountRow(a) {
   };
 }
 
-let _warnLast = {};
-function warnThrottled(key, msg) {
-  const now = Date.now();
-  if (!_warnLast[key] || now - _warnLast[key] > 60000) {
-    _warnLast[key] = now;
-    console.warn('[store] ' + msg);
-  }
-}
+
 
 async function pushAllRemote() {
   const d = getDb();
@@ -976,7 +979,9 @@ function setPlans(plans) {
 
 /* ============ vendas ============ */
 
-function addSale({ keyId, keyCode, price, buyerLabel, buyerContact, product, plan, paymentMethod, sellerAdminId, sellerAdminName, notes, status }) {
+function addSale({ keyId, keyCode, price, buyerLabel, buyerContact, product, plan, planType, expiresAt, paymentMethod, sellerAdminId, sellerAdminName, notes, receipt, status, paidAt }) {
+  // status padrão 'pendente': o cliente registra a compra e o admin aprova.
+  // O POST /api/admin/sales passa status='pago' explicitamente (compat).
   const sale = {
     id: id('sale'),
     keyId: keyId || null,
@@ -986,12 +991,16 @@ function addSale({ keyId, keyCode, price, buyerLabel, buyerContact, product, pla
     buyerContact: buyerContact || '',
     product: product || '',
     plan: plan || '',
+    planType: planType || '',
+    expiresAt: expiresAt || null,
     paymentMethod: paymentMethod || '',
     sellerAdminId: sellerAdminId || '',
     sellerAdminName: sellerAdminName || '',
     soldAt: new Date().toISOString(),
     notes: notes || '',
-    status: status || 'pago'
+    receipt: receipt || '',
+    status: status || 'pendente',
+    paidAt: paidAt || null
   };
   getDb().sales.push(sale);
   persistNow();

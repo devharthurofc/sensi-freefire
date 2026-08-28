@@ -54,3 +54,16 @@ alter table public.products enable row level security;
 drop policy if exists "Admin full access products" on public.products;
 create policy "Admin full access products" on public.products
   for all using (true) with check (true);
+
+-- 5) Colunas extras da tabela vendas (fluxo de compra com comprovante)
+alter table public.vendas add column if not exists seller_admin_id text default '';
+alter table public.vendas add column if not exists plan       text default '';
+alter table public.vendas add column if not exists plan_type  text default '';
+alter table public.vendas add column if not exists expires_at timestamptz;
+alter table public.vendas add column if not exists receipt    text default '';
+alter table public.vendas add column if not exists paid_at    timestamptz;
+alter table public.vendas add column if not exists status    text default 'pendente';
+create index if not exists idx_vendas_buyer_contact on public.vendas(buyer_contact);
+create index if not exists idx_vendas_paid_at on public.vendas(paid_at);
+-- (para rodar este bloco, a tabela vendas já deve existir -> veja criar-tabela-vendas.sql)
+

@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0a0505;--panel:#120909;--card:rgba(255,255,255,.04);--card-border:rgba(255,255,255,.09);
+  --bg:#0a0505;--bg2:#120909;--panel:#120909;--card:rgba(255,255,255,.04);--card-border:rgba(255,255,255,.09);--border:rgba(255,255,255,.09);
   --red1:#dc2626;--red2:#ef4444;--red3:#f87171;--blood:#7f1d1d;
   --text:#f5f0ee;--muted:#a89f9c;--ok:#22c55e;
 }
@@ -284,13 +284,34 @@ tr:hover{background:rgba(239,68,68,.03)}
 
       <div class="card">
         <h3 class="sec">Nova Venda</h3>
-        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end">
-          <div><label>Código da KEY</label><input class="mini-inp" id="saleKey" style="width:200px" placeholder="AIMZY-XXXX-XXXX-XXXX"></div>
-          <div><label>Valor (R$)</label><input type="number" class="mini-inp" id="salePrice" step="0.01" min="0" placeholder="ex: 25.00"></div>
-          <div><label>Nome do comprador</label><input class="mini-inp" id="saleBuyer" style="width:170px" placeholder="ex: João"></div>
-          <div><label>Contato</label><input class="mini-inp" id="saleContact" style="width:170px" placeholder="ex: @joao"></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px">
+          <div><label>Plano</label>
+            <select class="mini-inp" id="salePlanType" style="width:100%;padding:9px 10px">
+              <option value="premium">Sensi Premium</option>
+              <option value="proibida">Sensi VIP</option>
+            </select>
+          </div>
+          <div><label>Duração</label>
+            <select class="mini-inp" id="salePlanDuration" style="width:100%;padding:9px 10px">
+              <option value="1h">1 Hora</option>
+              <option value="2h">2 Horas</option>
+              <option value="3h">3 Horas</option>
+              <option value="6h">6 Horas</option>
+              <option value="12h">12 Horas</option>
+              <option value="1d">1 Dia</option>
+              <option value="3d">3 Dias</option>
+              <option value="7d">7 Dias</option>
+              <option value="15d">15 Dias</option>
+              <option value="30d">30 Dias</option>
+              <option value="permanent">Permanente</option>
+            </select>
+          </div>
+          <div><label>Valor (R$)</label><input type="number" class="mini-inp" id="salePrice" step="0.01" min="0" placeholder="Automático"></div>
+          <div><label>Nome do cliente</label><input class="mini-inp" id="saleBuyer" style="width:100%" placeholder="ex: João"></div>
+          <div><label>WhatsApp do cliente</label><input class="mini-inp" id="saleContact" style="width:100%" placeholder="+55 (DDD) 9XXXX-XXXX"></div>
+          <div><label>Código da KEY (opcional)</label><input class="mini-inp" id="saleKey" style="width:100%" placeholder="Gerado ao aprovar"></div>
           <div><label>Pagamento</label>
-            <select class="mini-inp" id="salePayment" style="width:auto;padding:9px 10px">
+            <select class="mini-inp" id="salePayment" style="width:100%;padding:9px 10px">
               <option value="pix">Pix</option>
               <option value="dinheiro">Dinheiro</option>
               <option value="cartao">Cartão</option>
@@ -298,27 +319,49 @@ tr:hover{background:rgba(239,68,68,.03)}
             </select>
           </div>
           <div><label>Status</label>
-            <select class="mini-inp" id="saleStatus" style="width:auto;padding:9px 10px">
+            <select class="mini-inp" id="saleStatus" style="width:100%;padding:9px 10px">
               <option value="pago">Pago</option>
               <option value="pendente">Pendente</option>
             </select>
           </div>
-          <button class="b-purple act" id="addSaleBtn">+ Registrar venda</button>
         </div>
-        <div style="margin-top:10px">
+        <div style="margin-top:12px">
           <label>Observações (opcional)</label>
           <input id="saleNotes" style="width:100%" placeholder="Ex: Venda via WhatsApp, cliente pediu 30 dias...">
+        </div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="b-purple act" id="addSaleBtn">+ Registrar venda</button>
+          <span id="salePriceHint" style="color:var(--muted);font-size:.82rem;align-self:center"></span>
         </div>
       </div>
 
       <div class="card">
         <h3 class="sec">Histórico de vendas</h3>
         <div class="search-row">
-          <input id="saleSearch" placeholder="🔎 Filtrar por comprador ou KEY...">
-          <button class="b-gray act" id="reloadSalesBtn">Recarregar</button>
+          <input id="saleSearch" placeholder="🔎 Filtrar por cliente, WhatsApp ou KEY...">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select class="mini-inp" id="saleFilterPlan" style="width:auto;padding:8px 10px">
+              <option value="">Todos planos</option>
+              <option value="premium">Premium</option>
+              <option value="proibida">VIP</option>
+            </select>
+            <select class="mini-inp" id="saleFilterStatus" style="width:auto;padding:8px 10px">
+              <option value="">Todos status</option>
+              <option value="pago">Pago</option>
+              <option value="pendente">Pendente</option>
+            </select>
+            <select class="mini-inp" id="saleFilterPayment" style="width:auto;padding:8px 10px">
+              <option value="">Todas formas</option>
+              <option value="pix">Pix</option>
+              <option value="dinheiro">Dinheiro</option>
+              <option value="cartao">Cartão</option>
+              <option value="outro">Outro</option>
+            </select>
+            <button class="b-gray act" id="reloadSalesBtn">Recarregar</button>
+          </div>
         </div>
         <table>
-          <thead><tr><th>KEY</th><th>Comprador</th><th>Valor</th><th>Pagamento</th><th>Status</th><th>Data</th><th>Ações</th></tr></thead>
+          <thead><tr><th>Plano</th><th>Cliente</th><th>WhatsApp</th><th>Key</th><th>Valor</th><th>Pagamento</th><th>Status</th><th>Data</th><th>Ações</th></tr></thead>
           <tbody id="salesBody"></tbody>
         </table>
       </div>
@@ -484,7 +527,6 @@ tr:hover{background:rgba(239,68,68,.03)}
           <button class="b-red act" id="clearAnnBtn">Remover aviso</button>
         </div>
       </div>
-      </div>
     </section>
 
     <!-- SEGURANÇA -->
@@ -509,23 +551,14 @@ tr:hover{background:rgba(239,68,68,.03)}
 </div>
 
 <!-- MODAL COMPROVANTE -->
-<div id="receiptModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px">
+<div id="receiptModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9999;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)closeReceipt()">
   <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;max-width:420px;width:100%;overflow:hidden">
-    <div style="background:linear-gradient(135deg,var(--blood),var(--red2));padding:20px;text-align:center">
-      <h2 style="font-size:1.5rem;letter-spacing:.1em">AIMZY</h2>
-      <p style="opacity:.8;font-size:.85rem">COMPROVANTE DE VENDA</p>
-    </div>
     <div id="receiptBody" style="padding:20px;font-size:.9rem;line-height:1.8"></div>
-    <div style="padding:0 20px 20px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
-      <button class="b-gray act" onclick="copyReceipt()">📋 Copiar</button>
-      <button class="b-gray act" onclick="copyReceiptKey()">🔑 Copiar Key</button>
-      <button class="b-purple act" onclick="printReceipt()">🖨️ Imprimir</button>
-    </div>
   </div>
 </div>
 
 <!-- MODAL AVISO USUÁRIO -->
-<div id="announceModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9998;align-items:center;justify-content:center;padding:20px">
+<div id="announceModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9998;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)closeAnnounce()">
   <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;max-width:400px;width:100%;padding:24px;text-align:center">
     <div style="font-size:2rem;margin-bottom:12px">📢</div>
     <h3 id="announceTitle" style="margin-bottom:12px"></h3>

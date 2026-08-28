@@ -162,6 +162,40 @@ function cleanStr(value, maxLen = 120) {
   return value.trim().slice(0, maxLen);
 }
 
+/* Duração->ms a partir do plano escolhido (ex: '1h','7d','permanent','30 dias').
+ * 'permanent' / nulo => sem expiração (null). */
+function msFromDuration(duration) {
+  if (!duration) return null;
+  const s = String(duration).toLowerCase().trim();
+  if (!s || s.includes('perm') || s === 'eterno' || s === 'vitalicio') return null;
+  const m = s.match(/(\d+)\s*(h|horas?|d|dias?|semana?s?|meses?|anos?)/);
+  if (!m) return null;
+  const n = Number(m[1]);
+  const u = m[2];
+  if (u === 'h' || u.startsWith('hor')) return n * 36e5;
+  if (u.startsWith('d') || u.startsWith('sem')) return n * 864e5;
+  if (u.startsWith('mes')) return n * 30 * 864e5;
+  if (u.startsWith('ano')) return n * 365 * 864e5;
+  return null;
+}
+
+/* ms de validade do plano: key de preço fixo (ex '1h','7d') ou plano custom. */
+function msFromPlan(plan) {
+  if (!plan || plan === 'permanent') return null;
+  const fixed = msFromDuration(plan);
+  if (fixed != null) return fixed;
+  // plano custom: busca a duração no catálogo de planos
+  const match = store.listPlans().find(p =>
+    p && (p.id === plan || p.name === plan || p.id === ('plan_' + plan))
+  );
+  if (match) {
+    const d = msFromDuration(match.duration || match.plan || '');
+    if (d != null) return d;
+  }
+  // fallback: tenta interpretar o próprio nome como duração
+  return msFromDuration(plan);
+}
+
 function getToken(req) {
   const header =
     req.headers['authorization'] || '';
@@ -722,6 +756,12 @@ const keyLimiter = rateLimiter({
   max: 8,
   message:
     'Muitas tentativas. Aguarde alguns minutos antes de tentar novamente.'
+});
+
+const saleStatusLimiter = rateLimiter({
+  windowMs: 5 * 60 * 1000,
+  max: 20,
+  message: 'Muitas consultas. Tente novamente em instantes.'
 });
 
 app.post(
@@ -2639,18 +2679,39 @@ app.post(
     const price = parseFloat(body.price) || 0;
     const product = store.clean(body.product, 80);
     const plan = store.clean(body.plan, 60);
+    const planType = store.clean(body.planType, 20);
     const paymentMethod = store.clean(body.paymentMethod, 30);
     const notes = store.clean(body.notes, 200);
     const status = body.status === 'pendente' ? 'pendente' : 'pago';
 
-    if (!keyCode) {
+    if (!buyerLabel) {
       return res.status(400).json({
         error: 'bad_request',
-        message: 'Informe o código da KEY.'
+        message: 'Informe o nome do cliente.'
       });
     }
 
-    const admin = store.getDb().admins.find(a => a.id === req.adminId);
+    if (!buyerContact) {
+      return res.status(400).json({
+        error: 'bad_request',
+        message: 'Informe o WhatsApp do cliente.'
+      });
+    }
+
+    // Validate price against stored prices if planType provided
+    const d = store.getDb();
+    if (planType && d.settings && d.settings.prices) {
+      const planKey = body.planDuration || '';
+      const storedPrice = (d.settings.prices[planType] || {})[planKey] || 0;
+      if (storedPrice > 0 && price !== storedPrice) {
+        return res.status(400).json({
+          error: 'bad_request',
+          message: 'Preço inválido para este plano. Preço correto: R$ ' + storedPrice.toFixed(2)
+        });
+      }
+    }
+
+    const admin = d.admins.find(a => a.id === req.adminId);
 
     const sale = store.addSale({
       keyId: null,
@@ -2660,6 +2721,7 @@ app.post(
       buyerContact,
       product,
       plan,
+      planType,
       paymentMethod,
       sellerAdminId: req.adminId,
       sellerAdminName: admin ? admin.username : '',
@@ -2680,11 +2742,46 @@ app.post(
 app.patch(
   '/api/admin/sales/:id',
   requireAdmin,
+  express.json(),
   (req, res) => {
-    const sale = store.updateSale(req.params.id, req.body || {});
+    const d = store.getDb();
+    const sale = d.sales.find(s => s.id === req.params.id);
     if (!sale) {
       return res.status(404).json({ error: 'not_found' });
     }
+    const b = req.body || {};
+    const prevStatus = sale.status;
+    if (b.status !== undefined) sale.status = cleanStr(b.status, 20) || sale.status;
+    if (b.buyerLabel !== undefined) sale.buyerLabel = cleanStr(b.buyerLabel, 80);
+    if (b.buyerContact !== undefined) sale.buyerContact = cleanStr(b.buyerContact, 120);
+    if (b.price !== undefined) sale.price = Number(b.price) || 0;
+    if (b.product !== undefined) sale.product = cleanStr(b.product, 80);
+    if (b.plan !== undefined) sale.plan = cleanStr(b.plan, 40);
+    if (b.planType !== undefined) sale.planType = cleanStr(b.planType, 20) || sale.planType;
+    if (b.paymentMethod !== undefined) sale.paymentMethod = cleanStr(b.paymentMethod, 30);
+    if (b.notes !== undefined) sale.notes = String(b.notes || '');
+    if (b.expiresAt !== undefined) sale.expiresAt = b.expiresAt || null;
+    if (b.paidAt !== undefined) sale.paidAt = b.paidAt || null;
+
+    // Aprovação: gera uma KEY expirando no plano escolhido (ativação única)
+    if (sale.status === 'pago' && prevStatus !== 'pago') {
+      sale.paidAt = sale.paidAt || new Date().toISOString();
+      if (!sale.keyCode && sale.plan && sale.planType) {
+        const ms = msFromPlan(sale.plan);
+        const expiresAt = ms ? new Date(Date.now() + ms).toISOString() : null;
+        const key = store.createKey({ expiresAt, maxUses: 1, type: sale.planType });
+        sale.keyCode = key.code;
+        sale.keyId = key.id;
+      }
+      sale.sellerAdminId = req.adminId;
+      const admin = d.admins.find(a => a.id === req.adminId);
+      sale.sellerAdminName = admin ? admin.username : '';
+      store.addAudit('sale_approved', sale.keyCode || sale.id, req.ip);
+    } else if (sale.status === 'pendente' && prevStatus === 'pago') {
+      store.addAudit('sale_rejected', sale.id, req.ip);
+    }
+
+    store.persistNow();
     res.json({ sale });
   }
 );
@@ -2707,6 +2804,82 @@ app.get(
   requireAdmin,
   (req, res) => {
     res.json(store.getSalesStats());
+  }
+);
+
+/* ================= compra pública (cliente) =================
+ * O cliente escolhe um plano, informa o contato (WhatsApp) e envia o
+ * comprovante de pagamento (imagem como base64). A venda é criada com
+ * status 'pendente' -> o admin aprova em /api/admin/sales/:id (status='pago')
+ * e o sistema gera uma KEY expirando no plano escolhido.
+ */
+
+app.post(
+  '/api/sales',
+  express.json({ limit: '2mb' }),
+  (req, res) => {
+    const b = req.body || {};
+    const plan = cleanStr(b.plan, 40);
+    const planType = cleanStr(b.planType, 20) || 'premium';
+    const price = Number(b.price) || 0;
+    const buyerLabel = cleanStr(b.buyerLabel, 80);
+    const buyerContact = cleanStr(b.buyerContact, 120);   // WhatsApp
+    const receipt = typeof b.receipt === 'string' ? b.receipt : '';
+    const notes = cleanStr(b.notes, 300);
+    const product = cleanStr(b.product, 80) || 'Aimzy';
+    const paymentMethod = cleanStr(b.paymentMethod, 30) || 'pix';
+
+    if (!plan) return res.status(400).json({ error: 'bad_request', message: 'Selecione um plano.' });
+    if (!buyerContact) return res.status(400).json({ error: 'bad_request', message: 'Informe seu WhatsApp/contato.' });
+    if (!receipt) return res.status(400).json({ error: 'bad_request', message: 'Envie o comprovante de pagamento.' });
+
+    const ms = msFromPlan(plan);
+    const expiresAt = ms ? new Date(Date.now() + ms).toISOString() : null;
+
+    const sale = store.addSale({
+      keyId: null,
+      keyCode: '',
+      price,
+      buyerLabel,
+      buyerContact,
+      product,
+      plan,
+      planType,
+      expiresAt,
+      paymentMethod,
+      sellerAdminId: '',
+      sellerAdminName: '',
+      notes,
+      receipt,
+      status: 'pendente',
+      paidAt: null
+    });
+
+    res.json({ ok: true, sale, expiresAt });
+  }
+);
+
+app.get(
+  '/api/sales/status/:contact',
+  saleStatusLimiter,
+  (req, res) => {
+    const contact = cleanStr(req.params.contact, 120);
+    if (!contact) return res.status(400).json({ error: 'bad_request' });
+    const matches = store.listSales(500)
+      .filter(s => (s.buyerContact || '') === contact)
+      .slice(0, 20)
+      .map(s => ({
+        id: s.id,
+        keyCode: s.keyCode,
+        plan: s.plan,
+        planType: s.planType,
+        price: s.price,
+        status: s.status,
+        expiresAt: s.expiresAt,
+        paidAt: s.paidAt,
+        soldAt: s.soldAt
+      }));
+    res.json({ sales: matches });
   }
 );
 
