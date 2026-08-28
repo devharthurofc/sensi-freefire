@@ -324,7 +324,7 @@ footer b{color:var(--text-secondary)}
 <body data-tier="normal">
 
 <!-- WELCOME SCREEN -->
-<div class="welcome-screen" id="welcomeScreen">
+<div class="welcome-screen" id="welcomeScreen" style="display:none">
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
   <div class="orb orb-3"></div>
@@ -854,6 +854,14 @@ document.querySelectorAll('.nav-links a').forEach(function(link) {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   });
+});
+
+// Quando a pessoa entra no site, pede o nome automaticamente e rola para o gerador
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    showNameModal();
+    document.getElementById('generator').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 300);
 });
 </script>
 </body>
