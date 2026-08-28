@@ -388,10 +388,14 @@ async function activateKey(zone) {
   btn.textContent = "Ativar KEY";
   if (r._status === 429) { toast(r.message, true); return; }
   if (r.status === "ok") {
-    input.value = "";
-    const me = await api("/api/me");
-    if (me.user) state.user = me.user;
-    applyVipState();
+  input.value = "";
+  const me = await api("/api/me");
+  if (me.user) {
+    state.user = Object.assign({}, me.user, {
+      vipType: r.user && r.user.vipType ? r.user.vipType : (me.user.vipType || 'premium')
+    });
+  }
+  applyVipState();
     // mensagem limpa (sem emojis) vinda do backend, ou fallback
     const cleanMsg = (r.message || "").replace(/[✅⏰⚠️❌]\s*/g, "").trim();
     toast(cleanMsg || "KEY ativada!", false);
