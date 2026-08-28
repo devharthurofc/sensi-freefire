@@ -2778,6 +2778,7 @@ app.post(
     const keyCode = store.clean(body.keyCode, 32);
     const buyerLabel = store.clean(body.buyerLabel, 60);
     const buyerContact = store.clean(body.buyerContact, 120);
+    const buyerEmail = store.clean(body.buyerEmail, 120);
     const price = parseFloat(body.price) || 0;
     const product = store.clean(body.product, 80);
     const plan = store.clean(body.plan, 60);
@@ -2821,6 +2822,7 @@ app.post(
       price,
       buyerLabel,
       buyerContact,
+      buyerEmail,
       product,
       plan,
       planType,
@@ -2837,7 +2839,8 @@ app.post(
       req.ip
     );
 
-    if (buyerContact && buyerContact.includes('@')) {
+    const emailToSend = buyerEmail || (buyerContact && buyerContact.includes('@') ? buyerContact : null);
+    if (emailToSend) {
       email.sendPurchaseReceipt(sale).catch(err => {
         console.error('[email] Falha ao enviar comprovante:', err.message);
       });

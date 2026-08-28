@@ -1,6 +1,6 @@
 'use strict';
 
-/* Fundo de partículas interativo — reage ao movimento do mouse/toque */
+/* Cyber Futuristic Particles — AIMZY Redesign */
 (function () {
   if (document.getElementById('bgParticles')) return;
 
@@ -11,8 +11,15 @@
 
   let W = 0, H = 0, dpr = 1, parts = [], running = true;
 
-  const LINK_DIST = 115;
-  const MOUSE_RADIUS = 170;
+  const LINK_DIST = 120;
+  const MOUSE_RADIUS = 180;
+
+  // Cyber colors
+  const COLORS = {
+    purple: { r: 124, g: 58, b: 237 },
+    cyan: { r: 0, g: 229, b: 255 },
+    blue: { r: 59, g: 130, b: 246 }
+  };
 
   const mouse = { x: -9999, y: -9999, px: -9999, py: -9999, vx: 0, vy: 0 };
 
@@ -29,17 +36,20 @@
   }
 
   function spawn() {
-    const target = Math.max(45, Math.min(120, Math.floor((W * H) / 15000)));
+    const target = Math.max(40, Math.min(100, Math.floor((W * H) / 18000)));
     parts = [];
     for (let i = 0; i < target; i++) {
+      const colorKey = Math.random() < 0.5 ? 'purple' : Math.random() < 0.7 ? 'cyan' : 'blue';
       parts.push({
         x: Math.random() * W,
         y: Math.random() * H,
-        vx: (Math.random() - 0.5) * 0.28,
-        vy: (Math.random() - 0.5) * 0.28,
-        r: 0.7 + Math.random() * 1.6,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.25,
+        r: 0.6 + Math.random() * 1.4,
         tw: Math.random() * Math.PI * 2,
-        tws: 0.008 + Math.random() * 0.02
+        tws: 0.006 + Math.random() * 0.018,
+        color: COLORS[colorKey],
+        colorKey
       });
     }
   }
@@ -69,47 +79,41 @@
     const mvy = Math.min(Math.abs(mouse.vy), 40) || 0;
 
     for (const p of parts) {
-      // deriva natural suave
-      p.x += p.vx + Math.sin(p.tw) * 0.06;
-      p.y += p.vy + Math.cos(p.tw) * 0.05;
+      p.x += p.vx + Math.sin(p.tw) * 0.05;
+      p.y += p.vy + Math.cos(p.tw) * 0.04;
       p.tw += p.tws;
 
-      // reação ao mouse
       const dx = p.x - mouse.x;
       const dy = p.y - mouse.y;
       const d2 = dx * dx + dy * dy;
       if (d2 < MOUSE_RADIUS * MOUSE_RADIUS) {
         const d = Math.sqrt(d2) || 1;
-        const f = (1 - d / MOUSE_RADIUS) * 1.5;
-        // empurra para longe do cursor
-        p.vx += (dx / d) * f * 0.55;
-        p.vy += (dy / d) * f * 0.55;
-        // arrasto na direção do movimento do mouse
-        p.vx += Math.sign(mouse.vx) * Math.min(mvx / 60, 0.9) * f * 0.35;
-        p.vy += Math.sign(mouse.vy) * Math.min(mvy / 60, 0.9) * f * 0.35;
+        const f = (1 - d / MOUSE_RADIUS) * 1.2;
+        p.vx += (dx / d) * f * 0.5;
+        p.vy += (dy / d) * f * 0.5;
+        p.vx += Math.sign(mouse.vx) * Math.min(mvx / 70, 0.8) * f * 0.3;
+        p.vy += Math.sign(mouse.vy) * Math.min(mvy / 70, 0.8) * f * 0.3;
       }
 
-      // limita velocidade e atrito
-      p.vx *= 0.96;
-      p.vy *= 0.96;
+      p.vx *= 0.97;
+      p.vy *= 0.97;
       const sp = Math.hypot(p.vx, p.vy);
-      if (sp > 2.4) { p.vx = (p.vx / sp) * 2.4; p.vy = (p.vy / sp) * 2.4; }
-      if (sp < 0.05 && sp > 0.001) { p.vx *= 20 / (sp * 200 + 1); }
+      if (sp > 2.2) { p.vx = (p.vx / sp) * 2.2; p.vy = (p.vy / sp) * 2.2; }
+      if (sp < 0.04 && sp > 0.001) { p.vx *= 18 / (sp * 180 + 1); }
 
-      // bordas com volta suave
       if (p.x < -20) p.x = W + 20; else if (p.x > W + 20) p.x = -20;
       if (p.y < -20) p.y = H + 20; else if (p.y > H + 20) p.y = -20;
     }
 
-    mouse.vx *= 0.8;
-    mouse.vy *= 0.8;
+    mouse.vx *= 0.85;
+    mouse.vy *= 0.85;
   }
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
 
-    // linhas entre partículas próximas
-    ctx.lineWidth = 1;
+    // Lines between nearby particles
+    ctx.lineWidth = 0.8;
     for (let i = 0; i < parts.length; i++) {
       const a = parts[i];
       for (let j = i + 1; j < parts.length; j++) {
@@ -117,8 +121,9 @@
         const dx = a.x - b.x, dy = a.y - b.y;
         const d2 = dx * dx + dy * dy;
         if (d2 < LINK_DIST * LINK_DIST) {
-          const al = (1 - Math.sqrt(d2) / LINK_DIST) * 0.16;
-          ctx.strokeStyle = 'rgba(239,68,68,' + al.toFixed(3) + ')';
+          const al = (1 - Math.sqrt(d2) / LINK_DIST) * 0.12;
+          const c = a.color;
+          ctx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${al.toFixed(3)})`;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
@@ -127,14 +132,15 @@
       }
     }
 
-    // brilho perto do mouse nas linhas
+    // Lines from mouse to nearby particles
     if (mouse.x > 0) {
       for (const p of parts) {
         const dx = p.x - mouse.x, dy = p.y - mouse.y;
         const d2 = dx * dx + dy * dy;
         if (d2 < MOUSE_RADIUS * MOUSE_RADIUS) {
-          const al = (1 - Math.sqrt(d2) / MOUSE_RADIUS) * 0.35;
-          ctx.strokeStyle = 'rgba(252,165,165,' + al.toFixed(3) + ')';
+          const al = (1 - Math.sqrt(d2) / MOUSE_RADIUS) * 0.25;
+          const c = p.color;
+          ctx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${al.toFixed(3)})`;
           ctx.beginPath();
           ctx.moveTo(mouse.x, mouse.y);
           ctx.lineTo(p.x, p.y);
@@ -143,13 +149,22 @@
       }
     }
 
-    // pontos
+    // Particle dots
     for (const p of parts) {
       const glow = Math.sin(p.tw) * 0.5 + 0.5;
-      ctx.fillStyle = 'rgba(255,110,110,' + (0.35 + glow * 0.45).toFixed(3) + ')';
+      const c = p.color;
+      const alpha = 0.3 + glow * 0.5;
+      
+      // Glow effect
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = `rgba(${c.r},${c.g},${c.b},0.5)`;
+      
+      ctx.fillStyle = `rgba(${c.r},${c.g},${c.b},${alpha.toFixed(3)})`;
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fill();
+      
+      ctx.shadowBlur = 0;
     }
   }
 

@@ -270,6 +270,7 @@ async function fetchRemoteSales() {
     price: s.price || 0,
     buyerLabel: s.buyer_label || '',
     buyerContact: s.buyer_contact || '',
+    buyerEmail: s.buyer_email || '',
     sellerAdminId: s.seller_admin_id || '',
     sellerAdminName: s.seller_admin_name || '',
     soldAt: s.sold_at,
@@ -279,7 +280,8 @@ async function fetchRemoteSales() {
     planType: s.plan_type || '',
     expiresAt: s.expires_at || null,
     receipt: s.receipt || '',
-    paidAt: s.paid_at || null
+    paidAt: s.paid_at || null,
+    emailSent: s.email_sent || { purchase: false, approval: false, reminder: false, expiry: false }
   }));
 }
 
@@ -390,6 +392,7 @@ function toSalesRow(s) {
     price: s.price || 0,
     buyer_label: s.buyerLabel || '',
     buyer_contact: s.buyerContact || '',
+    buyer_email: s.buyerEmail || '',
     seller_admin_id: s.sellerAdminId || '',
     seller_admin_name: s.sellerAdminName || '',
     sold_at: s.soldAt,
@@ -399,7 +402,8 @@ function toSalesRow(s) {
     plan_type: s.planType || '',
     expires_at: s.expiresAt || null,
     receipt: s.receipt || '',
-    paid_at: s.paidAt || null
+    paid_at: s.paidAt || null,
+    email_sent: s.emailSent || { purchase: false, approval: false, reminder: false, expiry: false }
   };
 }
 
@@ -979,7 +983,7 @@ function setPlans(plans) {
 
 /* ============ vendas ============ */
 
-function addSale({ keyId, keyCode, price, buyerLabel, buyerContact, product, plan, planType, expiresAt, paymentMethod, sellerAdminId, sellerAdminName, notes, receipt, status, paidAt }) {
+function addSale({ keyId, keyCode, price, buyerLabel, buyerContact, buyerEmail, product, plan, planType, expiresAt, paymentMethod, sellerAdminId, sellerAdminName, notes, receipt, status, paidAt }) {
   // status padrão 'pendente': o cliente registra a compra e o admin aprova.
   // O POST /api/admin/sales passa status='pago' explicitamente (compat).
   const sale = {
@@ -989,6 +993,7 @@ function addSale({ keyId, keyCode, price, buyerLabel, buyerContact, product, pla
     price: Number(price) || 0,
     buyerLabel: buyerLabel || '',
     buyerContact: buyerContact || '',
+    buyerEmail: buyerEmail || '',
     product: product || '',
     plan: plan || '',
     planType: planType || '',
@@ -1000,7 +1005,13 @@ function addSale({ keyId, keyCode, price, buyerLabel, buyerContact, product, pla
     notes: notes || '',
     receipt: receipt || '',
     status: status || 'pendente',
-    paidAt: paidAt || null
+    paidAt: paidAt || null,
+    emailSent: {
+      purchase: false,
+      approval: false,
+      reminder: false,
+      expiry: false
+    }
   };
   getDb().sales.push(sale);
   persistNow();

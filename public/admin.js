@@ -325,6 +325,7 @@ $('addSaleBtn').addEventListener('click', async () => {
   const price = $('salePrice').value;
   const buyer = $('saleBuyer').value.trim();
   const contact = $('saleContact').value.trim();
+  const email = $('saleEmail') ? $('saleEmail').value.trim() : '';
   const paymentMethod = $('salePayment').value;
   const status = $('saleStatus').value;
   const notes = $('saleNotes').value.trim();
@@ -342,7 +343,7 @@ $('addSaleBtn').addEventListener('click', async () => {
   const btn = $('addSaleBtn'); btn.disabled = true;
   const r = await api('/api/admin/sales', { body: {
     keyCode: key, price: finalPrice, buyerLabel: buyer,
-    buyerContact: whatsapp, paymentMethod, status, notes,
+    buyerContact: whatsapp, buyerEmail: email, paymentMethod, status, notes,
     product: 'Aimzy', plan: planType + ' · ' + planDuration, planType: planType
   }});
   btn.disabled = false;
@@ -351,6 +352,7 @@ $('addSaleBtn').addEventListener('click', async () => {
     toast('Venda registrada com sucesso!');
     $('saleKey').value = ''; $('salePrice').value = ''; $('saleBuyer').value = '';
     $('saleContact').value = ''; $('saleNotes').value = '';
+    if ($('saleEmail')) $('saleEmail').value = '';
     $('salePriceHint').textContent = '';
     if (r.sale) showReceipt(r.sale);
     loadSales(); loadDashboard();

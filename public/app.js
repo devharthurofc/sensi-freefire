@@ -1033,6 +1033,14 @@ document.getElementById("accPwBtn").addEventListener("click", async function() {
     }
   });
   initPWA();
+
+  // Voz de boas-vindas
+  setTimeout(function() {
+    if (window.AIMZYVoice) {
+      AIMZYVoice.playSound();
+      AIMZYVoice.playWelcome();
+    }
+  }, 1200);
 })();
 
 /* ================== PWA: offline + instalar app ================== */

@@ -78,7 +78,8 @@ async function send({ to, subject, html, text, retries = 3 }) {
 /* ============ funções públicas ============ */
 
 async function sendPurchaseReceipt(sale) {
-  if (!sale || !sale.buyerContact) return { ok: false, error: 'no_contact' };
+  const to = sale.buyerEmail || sale.buyerContact;
+  if (!sale || !to) return { ok: false, error: 'no_contact' };
 
   const tmpl = templates.purchaseReceipt({
     buyerLabel: sale.buyerLabel,
@@ -90,7 +91,7 @@ async function sendPurchaseReceipt(sale) {
   });
 
   return send({
-    to: sale.buyerContact,
+    to,
     subject: tmpl.subject,
     html: tmpl.html,
     text: tmpl.text
@@ -98,7 +99,8 @@ async function sendPurchaseReceipt(sale) {
 }
 
 async function sendApprovalEmail(sale) {
-  if (!sale || !sale.buyerContact) return { ok: false, error: 'no_contact' };
+  const to = sale.buyerEmail || sale.buyerContact;
+  if (!sale || !to) return { ok: false, error: 'no_contact' };
 
   const tmpl = templates.approvalEmail({
     buyerLabel: sale.buyerLabel,
@@ -108,7 +110,7 @@ async function sendApprovalEmail(sale) {
   });
 
   return send({
-    to: sale.buyerContact,
+    to,
     subject: tmpl.subject,
     html: tmpl.html,
     text: tmpl.text
@@ -116,7 +118,8 @@ async function sendApprovalEmail(sale) {
 }
 
 async function sendReminder(sale) {
-  if (!sale || !sale.buyerContact) return { ok: false, error: 'no_contact' };
+  const to = sale.buyerEmail || sale.buyerContact;
+  if (!sale || !to) return { ok: false, error: 'no_contact' };
 
   const tmpl = templates.reminderEmail({
     buyerLabel: sale.buyerLabel,
@@ -126,7 +129,7 @@ async function sendReminder(sale) {
   });
 
   return send({
-    to: sale.buyerContact,
+    to,
     subject: tmpl.subject,
     html: tmpl.html,
     text: tmpl.text
@@ -134,7 +137,8 @@ async function sendReminder(sale) {
 }
 
 async function sendExpiryNotification(sale) {
-  if (!sale || !sale.buyerContact) return { ok: false, error: 'no_contact' };
+  const to = sale.buyerEmail || sale.buyerContact;
+  if (!sale || !to) return { ok: false, error: 'no_contact' };
 
   const tmpl = templates.expiryEmail({
     buyerLabel: sale.buyerLabel,
@@ -144,7 +148,7 @@ async function sendExpiryNotification(sale) {
   });
 
   return send({
-    to: sale.buyerContact,
+    to,
     subject: tmpl.subject,
     html: tmpl.html,
     text: tmpl.text

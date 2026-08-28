@@ -1,0 +1,14 @@
+name: redesign-cyber
+description: Redesign completo do AIMZY com tema cyber gaming futurista
+schema: spec-driven
+skip_specs: false
+
+artifacts:
+  proposal:
+    done: true
+  specs:
+    done: true
+  design:
+    done: true
+  tasks:
+    done: true
