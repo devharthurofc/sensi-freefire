@@ -1,6 +1,6 @@
 'use strict';
 
-/* Custom Cursor */
+/* Custom Cursor - Full Black Premium */
 
 class CustomCursor {
   constructor() {
@@ -55,20 +55,20 @@ class CustomCursor {
       .cursor-dot {
         width: 8px;
         height: 8px;
-        background: var(--cyan);
+        background: #FFFFFF;
         border-radius: 50%;
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        box-shadow: 0 0 10px var(--cyan), 0 0 20px var(--cyan);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
       }
       
       .cursor-glow {
         position: fixed;
         width: 40px;
         height: 40px;
-        border: 1px solid rgba(0, 229, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 50%;
         pointer-events: none;
         z-index: 9999;
@@ -78,13 +78,12 @@ class CustomCursor {
       
       .custom-cursor.hovering .cursor-dot {
         transform: translate(-50%, -50%) scale(1.5);
-        background: var(--purple-neon);
-        box-shadow: 0 0 15px var(--purple-neon), 0 0 30px var(--purple-neon);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
       }
       
       .custom-cursor.hovering .cursor-glow {
         transform: translate(-50%, -50%) scale(1.5);
-        border-color: rgba(168, 85, 247, 0.5);
+        border-color: rgba(255, 255, 255, 0.3);
       }
       
       @media (hover: none) {

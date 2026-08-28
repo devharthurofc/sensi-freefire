@@ -416,8 +416,9 @@ function renderSales() {
     const paymentLabels = { pix: 'Pix', dinheiro: 'Dinheiro', cartao: 'Cartão', outro: 'Outro' };
     const planLabels = { premium: '🟦 Premium', proibida: '🔴 VIP' };
     const planName = s.plan || '—';
+    const emailBadge = s.emailSent && s.emailSent.purchase ? ' <span style="font-size:.65rem;color:#86efac">📧</span>' : '';
     tr.innerHTML =
-      '<td style="font-size:.82rem"><b>' + esc(planLabels[s.planType] || s.planType || '—') + '</b><br><span style="color:var(--muted);font-size:.75rem">' + esc(planName) + '</span></td>' +
+      '<td style="font-size:.82rem"><b>' + esc(planLabels[s.planType] || s.planType || '—') + '</b><br><span style="color:var(--muted);font-size:.75rem">' + esc(planName) + emailBadge + '</span></td>' +
       '<td><b>' + esc(s.buyerLabel) + '</b></td>' +
       '<td style="font-size:.82rem;color:var(--muted)">' + esc(s.buyerContact || '—') + '</td>' +
       '<td><span class="code">' + esc(s.keyCode || '—') + '</span></td>' +
@@ -428,6 +429,7 @@ function renderSales() {
       '<td><div class="actions">' +
         (s.keyCode ? '<button class="b-gray act cp">Copiar KEY</button>' : '') +
         '<button class="b-gray act wpp">WhatsApp</button>' +
+        '<button class="b-gray act email-btn" title="Enviar comprovante por e-mail">📧</button>' +
         (s.status === 'pendente' ? '<button class="b-green act pg">Pagar</button>' : '') +
         '<button class="b-red act del">🗑️</button>' +
       '</div></td>';
@@ -437,10 +439,19 @@ function renderSales() {
       catch(_) { prompt('Copie a KEY:', s.keyCode); }
     };
     tr.querySelector('.wpp').onclick = () => sendWhatsAppReceipt(s);
+    tr.querySelector('.email-btn').onclick = () => sendSaleEmail(s);
     const pgBtn = tr.querySelector('.pg');
     if (pgBtn) pgBtn.onclick = async () => {
       await api('/api/admin/sales/' + s.id, { method: 'PATCH', body: { status: 'pago' } });
+      s.status = 'pago';
       toast('Venda marcada como paga!');
+      if (s.buyerEmail && s.keyCode) {
+        if (confirm('Deseja enviar o e-mail de aprovação com a KEY para ' + s.buyerEmail + '?')) {
+          const er = await api('/api/admin/email/send-approval', { body: { saleId: s.id } });
+          if (er._status === 200) toast('E-mail de aprovação enviado!');
+          else toast(er.message || 'Erro ao enviar e-mail.', true);
+        }
+      }
       loadSales(); loadDashboard();
     };
     tr.querySelector('.del').onclick = async () => {
@@ -760,6 +771,9 @@ function showReceipt(sale) {
   const statusBadge = sale.status === 'pago'
     ? '<span style="background:#22c55e;color:#fff;padding:3px 10px;border-radius:20px;font-size:.8rem;font-weight:700">PAGO</span>'
     : '<span style="background:#f59e0b;color:#000;padding:3px 10px;border-radius:20px;font-size:.8rem;font-weight:700">PENDENTE</span>';
+  const emailSentBadge = sale.emailSent && sale.emailSent.purchase
+    ? '<span style="background:rgba(34,197,94,.2);color:#86efac;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:700;margin-left:6px">📧 E-mail enviado</span>'
+    : '';
 
   $('receiptBody').innerHTML =
     '<div style="text-align:center;border-bottom:2px dashed var(--border);padding-bottom:14px;margin-bottom:14px">' +
@@ -769,6 +783,7 @@ function showReceipt(sale) {
     '<div style="display:flex;flex-direction:column;gap:10px;border-bottom:1px dashed var(--border);padding-bottom:14px;margin-bottom:14px">' +
       '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Cliente</span><b>' + esc(sale.buyerLabel || '—') + '</b></div>' +
       '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">WhatsApp</span><b>' + esc(sale.buyerContact || '—') + '</b></div>' +
+      (sale.buyerEmail ? '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">E-mail</span><b style="font-size:.85rem">' + esc(sale.buyerEmail) + '</b></div>' : '') +
       '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Plano</span><b>' + esc(sale.plan || '—') + '</b></div>' +
       '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Duração</span><b>' + esc((sale.planDuration || sale.plan || '—')) + '</b></div>' +
       '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Valor</span><b style="color:#86efac">R$ ' + (sale.price || 0).toFixed(2) + '</b></div>' +
@@ -776,16 +791,40 @@ function showReceipt(sale) {
       (sale.keyCode ? '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Key</span><b style="color:var(--red3);font-size:.95rem">' + esc(sale.keyCode) + '</b></div>' : '') +
       '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Data</span><b>' + dateStr + '</b></div>' +
       '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">ID da venda</span><b style="font-size:.82rem">' + esc(sale.id) + '</b></div>' +
-      '<div style="display:flex;justify-content:space-between;align-items:center"><span style="color:var(--muted)">Status</span>' + statusBadge + '</div>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center"><span style="color:var(--muted)">Status</span><div>' + statusBadge + emailSentBadge + '</div></div>' +
     '</div>' +
-    '<p style="text-align:center;color:var(--muted);font-size:.8rem;margin-bottom:14px">Obrigado pela compra! ❤️</p>' +
+    '<p style="text-align:center;color:var(--muted);font-size:.8rem;margin-bottom:14px">Obrigado pela compra!</p>' +
     '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">' +
-      '<button class="b-green act" id="receiptWppBtn">📱 Enviar pelo WhatsApp</button>' +
-      '<button class="b-gray act" id="receiptCopyBtn">📋 Copiar texto</button>' +
+      '<button class="b-green act" id="receiptWppBtn">📱 WhatsApp</button>' +
+      '<button class="b-green act" id="receiptEmailBtn" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6)">📧 Enviar E-mail</button>' +
+      (sale.status === 'pago' && sale.keyCode && !(sale.emailSent && sale.emailSent.approval)
+        ? '<button class="b-green act" id="receiptApprovalBtn" style="background:linear-gradient(135deg,#15803d,#22c55e)">✅ Enviar Aprovação</button>'
+        : '') +
+      '<button class="b-gray act" id="receiptCopyBtn">📋 Copiar</button>' +
       '<button class="b-red act" id="receiptCloseBtn">✖ Fechar</button>' +
     '</div>';
 
   $('receiptWppBtn').onclick = () => sendWhatsAppReceipt(sale);
+  $('receiptEmailBtn').onclick = () => sendSaleEmail(sale);
+  const apprBtn = $('receiptApprovalBtn');
+  if (apprBtn) apprBtn.onclick = async () => {
+    if (!sale.buyerEmail) {
+      toast('Cadastre o e-mail do cliente na venda para enviar a aprovação.', true);
+      return;
+    }
+    apprBtn.disabled = true; apprBtn.textContent = '⏳ Enviando...';
+    const r = await api('/api/admin/email/send-approval', { body: { saleId: sale.id } });
+    if (r._status === 200) {
+      toast('E-mail de aprovação enviado!');
+      if (!sale.emailSent) sale.emailSent = {};
+      sale.emailSent.approval = true;
+      closeReceipt();
+      loadSales();
+    } else {
+      toast(r.message || 'Erro ao enviar.', true);
+      apprBtn.disabled = false; apprBtn.textContent = '✅ Enviar Aprovação';
+    }
+  };
   $('receiptCopyBtn').onclick = () => copyReceipt();
   $('receiptCloseBtn').onclick = () => closeReceipt();
   $('receiptModal').style.display = 'flex';
@@ -833,6 +872,36 @@ function sendWhatsAppReceipt(sale) {
     'Obrigado pela compra! ❤️'
   );
   window.open('https://wa.me/' + phone + '?text=' + msg, '_blank');
+}
+
+async function sendSaleEmail(sale) {
+  if (!sale) return;
+
+  let emailAddr = sale.buyerEmail || '';
+  if (!emailAddr) {
+    emailAddr = prompt('Digite o e-mail do cliente para enviar o comprovante:', '');
+    if (!emailAddr || !emailAddr.includes('@')) {
+      toast('E-mail inválido.', true);
+      return;
+    }
+  }
+
+  const btn = document.querySelector('.email-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳'; }
+
+  const r = await api('/api/admin/email/send-purchase', { body: { saleId: sale.id, toEmail: emailAddr } });
+
+  if (btn) { btn.disabled = false; btn.textContent = '📧'; }
+
+  if (r._status === 200) {
+    toast('Comprovante enviado para ' + emailAddr + '!');
+    sale.buyerEmail = emailAddr;
+    if (!sale.emailSent) sale.emailSent = {};
+    sale.emailSent.purchase = true;
+    loadSales();
+  } else {
+    toast(r.message || 'Erro ao enviar e-mail. Verifique se o Gmail está configurado.', true);
+  }
 }
 
 function copyReceiptKey() {

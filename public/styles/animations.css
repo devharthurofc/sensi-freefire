@@ -1,4 +1,4 @@
-/* Animations */
+/* Animations - Full Black Premium Theme */
 
 /* Fade In Up */
 .animate-fadeInUp {
@@ -81,24 +81,10 @@
 
 @keyframes glowPulse {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
   }
   50% {
-    box-shadow: 0 0 40px rgba(124, 58, 237, 0.8);
-  }
-}
-
-/* Cyan Glow */
-.animate-glowCyan {
-  animation: glowCyan 2s ease-in-out infinite;
-}
-
-@keyframes glowCyan {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(0, 229, 255, 0.8);
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
   }
 }
 
@@ -153,7 +139,7 @@
   left: -2px;
   right: -2px;
   bottom: -2px;
-  background: linear-gradient(45deg, var(--purple), var(--cyan), var(--purple));
+  background: linear-gradient(45deg, #1a1a1a, #303030, #1a1a1a);
   background-size: 400% 400%;
   animation: borderGlow 3s ease infinite;
   z-index: -1;
@@ -172,7 +158,7 @@
 /* Typing Effect */
 .animate-typing {
   overflow: hidden;
-  border-right: 2px solid var(--purple);
+  border-right: 2px solid var(--text);
   white-space: nowrap;
   animation: typing 3s steps(40) forwards, blink 0.75s step-end infinite;
 }

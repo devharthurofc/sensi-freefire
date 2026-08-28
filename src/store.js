@@ -271,6 +271,7 @@ async function fetchRemoteSales() {
     buyerLabel: s.buyer_label || '',
     buyerContact: s.buyer_contact || '',
     buyerEmail: s.buyer_email || '',
+    product: s.product || '',
     sellerAdminId: s.seller_admin_id || '',
     sellerAdminName: s.seller_admin_name || '',
     soldAt: s.sold_at,
@@ -393,6 +394,7 @@ function toSalesRow(s) {
     buyer_label: s.buyerLabel || '',
     buyer_contact: s.buyerContact || '',
     buyer_email: s.buyerEmail || '',
+    product: s.product || '',
     seller_admin_id: s.sellerAdminId || '',
     seller_admin_name: s.sellerAdminName || '',
     sold_at: s.soldAt,
@@ -422,6 +424,29 @@ function toAccountRow(a) {
 async function pushAllRemote() {
   const d = getDb();
 
+  // sincronizar exclusões: deletar no Supabase registros que foram removidos localmente
+  try {
+    const { data: remoteUsers } = await supabase.from('users').select('id');
+    if (remoteUsers && remoteUsers.length) {
+      const localIds = new Set(d.users.map(u => u.id));
+      const toDelete = remoteUsers.filter(r => !localIds.has(r.id));
+      if (toDelete.length) await supabase.from('users').delete().in('id', toDelete.map(r => r.id));
+    }
+  } catch (e) {
+    warnThrottled('users_delete', '[store] falha ao sincronizar exclusões de usuários: ' + e.message);
+  }
+
+  try {
+    const { data: remoteSessions } = await supabase.from('sessions').select('token');
+    if (remoteSessions && remoteSessions.length) {
+      const localTokens = new Set(d.sessions.map(s => s.token));
+      const toDelete = remoteSessions.filter(r => !localTokens.has(r.token));
+      if (toDelete.length) await supabase.from('sessions').delete().in('token', toDelete.map(r => r.token));
+    }
+  } catch (e) {
+    warnThrottled('sessions_delete', '[store] falha ao sincronizar exclusões de sessões: ' + e.message);
+  }
+
   const ops = [
     { name: 'users', fn: () => supabase.from('users').upsert(d.users.map(toUserRow), { onConflict: 'id' }) },
     { name: 'sessions', fn: () => supabase.from('sessions').upsert(d.sessions.map(toSessionRow), { onConflict: 'token' }) },
@@ -437,7 +462,23 @@ async function pushAllRemote() {
     ) },
     // vendas: tenta com todas as colunas; se a tabela for antiga (sem
     // key_id/product/plan/etc), salva só as colunas que existem.
+    // Também deleta no Supabase vendas que foram removidas localmente.
     { name: 'vendas', fn: async () => {
+      // deletar vendas que não existem mais no array local
+      try {
+        const { data: remoteRows } = await supabase.from('vendas').select('id');
+        if (remoteRows && remoteRows.length) {
+          const localIds = new Set(d.sales.map(s => s.id));
+          const toDelete = remoteRows.filter(r => !localIds.has(r.id));
+          if (toDelete.length) {
+            const ids = toDelete.map(r => r.id);
+            await supabase.from('vendas').delete().in('id', ids);
+          }
+        }
+      } catch (e) {
+        warnThrottled('vendas_delete', '[store] falha ao sincronizar exclusões de vendas: ' + e.message);
+      }
+
       if (!d.sales.length) return { error: null };
       const rows = d.sales.map(toSalesRow);
       const r = await supabase.from('vendas').upsert(rows, { onConflict: 'id' });
@@ -459,6 +500,20 @@ async function pushAllRemote() {
       return r2;
     } }
   ];
+
+  // keys: deletar keys que não existem mais no array local, depois upsert
+  try {
+    const { data: remoteKeys } = await supabase.from('keys').select('id');
+    if (remoteKeys && remoteKeys.length) {
+      const localIds = new Set(d.keys.map(k => k.id));
+      const toDelete = remoteKeys.filter(r => !localIds.has(r.id));
+      if (toDelete.length) {
+        await supabase.from('keys').delete().in('id', toDelete.map(r => r.id));
+      }
+    }
+  } catch (e) {
+    warnThrottled('keys_delete', '[store] falha ao sincronizar exclusões de keys: ' + e.message);
+  }
 
   // keys: tenta salvar com a coluna "type"; se o banco ainda não tiver a
   // coluna, salva sem ela (rode corrigir-banco.sql para adicionar)

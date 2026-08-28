@@ -14,11 +14,11 @@
   const LINK_DIST = 120;
   const MOUSE_RADIUS = 180;
 
-  // Cyber colors
+  // Full Black Premium colors - subtle white/gray particles
   const COLORS = {
-    purple: { r: 124, g: 58, b: 237 },
-    cyan: { r: 0, g: 229, b: 255 },
-    blue: { r: 59, g: 130, b: 246 }
+    white1: { r: 255, g: 255, b: 255 },
+    white2: { r: 200, g: 200, b: 200 },
+    white3: { r: 160, g: 160, b: 160 }
   };
 
   const mouse = { x: -9999, y: -9999, px: -9999, py: -9999, vx: 0, vy: 0 };
@@ -39,7 +39,7 @@
     const target = Math.max(40, Math.min(100, Math.floor((W * H) / 18000)));
     parts = [];
     for (let i = 0; i < target; i++) {
-      const colorKey = Math.random() < 0.5 ? 'purple' : Math.random() < 0.7 ? 'cyan' : 'blue';
+      const colorKey = Math.random() < 0.5 ? 'white1' : Math.random() < 0.7 ? 'white2' : 'white3';
       parts.push({
         x: Math.random() * W,
         y: Math.random() * H,
@@ -113,7 +113,7 @@
     ctx.clearRect(0, 0, W, H);
 
     // Lines between nearby particles
-    ctx.lineWidth = 0.8;
+    ctx.lineWidth = 0.6;
     for (let i = 0; i < parts.length; i++) {
       const a = parts[i];
       for (let j = i + 1; j < parts.length; j++) {
@@ -121,7 +121,7 @@
         const dx = a.x - b.x, dy = a.y - b.y;
         const d2 = dx * dx + dy * dy;
         if (d2 < LINK_DIST * LINK_DIST) {
-          const al = (1 - Math.sqrt(d2) / LINK_DIST) * 0.12;
+          const al = (1 - Math.sqrt(d2) / LINK_DIST) * 0.08;
           const c = a.color;
           ctx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${al.toFixed(3)})`;
           ctx.beginPath();
@@ -138,7 +138,7 @@
         const dx = p.x - mouse.x, dy = p.y - mouse.y;
         const d2 = dx * dx + dy * dy;
         if (d2 < MOUSE_RADIUS * MOUSE_RADIUS) {
-          const al = (1 - Math.sqrt(d2) / MOUSE_RADIUS) * 0.25;
+          const al = (1 - Math.sqrt(d2) / MOUSE_RADIUS) * 0.15;
           const c = p.color;
           ctx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${al.toFixed(3)})`;
           ctx.beginPath();
@@ -153,11 +153,11 @@
     for (const p of parts) {
       const glow = Math.sin(p.tw) * 0.5 + 0.5;
       const c = p.color;
-      const alpha = 0.3 + glow * 0.5;
+      const alpha = 0.2 + glow * 0.3;
       
-      // Glow effect
-      ctx.shadowBlur = 8;
-      ctx.shadowColor = `rgba(${c.r},${c.g},${c.b},0.5)`;
+      // Subtle glow effect
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = `rgba(${c.r},${c.g},${c.b},0.3)`;
       
       ctx.fillStyle = `rgba(${c.r},${c.g},${c.b},${alpha.toFixed(3)})`;
       ctx.beginPath();

@@ -1,6 +1,6 @@
 'use strict';
 
-/* Voice Welcome */
+/* Voice Welcome - Full Black Premium */
 
 class VoiceWelcome {
   constructor() {
@@ -50,9 +50,9 @@ class VoiceWelcome {
         width: 44px;
         height: 44px;
         border-radius: 50%;
-        border: 1px solid var(--border);
-        background: var(--bg-card);
-        color: var(--text-muted);
+        border: 1px solid #1A1A1A;
+        background: #0A0A0A;
+        color: #71717A;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -61,15 +61,14 @@ class VoiceWelcome {
       }
       
       .voice-btn:hover {
-        border-color: var(--purple);
-        color: var(--purple-neon);
-        box-shadow: var(--glow-purple);
+        border-color: #303030;
+        color: #FFFFFF;
       }
       
       .voice-btn.active {
-        background: var(--purple);
-        border-color: var(--purple);
-        color: white;
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #FFFFFF;
+        color: #FFFFFF;
       }
     `;
     document.head.appendChild(style);

@@ -2008,27 +2008,29 @@ app.post(
   '/api/admin/email/send-purchase',
   requireAdmin,
   async (req, res) => {
-    const { saleId } = req.body || {};
+    const { saleId, toEmail } = req.body || {};
 
     const sale = store.getDb().sales.find(s => s.id === saleId);
     if (!sale) {
       return res.status(404).json({ error: 'not_found', message: 'Venda não encontrada.' });
     }
 
-    if (!sale.buyerContact || !sale.buyerContact.includes('@')) {
-      return res.status(400).json({ error: 'bad_request', message: 'Venda não possui e-mail do cliente.' });
+    const emailAddr = toEmail || sale.buyerEmail || '';
+    if (!emailAddr || !emailAddr.includes('@')) {
+      return res.status(400).json({ error: 'bad_request', message: 'Informe o e-mail do cliente para enviar o comprovante.' });
     }
 
-    const result = await email.sendPurchaseReceipt(sale);
+    const saleForEmail = Object.assign({}, sale, { buyerEmail: emailAddr });
+    const result = await email.sendPurchaseReceipt(saleForEmail);
 
     if (result.ok) {
       if (!sale.emailSent) sale.emailSent = {};
       sale.emailSent.purchase = true;
       store.persistNow();
-      store.addAudit('email_purchase', 'KEY: ' + sale.keyCode, req.ip);
-      res.json({ ok: true, message: 'Comprovante enviado!' });
+      store.addAudit('email_purchase', 'KEY: ' + sale.keyCode + ' -> ' + emailAddr, req.ip);
+      res.json({ ok: true, message: 'Comprovante enviado para ' + emailAddr + '!' });
     } else {
-      res.status(500).json({ error: 'send_failed', message: 'Falha ao enviar e-mail.' });
+      res.status(500).json({ error: 'send_failed', message: 'Falha ao enviar e-mail. Verifique se o Gmail está configurado.' });
     }
   }
 );
@@ -2037,27 +2039,29 @@ app.post(
   '/api/admin/email/send-approval',
   requireAdmin,
   async (req, res) => {
-    const { saleId } = req.body || {};
+    const { saleId, toEmail } = req.body || {};
 
     const sale = store.getDb().sales.find(s => s.id === saleId);
     if (!sale) {
       return res.status(404).json({ error: 'not_found', message: 'Venda não encontrada.' });
     }
 
-    if (!sale.buyerContact || !sale.buyerContact.includes('@')) {
-      return res.status(400).json({ error: 'bad_request', message: 'Venda não possui e-mail do cliente.' });
+    const emailAddr = toEmail || sale.buyerEmail || '';
+    if (!emailAddr || !emailAddr.includes('@')) {
+      return res.status(400).json({ error: 'bad_request', message: 'Informe o e-mail do cliente.' });
     }
 
-    const result = await email.sendApprovalEmail(sale);
+    const saleForEmail = Object.assign({}, sale, { buyerEmail: emailAddr });
+    const result = await email.sendApprovalEmail(saleForEmail);
 
     if (result.ok) {
       if (!sale.emailSent) sale.emailSent = {};
       sale.emailSent.approval = true;
       store.persistNow();
-      store.addAudit('email_approval', 'KEY: ' + sale.keyCode, req.ip);
-      res.json({ ok: true, message: 'E-mail de aprovação enviado!' });
+      store.addAudit('email_approval', 'KEY: ' + sale.keyCode + ' -> ' + emailAddr, req.ip);
+      res.json({ ok: true, message: 'E-mail de aprovação enviado para ' + emailAddr + '!' });
     } else {
-      res.status(500).json({ error: 'send_failed', message: 'Falha ao enviar e-mail.' });
+      res.status(500).json({ error: 'send_failed', message: 'Falha ao enviar e-mail. Verifique se o Gmail está configurado.' });
     }
   }
 );
@@ -2801,19 +2805,7 @@ app.post(
       });
     }
 
-    // Validate price against stored prices if planType provided
     const d = store.getDb();
-    if (planType && d.settings && d.settings.prices) {
-      const planKey = body.planDuration || '';
-      const storedPrice = (d.settings.prices[planType] || {})[planKey] || 0;
-      if (storedPrice > 0 && price !== storedPrice) {
-        return res.status(400).json({
-          error: 'bad_request',
-          message: 'Preço inválido para este plano. Preço correto: R$ ' + storedPrice.toFixed(2)
-        });
-      }
-    }
-
     const admin = d.admins.find(a => a.id === req.adminId);
 
     const sale = store.addSale({
