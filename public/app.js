@@ -392,7 +392,19 @@ async function activateKey(zone) {
     const me = await api("/api/me");
     if (me.user) state.user = me.user;
     applyVipState();
-    toast(r.message.replace(/[✅⏰⚠️❌]\s*/g, "") || "KEY ativada!", false);
+    // mensagem limpa (sem emojis) vinda do backend, ou fallback
+    const cleanMsg = (r.message || "").replace(/[✅⏰⚠️❌]\s*/g, "").trim();
+    toast(cleanMsg || "KEY ativada!", false);
+    // destaque visual: brilho no chip VIP para confirmar ativação
+    try {
+      const chip = document.getElementById("vipChip");
+      if (chip) {
+        chip.style.transition = "transform .3s ease, box-shadow .3s ease";
+        chip.style.transform = "scale(1.15)";
+        chip.style.boxShadow = "0 0 24px rgba(34,197,94,.6)";
+        setTimeout(() => { chip.style.transform = ""; chip.style.boxShadow = ""; }, 1200);
+      }
+    } catch (_) {}
   } else {
     toast((r.message || "❌ KEY inválida ou expirada.").replace(/^[^\wÀ-ÿ]+/, ""), true);
   }

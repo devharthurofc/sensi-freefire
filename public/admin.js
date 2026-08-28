@@ -196,9 +196,19 @@ function renderKeys() {
   tb.innerHTML = '';
   list.forEach(k => {
     const tr = document.createElement('tr');
-    const statusBadge = k.status === 'ativa'
-      ? (k.expired ? '<span class="badge bg-warn">expirada</span>' : '<span class="badge bg-ok">ativa</span>')
-      : '<span class="badge bg-off">inativa</span>';
+    // Status visual: aguardando (dourado), ativa (verde), expirada (amarelo), inativa (cinza)
+    let statusBadge;
+    if (k.status === 'aguardando') {
+      statusBadge = '<span class="badge" style="background:rgba(245,158,11,.18);color:#fbbf24;border:1px solid rgba(245,158,11,.4)">⏳ aguardando</span>';
+    } else if (k.status === 'ativa') {
+      statusBadge = k.expired
+        ? '<span class="badge bg-warn">expirada</span>'
+        : '<span class="badge bg-ok">ativa</span>';
+    } else if (k.status === 'usada' || k.status === 'utilizada') {
+      statusBadge = '<span class="badge" style="background:rgba(59,130,246,.18);color:#60a5fa;border:1px solid rgba(59,130,246,.4)">✓ usada</span>';
+    } else {
+      statusBadge = '<span class="badge bg-off">' + (k.status || 'inativa') + '</span>';
+    }
     const typeBadge = (k.type === 'proibida' || k.type === 'vip')
       ? '<span class="badge bg-warn" style="font-size:.7rem">🔴 PROIBIDA</span>'
       : '<span class="badge bg-owner" style="font-size:.7rem">🟦 PREMIUM</span>';
@@ -208,7 +218,12 @@ function renderKeys() {
       '<td>' + typeBadge + '</td>' +
       '<td>' + statusBadge + '</td>' +
       '<td>' + usesTxt + '</td>' +
-      '<td><input type="date" class="mini-inp exp-inp" value="' + (k.expiresAt ? k.expiresAt.slice(0,10) : '') + '"></td>' +
+      // coluna validade: mostra a data se já foi ativada, ou a duração se está aguardando
+      '<td>' + (
+        k.status === 'aguardando'
+          ? '<span style="color:#fbbf24;font-size:.82rem">⏱️ ' + esc(k.duration || k.plan || '—') + ' <span style="color:var(--muted);font-size:.7rem">(após ativar)</span></span>'
+          : '<input type="date" class="mini-inp exp-inp" value="' + (k.expiresAt ? k.expiresAt.slice(0,10) : '') + '">'
+      ) + '</td>' +
       '<td>' + esc(k.activatedByLabel || '—') + '</td>' +
       '<td><div class="actions">' +
         '<button class="b-gray act cp">Copiar</button>' +

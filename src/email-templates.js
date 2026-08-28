@@ -114,12 +114,12 @@ function purchaseReceipt({ buyerLabel, keyCode, plan, duration, price, soldAt })
   };
 }
 
-function approvalEmail({ buyerLabel, keyCode, plan, expiresAt }) {
+function approvalEmail({ buyerLabel, keyCode, plan, duration, expiresAt }) {
   const content = `
     <div style="text-align:center;margin-bottom:25px;">
       <div style="font-size:48px;margin-bottom:10px;">✅</div>
       <h2 style="margin:0;font-size:20px;color:${COLORS.green};">Pagamento Aprovado!</h2>
-      <p style="margin:8px 0 0;color:${COLORS.muted};font-size:14px;">Sua KEY está ativa e pronta para uso</p>
+      <p style="margin:8px 0 0;color:${COLORS.muted};font-size:14px;">Ative sua KEY no gerador para começar a usar</p>
     </div>
     
     <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.25);border-radius:12px;padding:20px;margin-bottom:20px;text-align:center;">
@@ -134,8 +134,12 @@ function approvalEmail({ buyerLabel, keyCode, plan, expiresAt }) {
           <td style="padding:8px 0;color:${COLORS.accent};font-size:13px;text-align:right;font-weight:600;">${plan || 'N/A'}</td>
         </tr>
         <tr>
-          <td style="padding:8px 0;color:${COLORS.muted};font-size:13px;border-top:1px solid ${COLORS.border};">Válida até</td>
-          <td style="padding:8px 0;color:${COLORS.text};font-size:13px;text-align:right;font-weight:600;border-top:1px solid ${COLORS.border};">${expiresAt ? new Date(expiresAt).toLocaleString('pt-BR') : 'Permanente'}</td>
+          <td style="padding:8px 0;color:${COLORS.muted};font-size:13px;border-top:1px solid ${COLORS.border};">Duração</td>
+          <td style="padding:8px 0;color:${COLORS.text};font-size:13px;text-align:right;font-weight:600;border-top:1px solid ${COLORS.border};">${duration && /perm/i.test(duration) ? 'Permanente' : (duration || plan || 'N/A')}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;color:${COLORS.muted};font-size:13px;border-top:1px solid ${COLORS.border};">Validade</td>
+          <td style="padding:8px 0;color:${COLORS.gold};font-size:12px;text-align:right;font-weight:600;border-top:1px solid ${COLORS.border};">⏱️ Começa a contar quando você ativar a KEY no gerador</td>
         </tr>
       </table>
     </div>
@@ -155,9 +159,9 @@ function approvalEmail({ buyerLabel, keyCode, plan, expiresAt }) {
     </p>`;
 
   return {
-    subject: '✅ AIMZY - Pagamento Aprovado! Sua KEY está ativa',
+    subject: '✅ AIMZY - Pagamento Aprovado! Ative sua KEY no gerador',
     html: baseTemplate('Pagamento Aprovado', content),
-    text: `AIMZY - Pagamento Aprovado!\n\nSua KEY: ${keyCode}\nPlano: ${plan}\nVálida até: ${expiresAt ? new Date(expiresAt).toLocaleString('pt-BR') : 'Permanente'}\n\nComo usar:\n1. Acesse aimzy.com\n2. Clique em "Ativar KEY"\n3. Digite o código acima`
+    text: `AIMZY - Pagamento Aprovado!\n\nSua KEY: ${keyCode}\nPlano: ${plan}\nDuração: ${duration || 'N/A'}\n\n⏱️ O tempo de validade SÓ começa a contar quando você ativar a KEY no gerador.\n\nComo usar:\n1. Acesse aimzy.com\n2. Clique em "Ativar KEY"\n3. Digite o código acima`
   };
 }
 

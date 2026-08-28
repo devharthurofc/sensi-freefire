@@ -29,6 +29,15 @@ alter table public.settings add column if not exists plans jsonb default '[]'::j
 -- 3) Coluna type na tabela keys (Premium / Proibida)
 alter table public.keys add column if not exists type text default 'premium';
 
+-- 3.1) Colunas para o novo fluxo: KEY só conta o tempo quando o cliente ativa
+--      - plan: nome do plano vendido (ex: "7 Dias", "1 Hora")
+--      - plan_type: tipo (premium | proibida)
+--      - duration: duração bruta (ex: "7d", "1h", "30d", "permanent")
+--      - status já existe (text) — passa a aceitar também 'aguardando'
+alter table public.keys add column if not exists plan text default '';
+alter table public.keys add column if not exists plan_type text default '';
+alter table public.keys add column if not exists duration text default '';
+
 -- 4) Tabela de produtos (caso ainda não exista)
 create table if not exists public.products (
   id text primary key,

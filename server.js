@@ -1164,7 +1164,7 @@ app.post(
 
     if (
       !key ||
-      key.status !== 'ativa'
+      (key.status !== 'ativa' && key.status !== 'aguardando')
     ) {
 
       return res.json({
@@ -1242,6 +1242,28 @@ app.post(
     }
 
 
+    // KEY 'aguardando' (vinda de venda aprovada): calcular expiresAt
+    // AGORA com base na duração. O tempo só começa a contar a partir
+    // deste momento em que o cliente está ativando a key no gerador.
+    if (key.status === 'aguardando' || !key.expiresAt) {
+      const ms = store.msFromKeyDuration ? store.msFromKeyDuration(key) : null;
+      // fallback: tentar via msFromPlan se msFromKeyDuration não existir
+      const durMs = ms != null ? ms : (typeof msFromPlan === 'function' ? msFromPlan(key.plan || key.duration || '') : null);
+      key.expiresAt = durMs ? new Date(Date.now() + durMs).toISOString() : null;
+      key.status = 'ativa';
+    }
+
+    // KEY 'aguardando' (vinda de venda aprovada): calcular expiresAt
+    // AGORA com base na duração. O tempo só começa a contar a partir
+    // deste momento em que o cliente está ativando a key no gerador.
+    if (key.status === 'aguardando' || !key.expiresAt) {
+      const ms = store.msFromKeyDuration ? store.msFromKeyDuration(key) : null;
+      // fallback: tentar via msFromPlan se msFromKeyDuration não existir
+      const durMs = ms != null ? ms : (typeof msFromPlan === 'function' ? msFromPlan(key.plan || key.duration || '') : null);
+      key.expiresAt = durMs ? new Date(Date.now() + durMs).toISOString() : null;
+      key.status = 'ativa';
+    }
+
     key.uses += 1;
 
     key.activatedByUserId =
@@ -1266,11 +1288,17 @@ app.post(
     );
 
 
+    // mensagem: se a key foi ativada agora pela primeira vez, reforça
+    // que o tempo começou a contar NESTE momento
+    const wasAguardando = !key.activatedByUserId || key.activatedByUserId !== req.user.id;
+    const successMsg = wasAguardando
+      ? '✅ KEY ativada! O tempo começou a contar agora.'
+      : '✅ KEY ativada com sucesso!';
+
     res.json({
 
       status: 'ok',
-      message:
-        '✅ KEY ativada com sucesso!',
+      message: successMsg,
       user: {
 
         isVip: true,
@@ -3940,22 +3968,31 @@ app.patch(
     if (b.paidAt !== undefined) sale.paidAt = b.paidAt || null;
 
 
-    // Aprovação: gera uma KEY expirando no plano escolhido (ativação única)
+    // Aprovação: gera uma KEY com status "aguardando".
+O tempo de validade SÓ começa a contar quando o cliente ATIVAR a key
+no gerador (POST /api/key/activate). Até lá a key fica 'aguardando'
+e não consome prazo.
     if (sale.status === 'pago' && prevStatus !== 'pago') {
 
       sale.paidAt = sale.paidAt || new Date().toISOString();
 
       if (!sale.keyCode && sale.plan && sale.planType) {
 
-        const ms = msFromPlan(sale.plan);
-
-        const expiresAt = ms ? new Date(Date.now() + ms).toISOString() : null;
-
-        const key = store.createKey({ expiresAt, maxUses: 1, type: sale.planType });
+        const key = store.createKey({
+          expiresAt: null,
+          maxUses: 1,
+          type: sale.planType,
+          status: 'aguardando',
+          plan: sale.plan,
+          planType: sale.planType,
+          duration: sale.plan
+        });
 
         sale.keyCode = key.code;
 
         sale.keyId = key.id;
+
+        sale.expiresAt = null;
 
       }
 

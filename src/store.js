@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 const supabase = require('./lib/supabase');
 const fs = require('fs');
@@ -130,6 +130,14 @@ function hydrate(parsed) {
   if (!Array.isArray(merged.settings.plans)) {
     merged.settings.plans = seedPlansFromPrices(merged.settings.prices);
   }
+  // normaliza keys antigas garantindo os novos campos
+  if (Array.isArray(merged.keys)) {
+    merged.keys.forEach(k => {
+      if (k.plan === undefined) k.plan = '';
+      if (k.planType === undefined) k.planType = canonicalKeyType(k.type);
+      if (k.duration === undefined) k.duration = '';
+    });
+  }
   return merged;
 }
 
@@ -171,7 +179,10 @@ async function fetchRemoteKeys() {
     id: k.id,
     code: k.code,
     type: inferKeyType(k),
-    status: k.status,
+    status: k.status || 'ativa',
+    plan: k.plan || '',
+    planType: k.plan_type || canonicalKeyType(k.type),
+    duration: k.duration || '',
     createdAt: k.created_at,
     expiresAt: k.expires_at || null,
     maxUses: k.max_uses || 0,
@@ -337,6 +348,9 @@ function toKeyRow(k) {
     code: k.code,
     type: canonicalKeyType(k.type),
     status: k.status,
+    plan: k.plan || '',
+    plan_type: k.planType || canonicalKeyType(k.type),
+    duration: k.duration || '',
     created_at: k.createdAt,
     expires_at: k.expiresAt || null,
     max_uses: k.maxUses || 0,
@@ -895,13 +909,16 @@ function generateKeyCode() {
   return code;
 }
 
-function createKey({ expiresAt = null, maxUses = 1, type = 'premium' }) {
+function createKey({ expiresAt = null, maxUses = 1, type = 'premium', status = 'ativa', plan = '', planType = '', duration = '' } = {}) {
   const code = generateKeyCode();
   const key = {
     id: id('key'),
     code,
     type: canonicalKeyType(type),
-    status: 'ativa',
+    status: status || 'ativa',
+    plan: plan || '',
+    planType: planType || canonicalKeyType(type),
+    duration: duration || '',
     createdAt: new Date().toISOString(),
     expiresAt: expiresAt || null,
     maxUses: Number.isInteger(maxUses) && maxUses > 0 ? maxUses : 0,
@@ -931,6 +948,23 @@ function deleteKey(keyId) {
 
 function isKeyExpired(key) {
   return !!(key.expiresAt && new Date(key.expiresAt).getTime() <= Date.now());
+}
+
+/* Calcula o tempo de dura\u00e7\u00e3o a partir do campo duration da key (1h, 7d, 30d, permanent, etc)
+ * Retorna null para permanente / n\u00e3o reconhecido. */
+function msFromKeyDuration(key) {
+  if (!key) return null;
+  const dur = String(key.duration || '').toLowerCase().trim();
+  if (!dur || dur.includes('perm') || dur === 'eterno' || dur === 'vitalicio' || dur === 'permanent') return null;
+  const m = dur.match(/(\d+)\s*(h|horas?|d|dias?|semana?s?|meses?|anos?)/);
+  if (!m) return null;
+  const n = Number(m[1]);
+  const u = m[2];
+  if (u === 'h' || u.startsWith('hor')) return n * 36e5;
+  if (u.startsWith('d') || u.startsWith('sem')) return n * 864e5;
+  if (u.startsWith('mes')) return n * 30 * 864e5;
+  if (u.startsWith('ano')) return n * 365 * 864e5;
+  return null;
 }
 
 function keyUsesLeft(key) {
@@ -1315,6 +1349,7 @@ module.exports = {
   deleteKey,
   isKeyExpired,
   keyUsesLeft,
+  msFromKeyDuration,
 
   addGeneration,
   countFreeToday,

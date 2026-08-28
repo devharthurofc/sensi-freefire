@@ -106,6 +106,7 @@ async function sendApprovalEmail(sale) {
     buyerLabel: sale.buyerLabel,
     keyCode: sale.keyCode,
     plan: sale.plan || sale.planType,
+    duration: sale.plan,
     expiresAt: sale.expiresAt
   });
 
