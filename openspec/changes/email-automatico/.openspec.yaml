@@ -1,0 +1,14 @@
+name: email-automatico
+description: Sistema de envio automático de e-mails para comprovantes, aprovações e lembretes de expiração
+schema: spec-driven
+skip_specs: false
+
+artifacts:
+  proposal:
+    done: true
+  specs:
+    done: true
+  design:
+    done: true
+  tasks:
+    done: true

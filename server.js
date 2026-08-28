@@ -10,6 +10,8 @@ const express = require('express');
 const store = require('./src/store');
 const engine = require('./src/engine');
 const devices = require('./src/devices');
+const email = require('./src/email');
+const emailScheduler = require('./src/email-scheduler');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -1960,6 +1962,106 @@ app.post(
   }
 );
 
+/* ================= e-mails automáticos ================= */
+
+app.post(
+  '/api/admin/test-email',
+  requireAdmin,
+  async (req, res) => {
+    const { email: to } = req.body || {};
+
+    if (!to || !to.includes('@')) {
+      return res.status(400).json({
+        error: 'bad_request',
+        message: 'Informe um e-mail válido.'
+      });
+    }
+
+    const result = await email.sendTestEmail(to);
+
+    if (result.ok) {
+      store.addAudit('email_test', 'Enviado para: ' + to, req.ip);
+      res.json({ ok: true, message: 'E-mail de teste enviado!' });
+    } else {
+      res.status(500).json({
+        error: 'send_failed',
+        message: 'Falha ao enviar e-mail. Verifique as configurações do Gmail.'
+      });
+    }
+  }
+);
+
+app.get(
+  '/api/admin/email-status',
+  requireAdmin,
+  (req, res) => {
+    res.json({
+      email: email.getStatus(),
+      scheduler: {
+        running: emailScheduler.isRunning()
+      }
+    });
+  }
+);
+
+app.post(
+  '/api/admin/email/send-purchase',
+  requireAdmin,
+  async (req, res) => {
+    const { saleId } = req.body || {};
+
+    const sale = store.getDb().sales.find(s => s.id === saleId);
+    if (!sale) {
+      return res.status(404).json({ error: 'not_found', message: 'Venda não encontrada.' });
+    }
+
+    if (!sale.buyerContact || !sale.buyerContact.includes('@')) {
+      return res.status(400).json({ error: 'bad_request', message: 'Venda não possui e-mail do cliente.' });
+    }
+
+    const result = await email.sendPurchaseReceipt(sale);
+
+    if (result.ok) {
+      if (!sale.emailSent) sale.emailSent = {};
+      sale.emailSent.purchase = true;
+      store.persistNow();
+      store.addAudit('email_purchase', 'KEY: ' + sale.keyCode, req.ip);
+      res.json({ ok: true, message: 'Comprovante enviado!' });
+    } else {
+      res.status(500).json({ error: 'send_failed', message: 'Falha ao enviar e-mail.' });
+    }
+  }
+);
+
+app.post(
+  '/api/admin/email/send-approval',
+  requireAdmin,
+  async (req, res) => {
+    const { saleId } = req.body || {};
+
+    const sale = store.getDb().sales.find(s => s.id === saleId);
+    if (!sale) {
+      return res.status(404).json({ error: 'not_found', message: 'Venda não encontrada.' });
+    }
+
+    if (!sale.buyerContact || !sale.buyerContact.includes('@')) {
+      return res.status(400).json({ error: 'bad_request', message: 'Venda não possui e-mail do cliente.' });
+    }
+
+    const result = await email.sendApprovalEmail(sale);
+
+    if (result.ok) {
+      if (!sale.emailSent) sale.emailSent = {};
+      sale.emailSent.approval = true;
+      store.persistNow();
+      store.addAudit('email_approval', 'KEY: ' + sale.keyCode, req.ip);
+      res.json({ ok: true, message: 'E-mail de aprovação enviado!' });
+    } else {
+      res.status(500).json({ error: 'send_failed', message: 'Falha ao enviar e-mail.' });
+    }
+  }
+);
+
 /* ================= dashboard ================= */
 
 app.get(
@@ -2735,6 +2837,12 @@ app.post(
       req.ip
     );
 
+    if (buyerContact && buyerContact.includes('@')) {
+      email.sendPurchaseReceipt(sale).catch(err => {
+        console.error('[email] Falha ao enviar comprovante:', err.message);
+      });
+    }
+
     res.json({ sale });
   }
 );
@@ -2777,6 +2885,12 @@ app.patch(
       const admin = d.admins.find(a => a.id === req.adminId);
       sale.sellerAdminName = admin ? admin.username : '';
       store.addAudit('sale_approved', sale.keyCode || sale.id, req.ip);
+
+      if (sale.buyerContact && sale.buyerContact.includes('@')) {
+        email.sendApprovalEmail(sale).catch(err => {
+          console.error('[email] Falha ao enviar aprovação:', err.message);
+        });
+      }
     } else if (sale.status === 'pendente' && prevStatus === 'pago') {
       store.addAudit('sale_rejected', sale.id, req.ip);
     }
@@ -3161,6 +3275,9 @@ process.on(
     await store.init();
 
     ensureDefaultAdmin();
+
+    email.init();
+    emailScheduler.start(store);
 
     const PANEL_PATH =
       ensurePanelPath();
