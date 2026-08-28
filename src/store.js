@@ -1151,10 +1151,10 @@ function updateSale(saleId, patch) {
   return sale;
 }
 
-function deleteSale(saleId) {
+async function deleteSale(saleId) {
   const d = getDb();
   const i = d.sales.findIndex(s => s.id === saleId);
-  if (i >= 0) { d.sales.splice(i, 1); persistNow(); return true; }
+  if (i >= 0) { d.sales.splice(i, 1); await persistNow(); return true; }
   return false;
 }
 

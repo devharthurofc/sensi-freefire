@@ -2905,7 +2905,7 @@ app.delete(
   '/api/admin/sales/:id',
   requireAdmin,
   (req, res) => {
-    const ok = store.deleteSale(req.params.id);
+    const ok = await store.deleteSale(req.params.id);
     if (!ok) {
       return res.status(404).json({ error: 'not_found' });
     }
