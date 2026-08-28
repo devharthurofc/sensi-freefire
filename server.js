@@ -1977,15 +1977,19 @@ app.post(
       });
     }
 
+    console.log('[email] Teste solicitado para:', to);
+    console.log('[email] Status:', email.getStatus());
+
     const result = await email.sendTestEmail(to);
 
     if (result.ok) {
       store.addAudit('email_test', 'Enviado para: ' + to, req.ip);
-      res.json({ ok: true, message: 'E-mail de teste enviado!' });
+      res.json({ ok: true, message: 'E-mail de teste enviado! Verifique sua caixa de entrada e spam.' });
     } else {
+      console.error('[email] Falha no teste:', result.error);
       res.status(500).json({
         error: 'send_failed',
-        message: 'Falha ao enviar e-mail. Verifique as configurações do Gmail.'
+        message: 'Falha ao enviar e-mail. Verifique: 1) Gmail User/Senha de app no .env 2) Autenticação em 2 etapas ativa 3) Senha de app válida'
       });
     }
   }
@@ -2021,6 +2025,7 @@ app.post(
     }
 
     const saleForEmail = Object.assign({}, sale, { buyerEmail: emailAddr });
+    console.log('[email] Enviando comprovante para:', emailAddr, 'Venda:', sale.id);
     const result = await email.sendPurchaseReceipt(saleForEmail);
 
     if (result.ok) {
@@ -2030,7 +2035,8 @@ app.post(
       store.addAudit('email_purchase', 'KEY: ' + sale.keyCode + ' -> ' + emailAddr, req.ip);
       res.json({ ok: true, message: 'Comprovante enviado para ' + emailAddr + '!' });
     } else {
-      res.status(500).json({ error: 'send_failed', message: 'Falha ao enviar e-mail. Verifique se o Gmail está configurado.' });
+      console.error('[email] Falha ao enviar comprovante:', result.error);
+      res.status(500).json({ error: 'send_failed', message: 'Falha ao enviar e-mail. Verifique: 1) Gmail User/Senha de app no .env 2) Autenticação em 2 etapas ativa 3) Senha de app válida' });
     }
   }
 );

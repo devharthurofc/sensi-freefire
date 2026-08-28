@@ -39,9 +39,23 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-h
 h1,h2,h3,.font-display{font-weight:700;letter-spacing:-0.02em}
 
 .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:-1}
-.bg-glow{position:fixed;width:500px;height:500px;border-radius:50%;filter:blur(180px);opacity:0.06;pointer-events:none;z-index:-1}
-.bg-glow.g1{background:#1a1a1a;top:-200px;left:-200px}
-.bg-glow.g2{background:#1a1a1a;bottom:-200px;right:-200px;opacity:0.04}
+.bg-glow{position:fixed;width:500px;height:500px;border-radius:50%;filter:blur(180px);opacity:0.06;pointer-events:none;z-index:-1;animation:glowDrift 12s ease-in-out infinite}
+.bg-glow.g1{background:#1a1a1a;top:-200px;left:-200px;animation-delay:0s}
+.bg-glow.g2{background:#1a1a1a;bottom:-200px;right:-200px;opacity:0.04;animation-delay:4s}
+.bg-glow.g3{background:#ffffff;bottom:20%;left:40%;width:300px;height:300px;opacity:0.02;animation-delay:8s}
+
+@keyframes glowDrift{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(40px,-30px) scale(1.1)}
+  66%{transform:translate(-30px,40px) scale(0.9)}
+}
+
+/* Floating grid pulse */
+.bg-grid{animation:gridPulse 8s ease-in-out infinite}
+@keyframes gridPulse{
+  0%,100%{opacity:1}
+  50%{opacity:0.5}
+}
 #bgParticles{position:fixed;inset:0;z-index:-2;pointer-events:none}
 .wrap{max-width:1080px;margin:0 auto;padding:24px 18px 60px}
 
@@ -255,11 +269,31 @@ footer{text-align:center;margin-top:44px;color:var(--text-muted);font-size:.82re
 footer b{color:var(--text-secondary)}
 
 /* Welcome Screen */
-.welcome-screen{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s ease, visibility .5s ease}
+.welcome-screen{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s ease, visibility .5s ease;overflow:hidden}
 .welcome-screen.hidden{opacity:0;visibility:hidden;pointer-events:none}
-.welcome-logo{font-size:clamp(3rem,8vw,6rem);font-weight:900;color:#fff;margin-bottom:16px;opacity:0;transform:translateY(20px);animation:welcomeFadeIn .8s ease .2s forwards}
-.welcome-sub{color:#71717A;font-size:1rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:40px;opacity:0;animation:welcomeFadeIn .8s ease .4s forwards}
-.welcome-enter{background:#fff;color:#000;border:none;padding:16px 40px;border-radius:14px;font-weight:700;font-size:1rem;cursor:pointer;transition:all .3s;opacity:0;animation:welcomeFadeIn .8s ease .6s forwards;letter-spacing:.06em}
+
+/* Animated orbs */
+.welcome-screen .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0;animation:orbFloat 8s ease-in-out infinite, orbFadeIn 1.5s ease forwards}
+.welcome-screen .orb-1{width:400px;height:400px;background:rgba(255,255,255,0.04);top:-10%;left:-10%;animation-delay:0s}
+.welcome-screen .orb-2{width:300px;height:300px;background:rgba(255,255,255,0.03);bottom:-5%;right:-5%;animation-delay:1.5s}
+.welcome-screen .orb-3{width:200px;height:200px;background:rgba(255,255,255,0.025);top:40%;left:60%;animation-delay:3s}
+.welcome-screen .orb-4{width:150px;height:150px;background:rgba(255,255,255,0.02);top:20%;right:30%;animation-delay:4.5s}
+
+@keyframes orbFloat{
+  0%,100%{transform:translate(0,0) scale(1)}
+  25%{transform:translate(30px,-20px) scale(1.1)}
+  50%{transform:translate(-20px,30px) scale(0.95)}
+  75%{transform:translate(20px,15px) scale(1.05)}
+}
+@keyframes orbFadeIn{to{opacity:1}}
+
+/* Scan line */
+.welcome-screen::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.01) 2px,rgba(255,255,255,0.01) 4px);pointer-events:none;animation:scanMove 6s linear infinite}
+@keyframes scanMove{from{transform:translateY(-100%)}to{transform:translateY(100%)}}
+
+.welcome-logo{font-size:clamp(3rem,8vw,6rem);font-weight:900;color:#fff;margin-bottom:16px;opacity:0;transform:translateY(20px);animation:welcomeFadeIn .8s ease .2s forwards;position:relative;z-index:1;text-shadow:0 0 60px rgba(255,255,255,0.15)}
+.welcome-sub{color:#71717A;font-size:1rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:40px;opacity:0;animation:welcomeFadeIn .8s ease .4s forwards;position:relative;z-index:1}
+.welcome-enter{background:#fff;color:#000;border:none;padding:16px 40px;border-radius:14px;font-weight:700;font-size:1rem;cursor:pointer;transition:all .3s;opacity:0;animation:welcomeFadeIn .8s ease .6s forwards;letter-spacing:.06em;position:relative;z-index:1}
 .welcome-enter:hover{box-shadow:0 8px 30px rgba(255,255,255,0.25);transform:translateY(-2px)}
 @keyframes welcomeFadeIn{to{opacity:1;transform:translateY(0)}}
 
@@ -291,6 +325,10 @@ footer b{color:var(--text-secondary)}
 
 <!-- WELCOME SCREEN -->
 <div class="welcome-screen" id="welcomeScreen">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
   <div class="welcome-logo">AIMZY</div>
   <div class="welcome-sub">Sua sensibilidade. Seu melhor desempenho.</div>
   <button class="welcome-enter" id="welcomeEnter">ENTRAR NO AIMZY</button>
@@ -299,6 +337,7 @@ footer b{color:var(--text-secondary)}
 <div class="bg-grid"></div>
 <div class="bg-glow g1"></div>
 <div class="bg-glow g2"></div>
+<div class="bg-glow g3"></div>
 
 <!-- NAVBAR -->
 <nav class="navbar" id="navbar">
@@ -336,35 +375,35 @@ footer b{color:var(--text-secondary)}
 
 <!-- TIER SELECTOR -->
 <nav class="modes" id="modes">
-  <button class="mode-card normal active" data-tier="normal">
+  <button class="mode-card normal active animate-fadeInUp" data-tier="normal" style="animation-delay:0.1s">
     <span class="mode-badge mb-free">Grátis</span>
     <span class="emoji">🎯</span>
     <h3>AIMZY NORMAL</h3>
     <p>Equilibrada e fácil de se adaptar. Para todos os jogadores.</p>
   </button>
-  <button class="mode-card premium" data-tier="premium">
+  <button class="mode-card premium animate-fadeInUp" data-tier="premium" style="animation-delay:0.2s">
     <span class="mode-badge mb-key">Key VIP</span>
     <span class="emoji">⭐</span>
     <h3>AIMZY PREMIUM</h3>
     <p>Refinada com o perfil do seu aparelho e o seu estilo de jogo.</p>
   </button>
-  <button class="mode-card vip" data-tier="proibida">
+  <button class="mode-card vip animate-fadeInUp" data-tier="proibida" style="animation-delay:0.3s">
     <span class="mode-badge mb-proib">Key VIP</span>
     <span class="emoji">🔥</span>
     <h3>AIMZY VIP</h3>
     <p>AGRESSIVA. Drag insano pra quem já tem controle. Exige treino.</p>
   </button>
-  <button class="mode-card normal" data-tier="emulador">
+  <button class="mode-card emulator animate-fadeInUp" data-tier="emulator" style="animation-delay:0.4s">
     <span class="mode-badge mb-free">Grátis</span>
     <span class="emoji">🖥️</span>
-    <h3>AIMZY EMULADOR</h3>
-    <p>Para PC: BlueStacks, GameLoop, LDPlayer e MSI. Não precisa de KEY.</p>
+    <h3>AIMZY EMULATOR</h3>
+    <p>Para quem joga no PC. Sensibilidade calibrada para mouse.</p>
   </button>
 </nav>
 
 <!-- GENERATOR -->
 <section class="panel" id="generator">
-  <div class="hero">
+  <div class="hero animate-fadeInUp" style="animation-delay:0.5s">
     <h2 id="heroTitle"><em>AIMZY NORMAL</em></h2>
     <p id="heroDesc">Configuração equilibrada gerada na hora. Informe o modelo do seu celular e comece.</p>
   </div>
@@ -495,7 +534,7 @@ footer b{color:var(--text-secondary)}
 </section>
 
 <!-- BENEFITS -->
-<section id="benefits" style="margin-top:48px">
+<section id="benefits" class="animate-fadeInUp" style="margin-top:48px">
   <div class="section-title">Benefícios</div>
   <div class="tips-grid">
     <div class="tip-card">
@@ -593,7 +632,7 @@ footer b{color:var(--text-secondary)}
 </section>
 
 <!-- PLANS -->
-<section style="margin-top:44px;padding:24px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:16px;text-align:center" id="plans">
+<section class="animate-fadeInUp" style="margin-top:44px;padding:24px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:16px;text-align:center" id="plans">
   <div class="section-title" style="justify-content:center;font-size:1.1rem;color:var(--text)">
     Planos AIMZY Premium e VIP
   </div>
@@ -605,7 +644,7 @@ footer b{color:var(--text-secondary)}
 </section>
 
 <!-- FAQ -->
-<section style="margin-top:40px" id="faq">
+<section class="animate-fadeInUp" style="margin-top:40px" id="faq">
   <div class="section-title">Perguntas Frequentes</div>
   <div class="faq-list">
     <div class="faq-item">
@@ -741,6 +780,11 @@ footer b{color:var(--text-secondary)}
   </div>
 </div>
 
+<script>
+// Block app.js from showing name modal until welcome is dismissed
+window.__welcomeDismissed = false;
+window.__pendingShowNameModal = false;
+</script>
 <script src="/particles.js"></script>
 <script src="/js/cursor.js"></script>
 <script src="/js/animations.js"></script>
@@ -752,9 +796,13 @@ document.getElementById('welcomeEnter').addEventListener('click', function() {
   var ws = document.getElementById('welcomeScreen');
   ws.classList.add('hidden');
   setTimeout(function() { ws.style.display = 'none'; }, 500);
+  window.__welcomeDismissed = true;
   if (window.AIMZYVoice) {
     AIMZYVoice.playSound();
     AIMZYVoice.playWelcome();
+  }
+  if (window.__pendingShowNameModal) {
+    setTimeout(function() { showNameModal(); }, 600);
   }
 });
 
@@ -770,7 +818,6 @@ window.addEventListener('scroll', function() {
 
 // Hamburger menu
 document.getElementById('hamburgerBtn').addEventListener('click', function() {
-  // Simple alert for now - can be expanded to mobile menu
   alert('Menu mobile - Implementar');
 });
 

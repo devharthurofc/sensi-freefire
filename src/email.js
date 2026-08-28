@@ -163,9 +163,9 @@ async function sendTestEmail(to) {
 <!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"></head>
-<body style="background:#080404;color:#f5f0ee;font-family:sans-serif;padding:40px;text-align:center;">
-  <h1 style="color:#dc2626;">🎯 AIMZY</h1>
-  <p style="color:#a89f9c;">Se você recebeu este e-mail, a configuração está funcionando!</p>
+<body style="background:#000000;color:#FFFFFF;font-family:sans-serif;padding:40px;text-align:center;">
+  <h1 style="color:#FFFFFF;">🎯 AIMZY</h1>
+  <p style="color:#71717A;">Se você recebeu este e-mail, a configuração está funcionando!</p>
   <p style="color:#22c55e;font-weight:bold;">✅ E-mails automáticos configurados com sucesso</p>
 </body>
 </html>`,

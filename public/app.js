@@ -972,7 +972,12 @@ document.getElementById("accPwBtn").addEventListener("click", async function() {
     if (cn2) cn2.textContent = state.user.label;
     if (cc2) cc2.style.display = "inline-flex";
   } else {
-    showNameModal();
+    // Defer name modal until welcome screen is dismissed
+    if (window.__welcomeDismissed) {
+      showNameModal();
+    } else {
+      window.__pendingShowNameModal = true;
+    }
   }
 
   switchTier(state.tier);
