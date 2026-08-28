@@ -326,6 +326,7 @@ function toUserRow(u) {
     vip_source: u.vipSource || null,
     vip_key_id: u.vipKeyId || null,
     vip_since: u.vipSince || null,
+    vip_type: u.vipType || 'premium',
     created_at: u.createdAt,
     last_seen_at: u.lastSeenAt
   };

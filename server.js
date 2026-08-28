@@ -398,7 +398,7 @@ function refreshUserVip(user) {
 
   if (
     !key ||
-    key.status !== 'ativa' ||
+    (key.status !== 'ativa' && key.status !== 'aguardando') ||
     store.isKeyExpired(key)
   ) {
 
@@ -1241,17 +1241,6 @@ app.post(
 
     }
 
-
-    // KEY 'aguardando' (vinda de venda aprovada): calcular expiresAt
-    // AGORA com base na duração. O tempo só começa a contar a partir
-    // deste momento em que o cliente está ativando a key no gerador.
-    if (key.status === 'aguardando' || !key.expiresAt) {
-      const ms = store.msFromKeyDuration ? store.msFromKeyDuration(key) : null;
-      // fallback: tentar via msFromPlan se msFromKeyDuration não existir
-      const durMs = ms != null ? ms : (typeof msFromPlan === 'function' ? msFromPlan(key.plan || key.duration || '') : null);
-      key.expiresAt = durMs ? new Date(Date.now() + durMs).toISOString() : null;
-      key.status = 'ativa';
-    }
 
     // KEY 'aguardando' (vinda de venda aprovada): calcular expiresAt
     // AGORA com base na duração. O tempo só começa a contar a partir
@@ -3969,9 +3958,9 @@ app.patch(
 
 
     // Aprovação: gera uma KEY com status "aguardando".
-O tempo de validade SÓ começa a contar quando o cliente ATIVAR a key
-no gerador (POST /api/key/activate). Até lá a key fica 'aguardando'
-e não consome prazo.
+    // O tempo de validade SÓ começa a contar quando o cliente ATIVAR a key
+    // no gerador (POST /api/key/activate). Até lá a key fica 'aguardando'
+    // e não consome prazo.
     if (sale.status === 'pago' && prevStatus !== 'pago') {
 
       sale.paidAt = sale.paidAt || new Date().toISOString();
