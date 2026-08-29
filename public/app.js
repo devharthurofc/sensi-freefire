@@ -46,6 +46,58 @@ const TIER_INFO = {
   }
 };
 
+const HUD_DATA = {
+  "2dedos": {
+    title: "HUDs 2 Dedos",
+    desc: "Ideal para iniciantes e Instaplayer. Conforto e facilidade de adaptação.",
+    huds: [
+      { name: "HUD 2 Dedos Atualizado", author: "愛┇Ʀiᴄᴀʀᴅᴏㅤ", code: "COLE_AQUI_SEU_CODIGO_HUD_2_DEDOS_ATUALIZADO", likes: 16, tags: ["2 dedos", "atualizado", "mobile"], desc: "Layout moderno para 2 dedos, fácil de acostumar" },
+      { name: "2 Dedos Básico", author: "Wtomaz 2dedos", code: "COLE_AQUI_SEU_CODIGO_2_DEDOS_BASICO", likes: 38, tags: ["2 dedos", "básico", "iniciante"], desc: "HUD simples para quem está começando" },
+      { name: "HUD 2 Dedos Fácil de Acostumar", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_2_DEDOS_FACIL", likes: 24, tags: ["2 dedos", "fácil", "adaptação"], desc: "Focado em adaptação rápida" },
+      { name: "HUD 2 Dedos Versão Atualizada 2026", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_2_DEDOS_2026", likes: 31, tags: ["2 dedos", "2026", "atualizado"], desc: "Layout otimizado para a meta atual" },
+      { name: "HUD para Quem Quer Evoluir", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_EVOLUIR", likes: 42, tags: ["2 dedos", "evolução", "treino"], desc: "Design para melhorar mira e movimentação" },
+      { name: "HUD 2 Dedos Conforto Total", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_CONFORTO", likes: 19, tags: ["2 dedos", "conforto", "casual"], desc: "Botões grandes e bem espaçados" }
+    ]
+  },
+  "3dedos": {
+    title: "HUDs 3 Dedos",
+    desc: "Equilíbrio entre mobilidade e precisão. Popular no competitivo.",
+    huds: [
+      { name: "HUD 3 Dedos Competitivo", author: "Pro Player BR", code: "COLE_AQUI_SEU_CODIGO_3_DEDOS_COMP", likes: 87, tags: ["3 dedos", "competitivo", "ranqueada"], desc: "Usado por jogadores de alto nível" },
+      { name: "HUD 3 Dedos Drag Rápido", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_3_DEDOS_DRAG", likes: 56, tags: ["3 dedos", "drag", "agressivo"], desc: "Otimizado para drag headshot" },
+      { name: "HUD 3 Dedos Equilibrado", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_3_DEDOS_EQ", likes: 43, tags: ["3 dedos", "equilibrado", "versátil"], desc: "Funciona bem em todas as armas" },
+      { name: "HUD 3 Dedos Instaplayer", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_3_DEDOS_INSTA", likes: 34, tags: ["3 dedos", "instaplayer", "tela pequena"], desc: "Adaptado para telas menores" },
+      { name: "HUD 3 Dedos Híbrido", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_3_DEDOS_HIBRIDO", likes: 29, tags: ["3 dedos", "híbrido", "misto"], desc: "Mistura de 2 e 3 dedos para transição" }
+    ]
+  },
+  "4dedos": {
+    title: "HUDs 4 Dedos",
+    desc: "Controle total para avançados. Ranqueadas e campeonatos.",
+    huds: [
+      { name: "HUD 4 Dedos Tryhard", author: "Tryhard BR", code: "COLE_AQUI_SEU_CODIGO_4_DEDOS_TRYHARD", likes: 156, tags: ["4 dedos", "tryhard", "pro"], desc: "Layout de jogador profissional" },
+      { name: "HUD 4 Dedos Fácil Rápido Sem Frescura", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_4_DEDOS_FACIL", likes: 98, tags: ["4 dedos", "fácil", "rápido"], desc: "Simples mas eficiente" },
+      { name: "HUD 4 Dedos Básico Fácil de Acostumar", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_4_DEDOS_BASICO", likes: 67, tags: ["4 dedos", "básico", "iniciante avançado"], desc: "Para quem está migrando de 3 dedos" },
+      { name: "HUD 4 Dedos Agressivo", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_4_DEDOS_AGRESSIVO", likes: 74, tags: ["4 dedos", "agressivo", "rush"], desc: "Botão de tiro grande, mira rápida" },
+      { name: "HUD 4 Dedos Precisão Cirúrgica", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_4_DEDOS_PRECISAO", likes: 52, tags: ["4 dedos", "precisão", "headshot"], desc: "Foco total em mira e controle" },
+      { name: "HUD 4 Dedos Estilo Livre", author: "uripaze", code: "COLE_AQUI_SEU_CODIGO_URIPAZE", likes: 41, tags: ["4 dedos", "estilo livre", "custom"], desc: "Layout único do jogador uripaze" }
+    ]
+  },
+  "famosos": {
+    title: "HUDs de Famosos",
+    desc: "Layouts de jogadores conhecidos, streamers e pro players.",
+    huds: [
+      { name: "HUD do Freitas 2026", author: "Freitas", code: "COLE_AQUI_CODIGO_HUD_FREITAS", likes: 234, tags: ["famoso", "freitas", "streamer"], desc: "HUD do streamer Freitas (atualizado 2026)" },
+      { name: "HUD do Nobru", author: "Nobru", code: "COLE_AQUI_CODIGO_HUD_NOBRU", likes: 189, tags: ["famoso", "nobru", "pro player"], desc: "Layout do campeão mundial Nobru" },
+      { name: "HUD do BAK", author: "BAK", code: "COLE_AQUI_CODIGO_HUD_BAK", likes: 167, tags: ["famoso", "bak", "streamer"], desc: "HUD do streamer BAK" },
+      { name: "HUD do Cerol", author: "Cerol", code: "COLE_AQUI_CODIGO_HUD_CEROL", likes: 145, tags: ["famoso", "cerol", "influenciador"], desc: "Configuração do Cerol" },
+      { name: "HUD do Modéstia", author: "Modéstia", code: "COLE_AQUI_CODIGO_HUD_MODESTIA", likes: 123, tags: ["famoso", "modéstia", "youtuber"], desc: "HUD do youtuber Modéstia" },
+      { name: "HUD do Luqueta", author: "Luqueta", code: "COLE_AQUI_CODIGO_HUD_LUQUETA", likes: 112, tags: ["famoso", "luqueta", "pro"], desc: "Layout do jogador Luqueta" },
+      { name: "HUD do Cauan7", author: "Cauan7", code: "COLE_AQUI_CODIGO_HUD_CAUAN", likes: 98, tags: ["famoso", "cauan7", "streamer"], desc: "Config do streamer Cauan7" },
+      { name: "HUD do GGWS", author: "GGWS", code: "COLE_AQUI_CODIGO_HUD_GGWS", likes: 87, tags: ["famoso", "ggws", "time"], desc: "HUD do time GGWS" }
+    ]
+  }
+};
+
 const state = {
   token: null,
   user: { id: null, label: null, isVip: false },
@@ -233,6 +285,129 @@ function fmtResult(r) {
 document.querySelectorAll("#modes .mode-card").forEach(btn => {
   btn.addEventListener("click", () => switchTier(btn.dataset.tier));
 });
+
+/* ================== HUD TABS ================== */
+
+function initHudTabs() {
+  const hudTabs = document.querySelectorAll("#hudTabs .hud-tab");
+  const hudSection = document.getElementById("hudSection");
+  const hudGrid = document.getElementById("hudGrid");
+  const hudHeroTitle = document.getElementById("hudHeroTitle");
+  const hudHeroDesc = document.getElementById("hudHeroDesc");
+
+  let currentHudTab = "2dedos";
+
+  function renderHudGrid(tabKey) {
+    const data = HUD_DATA[tabKey];
+    if (!data) return;
+    hudGrid.innerHTML = "";
+    data.huds.forEach((hud, idx) => {
+      const card = el("div", "sensi-card hud-card");
+      card.style.cursor = "pointer";
+      card.innerHTML = `
+        <div class="label" style="display:flex;align-items:center;gap:6px;justify-content:space-between">
+          <span>${escapeHtml(hud.name)}</span>
+          <span style="font-size:.6rem;font-weight:800;color:var(--text-muted);background:rgba(255,255,255,.05);padding:2px 6px;border-radius:99px">${escapeHtml(hud.tags.join(" · "))}</span>
+        </div>
+        <div class="value" style="font-size:1.3rem;margin:8px 0">${hud.likes} ❤️</div>
+        <div style="color:var(--text-muted);font-size:.8rem;margin-bottom:8px">${escapeHtml(hud.desc)}</div>
+        <div style="color:var(--text-muted);font-size:.7rem;margin-bottom:10px">Por ${escapeHtml(hud.author)}</div>
+        <div style="background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:10px;font-family:monospace;font-size:.75rem;color:var(--text-secondary);overflow-x:auto;white-space:nowrap;max-height:60px" class="hud-code">${escapeHtml(hud.code)}</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm copy-hud-btn" data-code="${escapeHtml(hud.code).replace(/"/g, '"')}">📋 Copiar Código</button>
+          <button class="btn btn-red btn-sm like-hud-btn" data-likes="${hud.likes}" data-name="${escapeHtml(hud.name)}">❤️ ${hud.likes}</button>
+        </div>
+      `;
+      hudGrid.appendChild(card);
+    });
+
+    // Attach copy handlers
+    hudGrid.querySelectorAll(".copy-hud-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const code = btn.dataset.code;
+        if (code === "COLE_AQUI_SEU_CODIGO_HUD_2_DEDOS_ATUALIZADO" || code.startsWith("COLE_AQUI")) {
+          toast("Este é um placeholder — substitua pelo código real do HUD no app.js", true);
+          return;
+        }
+        copyText(code, "Código do HUD copiado!");
+      });
+    });
+
+    hudGrid.querySelectorAll(".like-hud-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const newLikes = parseInt(btn.dataset.likes) + 1;
+        btn.dataset.likes = newLikes;
+        btn.textContent = "❤️ " + newLikes;
+        btn.disabled = true;
+        btn.style.opacity = "0.7";
+        toast("Obrigado por curtir! ❤️");
+      });
+    });
+  }
+
+  function switchHudTab(tabKey) {
+    currentHudTab = tabKey;
+    const data = HUD_DATA[tabKey];
+    hudTabs.forEach(b => b.classList.toggle("active", b.dataset.hud === tabKey));
+    hudHeroTitle.innerHTML = "<em>" + data.title + "</em>";
+    hudHeroDesc.textContent = data.desc;
+    renderHudGrid(tabKey);
+  }
+
+  hudTabs.forEach(btn => {
+    btn.addEventListener("click", () => switchHudTab(btn.dataset.hud));
+  });
+
+  // Show HUD section when user clicks a special trigger or we can add it to navigation
+  // For now, let's add a HUD button in the header chips area
+}
+
+function showHudSection() {
+  const hudSection = document.getElementById("hudSection");
+  const hudTabs = document.getElementById("hudTabs");
+  const generator = document.getElementById("generator");
+  const vipExtras = document.getElementById("vipExtras");
+  const benefits = document.getElementById("benefits");
+
+  // Hide other main sections
+  generator.style.display = "none";
+  if (vipExtras) vipExtras.style.display = "none";
+  if (benefits) benefits.style.display = "none";
+
+  // Show HUD tabs and section
+  hudTabs.style.display = "grid";
+  hudSection.style.display = "";
+
+  // Scroll to HUD section
+  hudSection.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  // Initialize if not done
+  if (!window.__hudInitialized) {
+    initHudTabs();
+    window.__hudInitialized = true;
+    
+    // Add back button handler
+    document.getElementById("hudBackBtn").addEventListener("click", hideHudSection);
+  }
+}
+
+function hideHudSection() {
+  const hudSection = document.getElementById("hudSection");
+  const hudTabs = document.getElementById("hudTabs");
+  const generator = document.getElementById("generator");
+  const vipExtras = document.getElementById("vipExtras");
+  const benefits = document.getElementById("benefits");
+
+  hudTabs.style.display = "none";
+  hudSection.style.display = "none";
+
+  // Show generator again
+  generator.style.display = "";
+  if (state.user.isVip) vipExtras.style.display = "";
+  benefits.style.display = "";
+}
 
 function switchTier(tier) {
   // normaliza apelidos antigos: 'vip' -> 'proibida'
@@ -911,6 +1086,7 @@ function refreshAccountChip() {
 }
 
 document.getElementById("accountChip").addEventListener("click", openAccountModal);
+document.getElementById("hudChip").addEventListener("click", showHudSection);
 document.getElementById("accClose").addEventListener("click", closeAccountModal);
 document.getElementById("accClose2").addEventListener("click", closeAccountModal);
 document.getElementById("accountModal").addEventListener("click", function(e) {

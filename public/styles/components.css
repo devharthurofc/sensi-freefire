@@ -380,3 +380,86 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* HUD Cards */
+.hud-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  transition: all 0.25s;
+}
+
+.hud-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-hover);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.3);
+}
+
+.hud-card .hud-code {
+  font-family: 'SF Mono', 'Fira Code', monospace !important;
+  line-height: 1.4;
+}
+
+#hudTabs .mode-card {
+  cursor: pointer;
+  text-align: left;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px 18px;
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  transition: .25s;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+}
+
+#hudTabs .mode-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-hover);
+}
+
+#hudTabs .mode-card.active {
+  border-color: var(--text);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.08);
+}
+
+#hudTabs .mode-card .emoji {
+  font-size: 1.7rem;
+  display: block;
+  margin-bottom: 8px;
+}
+
+#hudTabs .mode-card h3 {
+  font-size: .98rem;
+  letter-spacing: .08em;
+  margin-bottom: 5px;
+  color: var(--text);
+}
+
+#hudTabs .mode-card p {
+  color: var(--text-muted);
+  font-size: .88rem;
+  line-height: 1.35;
+}
+
+#hudTabs .mode-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .14em;
+  padding: 4px 8px;
+  border-radius: 99px;
+  text-transform: uppercase;
+}
+
+@media (max-width: 760px) {
+  #hudTabs {
+    grid-template-columns: 1fr !important;
+  }
+}

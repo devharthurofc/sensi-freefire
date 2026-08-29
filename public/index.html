@@ -373,6 +373,7 @@ footer b{color:var(--text-secondary)}
     <span class="chip"><i></i>Servidor Online</span>
     <span class="chip">Escala 200 · 2026</span>
     <span class="chip vip-on" id="vipChip" style="display:none"><i style="background:var(--text);box-shadow:0 0 8px var(--text)"></i><em id="vipChipTxt" style="font-style:normal">VIP Ativo</em></span>
+    <button class="chip" id="hudChip" style="cursor:pointer;border-color:var(--border);color:var(--text-secondary);background:rgba(255,255,255,0.03)">🎮 HUDs</button>
   </div>
 </header>
 
@@ -403,6 +404,58 @@ footer b{color:var(--text-secondary)}
     <p>Para quem joga no PC. Sensibilidade calibrada para mouse.</p>
   </button>
 </nav>
+
+<!-- HUD TABS -->
+<nav class="modes" id="hudTabs" style="display:none;margin-bottom:28px">
+  <button class="mode-card hud-tab active animate-fadeInUp" data-hud="2dedos" style="animation-delay:0.1s">
+    <span class="mode-badge mb-free">2 Dedos</span>
+    <span class="emoji">✌️</span>
+    <h3>HUD 2 Dedos</h3>
+    <p>Ideal para iniciantes e Instaplayer. Conforto e facilidade.</p>
+  </button>
+  <button class="mode-card hud-tab animate-fadeInUp" data-hud="3dedos" style="animation-delay:0.2s">
+    <span class="mode-badge mb-key">3 Dedos</span>
+    <span class="emoji">🤟</span>
+    <h3>HUD 3 Dedos</h3>
+    <p>Equilíbrio entre mobilidade e precisão. Popular no competitivo.</p>
+  </button>
+  <button class="mode-card hud-tab animate-fadeInUp" data-hud="4dedos" style="animation-delay:0.3s">
+    <span class="mode-badge mb-proib">4 Dedos</span>
+    <span class="emoji">🖐️</span>
+    <h3>HUD 4 Dedos</h3>
+    <p>Controle total para avançados. Ranqueadas e campeonatos.</p>
+  </button>
+  <button class="mode-card hud-tab animate-fadeInUp" data-hud="famosos" style="animation-delay:0.4s">
+    <span class="mode-badge" style="background:rgba(255,215,0,.1);color:#ffd700;border-color:rgba(255,215,0,.3)">Famosos</span>
+    <span class="emoji">⭐</span>
+    <h3>HUDs de Famosos</h3>
+    <p>Layouts de jogadores conhecidos e streamers.</p>
+  </button>
+</nav>
+
+<!-- HUD SECTION -->
+<section class="panel" id="hudSection" style="display:none">
+  <div class="hero animate-fadeInUp" style="animation-delay:0.5s;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <div>
+      <h2 id="hudHeroTitle"><em>HUDs 2 Dedos</em></h2>
+      <p id="hudHeroDesc">Layouts testados pela comunidade. Copie o código e cole no Free Fire: Configurações → HUD Personalizada → Importar.</p>
+    </div>
+    <button class="btn btn-ghost btn-sm" id="hudBackBtn" style="margin-top:0">← Voltar ao Gerador</button>
+  </div>
+
+  <div class="grid" id="hudGrid"></div>
+
+  <div style="margin-top:30px;padding:20px;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:16px;text-align:center">
+    <h3 style="margin-bottom:10px">📥 Como usar o código do HUD</h3>
+    <p style="color:var(--text-muted);margin-bottom:16px;max-width:600px;margin-left:auto;margin-right:auto">
+      1. Copie o código abaixo do HUD desejado<br>
+      2. Abra o Free Fire → Configurações (⚙️) → <b>HUD Personalizada</b><br>
+      3. Toque em <b>Importar</b> → Cole o código → <b>OK</b><br>
+      4. Ajuste transparência/tamanho se quiser e salve
+    </p>
+    <a class="btn btn-ghost btn-sm" href="https://www.freefiremania.com.br/huds.html" target="_blank" rel="noopener">Ver mais HUDs no Free Fire Mania →</a>
+  </div>
+</section>
 
 <!-- GENERATOR -->
 <section class="panel" id="generator">
