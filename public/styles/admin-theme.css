@@ -1,0 +1,14 @@
+/* AIMZY admin — shared premium identity */
+:root{--aim-red:#ff1744;--aim-purple:#7c3aed;--aim-surface:rgba(18,14,29,.9);--aim-border:rgba(167,99,255,.26)}
+body{background:#08070d!important;background-image:radial-gradient(circle at 12% 0%,rgba(255,23,68,.14),transparent 32%),radial-gradient(circle at 90% 20%,rgba(124,58,237,.14),transparent 38%)!important}
+.sidebar{background:rgba(9,7,16,.94)!important;border-color:var(--aim-border)!important;box-shadow:8px 0 35px rgba(0,0,0,.2)}
+.brand{border-color:var(--aim-border)!important}.brand-mark{background:linear-gradient(145deg,rgba(255,23,68,.22),rgba(124,58,237,.25))!important;border-color:rgba(255,23,68,.55)!important;box-shadow:0 0 22px rgba(255,23,68,.22)!important}.brand-mark svg{filter:drop-shadow(0 0 7px var(--aim-red))}
+.brand h1 span{background:linear-gradient(100deg,#fff,#ff6b88,#c4a1ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav button:hover{background:rgba(255,23,68,.1)!important;color:#fff!important}.nav button.on{background:linear-gradient(90deg,rgba(255,23,68,.18),rgba(124,58,237,.1))!important;box-shadow:inset 3px 0 0 var(--aim-red)!important}
+.card,.stat{background:var(--aim-surface)!important;border-color:var(--aim-border)!important}.card::before{background:linear-gradient(90deg,transparent,var(--aim-red),var(--aim-purple),transparent)!important}.card:hover{border-color:rgba(255,23,68,.55)!important;box-shadow:0 10px 30px rgba(255,23,68,.1)!important}
+.stat::after{background:linear-gradient(90deg,var(--aim-red),var(--aim-purple),transparent)!important}.stat.revenue::after{background:linear-gradient(90deg,#22c55e,transparent)!important}
+input,select{border-color:var(--aim-border)!important;background:rgba(5,3,10,.55)!important}input:focus,select:focus{border-color:var(--aim-red)!important;box-shadow:0 0 14px rgba(255,23,68,.2)!important}
+.b-red,.b-purple{background:linear-gradient(110deg,var(--aim-red),#ff4569 45%,var(--aim-purple))!important;border:0!important;box-shadow:0 7px 22px rgba(255,23,68,.25)}.b-gray,.b-gold{background:rgba(124,58,237,.12)!important;border-color:var(--aim-border)!important}.b-red:hover,.b-purple:hover{transform:translateY(-2px) scale(1.02)!important;box-shadow:0 10px 28px rgba(255,23,68,.35)!important}
+.presets button:hover{background:rgba(255,23,68,.15)!important;border-color:var(--aim-red)!important}.code{color:#ff718d!important}th{border-color:var(--aim-border)!important}tr:hover{background:rgba(255,23,68,.05)!important}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--aim-red),var(--aim-purple))!important}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
