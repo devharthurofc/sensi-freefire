@@ -443,6 +443,37 @@ function vipExpiresAtOf(user) {
 }
 
 
+function vipTypeOf(user) {
+
+  if (!user || !user.isVip) {
+
+    return null;
+
+  }
+
+
+  // Em bancos antigos, users.vip_type pode não existir. A KEY é a fonte
+  // confiável do plano e mantém o acesso certo ao entrar em outro celular.
+  if (user.vipSource === 'key' && user.vipKeyId) {
+
+    const key = store.getDb().keys.find(k => k.id === user.vipKeyId);
+
+    if (key) {
+
+      return store.canonicalKeyType(key.type);
+
+    }
+
+  }
+
+
+  return user.vipType
+    ? store.canonicalKeyType(user.vipType)
+    : null;
+
+}
+
+
 function requireUser(req, res, next) {
 
   const user = currentUser(req);
@@ -654,6 +685,7 @@ app.post(
         id: user.id,
         label: user.label,
         isVip: !!user.isVip,
+        vipType: vipTypeOf(user),
         vipExpiresAt:
           vipExpiresAtOf(user)
       },
@@ -696,6 +728,7 @@ app.get(
         id: user.id,
         label: user.label,
         isVip: !!user.isVip,
+        vipType: vipTypeOf(user),
         vipExpiresAt:
           vipExpiresAtOf(user)
       }
@@ -744,7 +777,9 @@ app.put(
 
         id: req.user.id,
         label: req.user.label,
-        isVip: !!req.user.isVip
+        isVip: !!req.user.isVip,
+        vipType: vipTypeOf(req.user),
+        vipExpiresAt: vipExpiresAtOf(req.user)
       }
 
     });
@@ -890,6 +925,7 @@ app.post(
         id: user.id,
         label: user.label,
         isVip: !!user.isVip,
+        vipType: vipTypeOf(user),
         vipExpiresAt: vipExpiresAtOf(user)
       },
       account: { email: account.email }
@@ -960,6 +996,7 @@ app.post(
         id: user.id,
         label: user.label,
         isVip: !!user.isVip,
+        vipType: vipTypeOf(user),
         vipExpiresAt: vipExpiresAtOf(user)
       },
       account: { email: account.email }
@@ -986,7 +1023,7 @@ app.get(
         id: req.user.id,
         label: req.user.label,
         isVip: !!req.user.isVip,
-        vipType: req.user.vipType || null,
+        vipType: vipTypeOf(req.user),
         vipExpiresAt: vipExpiresAtOf(req.user)
       },
       account: account ? { email: account.email } : null

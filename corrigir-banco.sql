@@ -29,6 +29,10 @@ alter table public.settings add column if not exists plans jsonb default '[]'::j
 -- 3) Coluna type na tabela keys (Premium / Proibida)
 alter table public.keys add column if not exists type text default 'premium';
 
+-- Tipo de acesso salvo no usuário. É necessário para liberar corretamente
+-- Premium ou VIP quando a pessoa entra em outro celular.
+alter table public.users add column if not exists vip_type text default 'premium';
+
 -- 3.1) Colunas para o novo fluxo: KEY só conta o tempo quando o cliente ativa
 --      - plan: nome do plano vendido (ex: "7 Dias", "1 Hora")
 --      - plan_type: tipo (premium | proibida)

@@ -79,6 +79,8 @@ const DEFAULT_DB = {
 let db = null;
 let saveTimer = null;
 let writeChain = Promise.resolve();
+const unsupportedKeyColumns = new Set();
+const unsupportedUserColumns = new Set();
 
 /* Avisos repetitivos (ex.: colunas ausentes no Supabase) só aparecem
  * 1x a cada 5 minutos — evita encher o log do Render */
@@ -439,6 +441,42 @@ function toAccountRow(a) {
 async function pushAllRemote() {
   const d = getDb();
 
+  async function upsertUsersCompatible() {
+    let rows = d.users.map(user => {
+      const row = toUserRow(user);
+      unsupportedUserColumns.forEach(column => delete row[column]);
+      return row;
+    });
+    let lastError = null;
+
+    for (let attempt = 0; attempt < 12; attempt++) {
+      const r = await supabase.from('users').upsert(rows, { onConflict: 'id' });
+      if (!r.error) {
+        if (unsupportedUserColumns.size) {
+          warnThrottled(
+            'users_legacy_columns',
+            '[store] users: coluna(s) ausente(s) no Supabase (' + [...unsupportedUserColumns].join(', ') + ') — salvando no modo compatível. Rode corrigir-banco.sql.'
+          );
+        }
+        return r;
+      }
+
+      lastError = r.error;
+      const match = String(r.error.message || '').match(/Could not find the '([^']+)' column/i);
+      const missingColumn = match && match[1];
+      if (!missingColumn || unsupportedUserColumns.has(missingColumn)) break;
+
+      unsupportedUserColumns.add(missingColumn);
+      rows = rows.map(row => {
+        const next = { ...row };
+        delete next[missingColumn];
+        return next;
+      });
+    }
+
+    return { error: lastError || new Error('erro ao salvar usuários') };
+  }
+
   // sincronizar exclusões: deletar no Supabase registros que foram removidos localmente
   try {
     const { data: remoteUsers } = await supabase.from('users').select('id');
@@ -463,18 +501,27 @@ async function pushAllRemote() {
   }
 
   const ops = [
-    { name: 'users', fn: () => supabase.from('users').upsert(d.users.map(toUserRow), { onConflict: 'id' }) },
+    { name: 'users', fn: upsertUsersCompatible },
     { name: 'sessions', fn: () => supabase.from('sessions').upsert(d.sessions.map(toSessionRow), { onConflict: 'token' }) },
     { name: 'generations', fn: () => supabase.from('generations').upsert(d.generations.map(toGenerationRow), { onConflict: 'id' }) },
     { name: 'profiles', fn: () => supabase.from('profiles').upsert(d.profiles.map(toProfileRow), { onConflict: 'id' }) },
-    { name: 'audit_log', fn: () => supabase.from('audit_log').upsert(
-      d.auditLog.map((a, i) => {
-        // id estável por conteúdo: rotação do log não sobrescreve eventos antigos
-        const h = crypto.createHash('md5').update(a.at + '|' + a.action + '|' + a.detail + '|' + a.ip).digest('hex').slice(0, 12);
-        return { id: a.id || 'logl_' + h, at: a.at, action: a.action, detail: a.detail, ip: a.ip };
-      }),
-      { onConflict: 'id' }
-    ) },
+    { name: 'audit_log', fn: async () => {
+      const r = await supabase.from('audit_log').upsert(
+        d.auditLog.map(a => {
+          // id estável por conteúdo: rotação do log não sobrescreve eventos antigos
+          const h = crypto.createHash('md5').update(a.at + '|' + a.action + '|' + a.detail + '|' + a.ip).digest('hex').slice(0, 12);
+          return { id: a.id || 'logl_' + h, at: a.at, action: a.action, detail: a.detail, ip: a.ip };
+        }),
+        { onConflict: 'id' }
+      );
+      if (r.error) {
+        // Auditoria não pode impedir o salvamento do acesso. Alguns schemas
+        // antigos usam id numérico, enquanto o app usa ids textuais.
+        warnThrottled('audit_log_schema', '[store] audit_log incompatível — mantendo a auditoria no espelho local. Rode corrigir-banco.sql para normalizar o schema.');
+        return { error: null };
+      }
+      return r;
+    } },
     // vendas: tenta com todas as colunas; se a tabela for antiga (sem
     // key_id/product/plan/etc), salva só as colunas que existem.
     // Também deleta no Supabase vendas que foram removidas localmente.
@@ -530,20 +577,43 @@ async function pushAllRemote() {
     warnThrottled('keys_delete', '[store] falha ao sincronizar exclusões de keys: ' + e.message);
   }
 
-  // keys: tenta salvar com a coluna "type"; se o banco ainda não tiver a
-  // coluna, salva sem ela (rode corrigir-banco.sql para adicionar)
-  try {
-    const r = await supabase.from('keys').upsert(d.keys.map(toKeyRow), { onConflict: 'id' });
-    if (r.error) throw r.error;
-  } catch (e) {
-    try {
-      const rows = d.keys.map(k => { const { type, ...rest } = toKeyRow(k); return rest; });
-      const r2 = await supabase.from('keys').upsert(rows, { onConflict: 'id' });
-      if (r2.error) throw r2.error;
-      warnThrottled('keys_type', '[store] keys: coluna "type" ausente no Supabase — salvando sem ela. Rode corrigir-banco.sql');
-    } catch (e2) {
-      throw new Error('keys: ' + e2.message);
+  // Bancos antigos podem não ter campos adicionados depois (type, plan,
+  // duration, etc.). Descobre a coluna ausente e tenta novamente sem ela,
+  // para que uma KEY não bloqueie a gravação de usuário e sessão.
+  let keyRows = d.keys.map(key => {
+    const row = toKeyRow(key);
+    unsupportedKeyColumns.forEach(column => delete row[column]);
+    return row;
+  });
+  let keySaveError = null;
+  let savedKeys = false;
+  for (let attempt = 0; attempt < 12; attempt++) {
+    const r = await supabase.from('keys').upsert(keyRows, { onConflict: 'id' });
+    if (!r.error) {
+      savedKeys = true;
+      break;
     }
+
+    keySaveError = r.error;
+    const match = String(r.error.message || '').match(/Could not find the '([^']+)' column/i);
+    const missingColumn = match && match[1];
+    if (!missingColumn || unsupportedKeyColumns.has(missingColumn)) break;
+
+    unsupportedKeyColumns.add(missingColumn);
+    keyRows = keyRows.map(row => {
+      const next = { ...row };
+      delete next[missingColumn];
+      return next;
+    });
+  }
+  if (!savedKeys) {
+    throw new Error('keys: ' + (keySaveError && keySaveError.message || 'erro ao salvar'));
+  }
+  if (unsupportedKeyColumns.size) {
+    warnThrottled(
+      'keys_legacy_columns',
+      '[store] keys: coluna(s) ausente(s) no Supabase (' + [...unsupportedKeyColumns].join(', ') + ') — salvando no modo compatível. Rode corrigir-banco.sql.'
+    );
   }
 
   // accounts: tabela pode ainda não existir — não bloqueia as demais gravações
