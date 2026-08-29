@@ -51,49 +51,60 @@ const HUD_DATA = {
     title: "HUDs 2 Dedos",
     desc: "Ideal para iniciantes e Instaplayer. Conforto e facilidade de adaptação.",
     huds: [
-      { name: "HUD 2 Dedos Atualizado", author: "愛┇Ʀiᴄᴀʀᴅᴏㅤ", code: "COLE_AQUI_SEU_CODIGO_HUD_2_DEDOS_ATUALIZADO", likes: 16, tags: ["2 dedos", "atualizado", "mobile"], desc: "Layout moderno para 2 dedos, fácil de acostumar" },
-      { name: "2 Dedos Básico", author: "Wtomaz 2dedos", code: "COLE_AQUI_SEU_CODIGO_2_DEDOS_BASICO", likes: 38, tags: ["2 dedos", "básico", "iniciante"], desc: "HUD simples para quem está começando" },
-      { name: "HUD 2 Dedos Fácil de Acostumar", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_2_DEDOS_FACIL", likes: 24, tags: ["2 dedos", "fácil", "adaptação"], desc: "Focado em adaptação rápida" },
-      { name: "HUD 2 Dedos Versão Atualizada 2026", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_2_DEDOS_2026", likes: 31, tags: ["2 dedos", "2026", "atualizado"], desc: "Layout otimizado para a meta atual" },
-      { name: "HUD para Quem Quer Evoluir", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_EVOLUIR", likes: 42, tags: ["2 dedos", "evolução", "treino"], desc: "Design para melhorar mira e movimentação" },
-      { name: "HUD 2 Dedos Conforto Total", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_CONFORTO", likes: 19, tags: ["2 dedos", "conforto", "casual"], desc: "Botões grandes e bem espaçados" }
+      { name: "HUD 2 Dedos Atualizado", author: "愛┇Ʀiᴄᴀʀᴅᴏㅤ", code: "#FFHUDT6O3jjHQi0FPo7eM", likes: 16, tags: ["2 dedos", "atualizado", "mobile"], desc: "Layout moderno para 2 dedos, fácil de acostumar", vip: false },
+      { name: "2 Dedos Básico", author: "Wtomaz 2dedos", code: "#FFHUDT6O3jlNpVr1Po7eO", likes: 38, tags: ["2 dedos", "básico", "iniciante"], desc: "HUD simples para quem está começando", vip: false },
+      { name: "HUD 2 Dedos Fácil de Acostumar", author: "Comunidade", code: "#FFHUDT6O3jjxYFU9Po7eM", likes: 24, tags: ["2 dedos", "fácil", "adaptação"], desc: "Focado em adaptação rápida", vip: false },
+      { name: "HUD 2 Dedos Versão Atualizada 2026", author: "Comunidade", code: "#FFHUDT6O3jiK7Yp5Po7eP", likes: 31, tags: ["2 dedos", "2026", "atualizado"], desc: "Layout otimizado para a meta atual", vip: false },
+      { name: "HUD para Quem Quer Evoluir", author: "Comunidade", code: "#FFHUDT6O3jg3LCldPo7eP", likes: 42, tags: ["2 dedos", "evolução", "treino"], desc: "Design para melhorar mira e movimentação", vip: false },
+      { name: "HUD 2 Dedos Conforto Total", author: "Comunidade", code: "#FFHUDT6O3jiHvU3VPo7eO", likes: 19, tags: ["2 dedos", "conforto", "casual"], desc: "Botões grandes e bem espaçados", vip: false },
+      { name: "HUD 2 Dedos Elite ⭐", author: "Comunidade", code: "#FFHUDT6O3jidpLCxPo7eO", likes: 56, tags: ["2 dedos", "elite", "pro"], desc: "Configuração avançada para 2 dedos — VIP", vip: true },
+      { name: "HUD 2 Dedos Simples pra Dar Capa 😈 ⭐", author: "Comunidade", code: "#FFHUDT6O3jvNJIypPo7eM", likes: 67, tags: ["2 dedos", "capa", "ranqueada"], desc: "Simples e eficiente para subir capa — VIP", vip: true },
+      { name: "HUD 2 Dedos Movimentação Insana ⭐", author: "Comunidade", code: "#FFHUDT6O3jgFALvtPo7eO", likes: 45, tags: ["2 dedos", "movimentação", "agressivo"], desc: "Melhore sua movimentação no Free Fire — VIP", vip: true },
+      { name: "HUD 2 Dedos Básico VIP ⭐", author: "Comunidade", code: "#FFHUDT6O3jifByz9Po7eO", likes: 34, tags: ["2 dedos", "básico", "vip"], desc: "Outra opção de HUD 2 dedos básico — VIP", vip: true },
     ]
   },
   "3dedos": {
     title: "HUDs 3 Dedos",
     desc: "Equilíbrio entre mobilidade e precisão. Popular no competitivo.",
     huds: [
-      { name: "HUD 3 Dedos Competitivo", author: "Pro Player BR", code: "COLE_AQUI_SEU_CODIGO_3_DEDOS_COMP", likes: 87, tags: ["3 dedos", "competitivo", "ranqueada"], desc: "Usado por jogadores de alto nível" },
-      { name: "HUD 3 Dedos Drag Rápido", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_3_DEDOS_DRAG", likes: 56, tags: ["3 dedos", "drag", "agressivo"], desc: "Otimizado para drag headshot" },
-      { name: "HUD 3 Dedos Equilibrado", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_3_DEDOS_EQ", likes: 43, tags: ["3 dedos", "equilibrado", "versátil"], desc: "Funciona bem em todas as armas" },
-      { name: "HUD 3 Dedos Instaplayer", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_3_DEDOS_INSTA", likes: 34, tags: ["3 dedos", "instaplayer", "tela pequena"], desc: "Adaptado para telas menores" },
-      { name: "HUD 3 Dedos Híbrido", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_3_DEDOS_HIBRIDO", likes: 29, tags: ["3 dedos", "híbrido", "misto"], desc: "Mistura de 2 e 3 dedos para transição" }
+      { name: "HUD 3 Dedos Competitivo", author: "Pro Player BR", code: "#FFHUDT6O3jjmhVBNPo7eM", likes: 87, tags: ["3 dedos", "competitivo", "ranqueada"], desc: "Usado por jogadores de alto nível", vip: false },
+      { name: "HUD 3 Dedos Drag Rápido", author: "Comunidade", code: "#FFHUDT6O3jiTG4gxPo7eP", likes: 56, tags: ["3 dedos", "drag", "agressivo"], desc: "Otimizado para drag headshot", vip: false },
+      { name: "HUD 3 Dedos Equilibrado", author: "Comunidade", code: "#FFHUDT6O3jjaYCV1Po7eP", likes: 43, tags: ["3 dedos", "equilibrado", "versátil"], desc: "Funciona bem em todas as armas", vip: false },
+      { name: "HUD 3 Dedos Instaplayer", author: "Comunidade", code: "#FFHUDT6O3jjHQi0FPo7eO", likes: 34, tags: ["3 dedos", "instaplayer", "tela pequena"], desc: "Adaptado para telas menores", vip: false },
+      { name: "HUD 3 Dedos Híbrido", author: "Comunidade", code: "#FFHUDT6O3jo9PUcZPo7eO", likes: 29, tags: ["3 dedos", "híbrido", "misto"], desc: "Mistura de 2 e 3 dedos para transição", vip: false },
+      { name: "HUD 3 Dedos Pro Player ⭐", author: "Comunidade", code: "#FFHUDT6O3jiBCL/FPo7eO", likes: 78, tags: ["3 dedos", "pro", "x1"], desc: "HUD 3 dedos mais usado em 2022 e atualmente — VIP", vip: true },
+      { name: "HUD 3 Dedos para Iniciantes (A05S) ⭐", author: "Comunidade", code: "#FFHUDT6O3jjRP1K5Po7eO", likes: 41, tags: ["3 dedos", "iniciante", "samsung"], desc: "Otimizado para Samsung A05S e similares — VIP", vip: true },
+      { name: "HUD Rud 3 Dedos ⭐", author: "Comunidade", code: "#FFHUDT6O3jkwDvs1Po7eO", likes: 36, tags: ["3 dedos", "rud", "estilo"], desc: "Estilo Rud de jogar — VIP", vip: true },
     ]
   },
   "4dedos": {
     title: "HUDs 4 Dedos",
     desc: "Controle total para avançados. Ranqueadas e campeonatos.",
     huds: [
-      { name: "HUD 4 Dedos Tryhard", author: "Tryhard BR", code: "COLE_AQUI_SEU_CODIGO_4_DEDOS_TRYHARD", likes: 156, tags: ["4 dedos", "tryhard", "pro"], desc: "Layout de jogador profissional" },
-      { name: "HUD 4 Dedos Fácil Rápido Sem Frescura", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_4_DEDOS_FACIL", likes: 98, tags: ["4 dedos", "fácil", "rápido"], desc: "Simples mas eficiente" },
-      { name: "HUD 4 Dedos Básico Fácil de Acostumar", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_4_DEDOS_BASICO", likes: 67, tags: ["4 dedos", "básico", "iniciante avançado"], desc: "Para quem está migrando de 3 dedos" },
-      { name: "HUD 4 Dedos Agressivo", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_4_DEDOS_AGRESSIVO", likes: 74, tags: ["4 dedos", "agressivo", "rush"], desc: "Botão de tiro grande, mira rápida" },
-      { name: "HUD 4 Dedos Precisão Cirúrgica", author: "Comunidade", code: "COLE_AQUI_SEU_CODIGO_4_DEDOS_PRECISAO", likes: 52, tags: ["4 dedos", "precisão", "headshot"], desc: "Foco total em mira e controle" },
-      { name: "HUD 4 Dedos Estilo Livre", author: "uripaze", code: "COLE_AQUI_SEU_CODIGO_URIPAZE", likes: 41, tags: ["4 dedos", "estilo livre", "custom"], desc: "Layout único do jogador uripaze" }
+      { name: "HUD 4 Dedos Tryhard", author: "Tryhard BR", code: "#FFHUDT6O3jiZ3FupPo7eO", likes: 156, tags: ["4 dedos", "tryhard", "pro"], desc: "Layout de jogador profissional", vip: false },
+      { name: "HUD 4 Dedos Fácil Rápido Sem Frescura", author: "Comunidade", code: "#FFHUDT6O3jHo5vXRPo7eP", likes: 98, tags: ["4 dedos", "fácil", "rápido"], desc: "Simples mas eficiente", vip: false },
+      { name: "HUD 4 Dedos Básico Fácil de Acostumar", author: "Comunidade", code: "#FFHUDT6O3jlSa4CdPo7eP", likes: 67, tags: ["4 dedos", "básico", "iniciante avançado"], desc: "Para quem está migrando de 3 dedos", vip: false },
+      { name: "HUD 4 Dedos Agressivo", author: "Comunidade", code: "#FFHUDT6O3jlJZD6lPo7eO", likes: 74, tags: ["4 dedos", "agressivo", "rush"], desc: "Botão de tiro grande, mira rápida", vip: false },
+      { name: "HUD 4 Dedos Precisão Cirúrgica", author: "Comunidade", code: "#FFHUDT6O3jQWDWktPo7eO", likes: 52, tags: ["4 dedos", "precisão", "headshot"], desc: "Foco total em mira e controle", vip: false },
+      { name: "HUD 4 Dedos Estilo Livre (uripaze) ⭐", author: "uripaze", code: "#FFHUDT6O3jiHjPSNPo7eO", likes: 41, tags: ["4 dedos", "estilo livre", "custom"], desc: "Layout único do jogador uripaze — VIP", vip: true },
+      { name: "HUD 4 Dedos Simples ⭐", author: "Comunidade", code: "#FFHUDT6O3jjyDc1RPo7eO", likes: 58, tags: ["4 dedos", "simples", "clean"], desc: "Layout limpo sem frescuras — VIP", vip: true },
+      { name: "HUD 4 Dedos do Sadx ⭐", author: "Sadx", code: "#FFHUDT6O3jlCILLNPo7eO", likes: 72, tags: ["4 dedos", "sadx", "famoso"], desc: "HUD do Sadx (ajuste emote/gelo) — VIP", vip: true },
+      { name: "HUD 5/6 Dedos ⭐", author: "Comunidade", code: "#FFHUDT6O3jkaHnlBPo7eO", likes: 34, tags: ["5 dedos", "6 dedos", "extremo"], desc: "Para quem joga com 5 ou 6 dedos — VIP", vip: true },
+      { name: "HUD Chinês 5 Dedos ⭐", author: "Comunidade", code: "#FFHUDT6O3jlSa4CdPo7eM", likes: 29, tags: ["5 dedos", "chinês", "estrangeiro"], desc: "Estilo chinês de HUD — VIP", vip: true },
     ]
   },
   "famosos": {
     title: "HUDs de Famosos",
     desc: "Layouts de jogadores conhecidos, streamers e pro players.",
     huds: [
-      { name: "HUD do Freitas 2026", author: "Freitas", code: "COLE_AQUI_CODIGO_HUD_FREITAS", likes: 234, tags: ["famoso", "freitas", "streamer"], desc: "HUD do streamer Freitas (atualizado 2026)" },
-      { name: "HUD do Nobru", author: "Nobru", code: "COLE_AQUI_CODIGO_HUD_NOBRU", likes: 189, tags: ["famoso", "nobru", "pro player"], desc: "Layout do campeão mundial Nobru" },
-      { name: "HUD do BAK", author: "BAK", code: "COLE_AQUI_CODIGO_HUD_BAK", likes: 167, tags: ["famoso", "bak", "streamer"], desc: "HUD do streamer BAK" },
-      { name: "HUD do Cerol", author: "Cerol", code: "COLE_AQUI_CODIGO_HUD_CEROL", likes: 145, tags: ["famoso", "cerol", "influenciador"], desc: "Configuração do Cerol" },
-      { name: "HUD do Modéstia", author: "Modéstia", code: "COLE_AQUI_CODIGO_HUD_MODESTIA", likes: 123, tags: ["famoso", "modéstia", "youtuber"], desc: "HUD do youtuber Modéstia" },
-      { name: "HUD do Luqueta", author: "Luqueta", code: "COLE_AQUI_CODIGO_HUD_LUQUETA", likes: 112, tags: ["famoso", "luqueta", "pro"], desc: "Layout do jogador Luqueta" },
-      { name: "HUD do Cauan7", author: "Cauan7", code: "COLE_AQUI_CODIGO_HUD_CAUAN", likes: 98, tags: ["famoso", "cauan7", "streamer"], desc: "Config do streamer Cauan7" },
-      { name: "HUD do GGWS", author: "GGWS", code: "COLE_AQUI_CODIGO_HUD_GGWS", likes: 87, tags: ["famoso", "ggws", "time"], desc: "HUD do time GGWS" }
+      { name: "HUD do Freitas 2026 ⭐", author: "Freitas", code: "#FFHUDT6O3jj6khXZPo7eO", likes: 234, tags: ["famoso", "freitas", "streamer"], desc: "HUD do streamer Freitas (atualizado 2026) — VIP", vip: true },
+      { name: "HUD do Nobru ⭐", author: "Nobru", code: "#FFHUDT6O3jj8y3WRPo7eO", likes: 189, tags: ["famoso", "nobru", "pro player"], desc: "Layout do campeão mundial Nobru — VIP", vip: true },
+      { name: "HUD do BAK ⭐", author: "BAK", code: "#FFHUDT6O3jiEpku1Po7eO", likes: 167, tags: ["famoso", "bak", "streamer"], desc: "HUD do streamer BAK — VIP", vip: true },
+      { name: "HUD do Cerol ⭐", author: "Cerol", code: "#FFHUDT6O3jlNpVr1Po7eO", likes: 145, tags: ["famoso", "cerol", "influenciador"], desc: "Configuração do Cerol — VIP", vip: true },
+      { name: "HUD do Modéstia ⭐", author: "Modéstia", code: "#FFHUDT6O3jjxYFU9Po7eM", likes: 123, tags: ["famoso", "modéstia", "youtuber"], desc: "HUD do youtuber Modéstia — VIP", vip: true },
+      { name: "HUD do Luqueta ⭐", author: "Luqueta", code: "#FFHUDT6O3jiK7Yp5Po7eP", likes: 112, tags: ["famoso", "luqueta", "pro"], desc: "Layout do jogador Luqueta — VIP", vip: true },
+      { name: "HUD do Cauan7 ⭐", author: "Cauan7", code: "#FFHUDT6O3jg3LCldPo7eP", likes: 98, tags: ["famoso", "cauan7", "streamer"], desc: "Config do streamer Cauan7 — VIP", vip: true },
+      { name: "HUD do GGWS ⭐", author: "GGWS", code: "#FFHUDT6O3jiHvU3VPo7eO", likes: 87, tags: ["famoso", "ggws", "time"], desc: "HUD do time GGWS — VIP", vip: true },
     ]
   }
 };
@@ -296,33 +307,63 @@ function initHudTabs() {
   const hudHeroDesc = document.getElementById("hudHeroDesc");
 
   let currentHudTab = "2dedos";
+  let currentHudFilter = "all"; // all, free, vip
 
   function renderHudGrid(tabKey) {
     const data = HUD_DATA[tabKey];
     if (!data) return;
+    
+    // Filter HUDs based on current filter
+    let filteredHuds = data.huds;
+    if (currentHudFilter === "free") {
+      filteredHuds = data.huds.filter(h => !h.vip);
+    } else if (currentHudFilter === "vip") {
+      filteredHuds = data.huds.filter(h => h.vip);
+    }
+    
     hudGrid.innerHTML = "";
-    data.huds.forEach((hud, idx) => {
-      const card = el("div", "sensi-card hud-card");
-      card.style.cursor = "pointer";
+    filteredHuds.forEach((hud, idx) => {
+      const isVipHud = hud.vip === true;
+      const isLocked = isVipHud && !state.user.isVip;
+      
+      const card = el("div", "sensi-card hud-card" + (isLocked ? " hud-locked" : ""));
+      card.style.cursor = isLocked ? "not-allowed" : "pointer";
+      
+      const vipBadge = isVipHud 
+        ? '<span style="font-size:.55rem;font-weight:800;color:#ffd700;background:rgba(255,215,0,.15);padding:2px 8px;border-radius:99px;border:1px solid rgba(255,215,0,.3);margin-left:8px">⭐ VIP</span>'
+        : '<span style="font-size:.55rem;font-weight:800;color:#86efac;background:rgba(34,197,94,.15);padding:2px 8px;border-radius:99px;border:1px solid rgba(34,197,94,.3);margin-left:8px">🆓 FREE</span>';
+      
+      const lockOverlay = isLocked 
+        ? `<div class="hud-lock-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,.85);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;padding:20px;text-align:center">
+            <div class="lock-icon" style="width:50px;height:50px;border-radius:16px;background:rgba(255,255,255,.1);border:1px solid var(--border);display:grid;place-items:center;margin-bottom:12px">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2.5" stroke-linecap="round" style="width:24px;height:24px"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+            </div>
+            <h4 style="color:#ffd700;margin-bottom:6px;font-size:1rem">🔒 HUD VIP</h4>
+            <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:12px;max-width:280px">Este HUD é exclusivo para usuários VIP. Ative uma KEY Premium ou VIP para desbloquear.</p>
+            <button class="btn btn-red btn-sm hud-unlock-btn" data-code="${escapeHtml(hud.code)}" style="min-width:160px">🔓 Desbloquear com KEY</button>
+          </div>`
+        : "";
+      
       card.innerHTML = `
-        <div class="label" style="display:flex;align-items:center;gap:6px;justify-content:space-between">
+        <div class="label" style="display:flex;align-items:center;gap:6px;justify-content:space-between;position:relative">
           <span>${escapeHtml(hud.name)}</span>
-          <span style="font-size:.6rem;font-weight:800;color:var(--text-muted);background:rgba(255,255,255,.05);padding:2px 6px;border-radius:99px">${escapeHtml(hud.tags.join(" · "))}</span>
+          ${vipBadge}
         </div>
         <div class="value" style="font-size:1.3rem;margin:8px 0">${hud.likes} ❤️</div>
         <div style="color:var(--text-muted);font-size:.8rem;margin-bottom:8px">${escapeHtml(hud.desc)}</div>
         <div style="color:var(--text-muted);font-size:.7rem;margin-bottom:10px">Por ${escapeHtml(hud.author)}</div>
         <div style="background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:10px;font-family:monospace;font-size:.75rem;color:var(--text-secondary);overflow-x:auto;white-space:nowrap;max-height:60px" class="hud-code">${escapeHtml(hud.code)}</div>
         <div style="display:flex;gap:8px">
-          <button class="btn btn-ghost btn-sm copy-hud-btn" data-code="${escapeHtml(hud.code).replace(/"/g, '"')}">📋 Copiar Código</button>
+          <button class="btn btn-ghost btn-sm copy-hud-btn ${isLocked ? 'hud-locked-btn' : ''}" data-code="${escapeHtml(hud.code).replace(/"/g, '"')}" ${isLocked ? 'disabled' : ''}>${isLocked ? '🔒 Bloqueado' : '📋 Copiar Código'}</button>
           <button class="btn btn-red btn-sm like-hud-btn" data-likes="${hud.likes}" data-name="${escapeHtml(hud.name)}">❤️ ${hud.likes}</button>
         </div>
+        ${lockOverlay}
       `;
       hudGrid.appendChild(card);
     });
 
     // Attach copy handlers
-    hudGrid.querySelectorAll(".copy-hud-btn").forEach(btn => {
+    hudGrid.querySelectorAll(".copy-hud-btn:not(.hud-locked-btn)").forEach(btn => {
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
         const code = btn.dataset.code;
@@ -334,6 +375,23 @@ function initHudTabs() {
       });
     });
 
+    // Attach unlock handlers for VIP HUDs
+    hudGrid.querySelectorAll(".hud-unlock-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        // Scroll to the tier lock in generator section
+        showHudSection(); // stay in HUD section but show message
+        // Switch back to generator and scroll to tier lock
+        hideHudSection();
+        setTimeout(() => {
+          document.getElementById("tierLock").scrollIntoView({ behavior: "smooth", block: "center" });
+          document.getElementById("tierLock").querySelector(".activate-key")?.focus();
+        }, 100);
+        toast("Ative uma KEY VIP na área do gerador para desbloquear HUDs VIP", false);
+      });
+    });
+
+    // Attach like handlers
     hudGrid.querySelectorAll(".like-hud-btn").forEach(btn => {
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -354,14 +412,35 @@ function initHudTabs() {
     hudHeroTitle.innerHTML = "<em>" + data.title + "</em>";
     hudHeroDesc.textContent = data.desc;
     renderHudGrid(tabKey);
+    
+    // Update filter buttons active state
+    document.querySelectorAll("#hudFilterTabs .hud-filter-btn").forEach(b => 
+      b.classList.toggle("active", b.dataset.filter === currentHudFilter)
+    );
+  }
+
+  function switchHudFilter(filterKey) {
+    currentHudFilter = filterKey;
+    renderHudGrid(currentHudTab);
+    document.querySelectorAll("#hudFilterTabs .hud-filter-btn").forEach(b => 
+      b.classList.toggle("active", b.dataset.filter === filterKey)
+    );
   }
 
   hudTabs.forEach(btn => {
     btn.addEventListener("click", () => switchHudTab(btn.dataset.hud));
   });
 
-  // Show HUD section when user clicks a special trigger or we can add it to navigation
-  // For now, let's add a HUD button in the header chips area
+  // Initialize filter tabs
+  const filterTabs = document.getElementById("hudFilterTabs");
+  if (filterTabs) {
+    filterTabs.querySelectorAll(".hud-filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => switchHudFilter(btn.dataset.filter));
+    });
+  }
+
+  // Initial render
+  renderHudGrid(currentHudTab);
 }
 
 function showHudSection() {
