@@ -1,683 +1,430 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AIMZY — Gerador de Sensibilidade Free Fire (TESTE DEPLOY)</title>
+<meta name="google-site-verification" content="V-XsgeR9Ad5hPAePIhD9KPfzAv8QPsBjgZBDZNvF0cM" />
+<title>SENSI PRO — Gerador de Sensibilidade Free Fire</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#000000">
-<link rel="icon" type="image/png" href="/icons/icon-192.png">
-<link rel="apple-touch-icon" href="/icons/icon-192.png">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="AIMZY">
-<link rel="stylesheet" href="/styles/main.css">
-<link rel="stylesheet" href="/styles/animations.css">
-<link rel="stylesheet" href="/styles/components.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0a0a0f;
-  --bg2:#0f0f14;
-  --bg-card:#12121a;
-  --card:rgba(18,18,26,0.85);
-  --border:#2a0a0a;
-  --border-hover:#e63946;
-  --text:#fff;
-  --text-secondary:#f4f4f8;
-  --text-muted:#b0b0c0;
-  --ok:#e63946;
-  --err:#ff3333;
-  --warn:#ff9900;
-  --accent:#e63946;
+  --bg:#07070d;
+  --bg2:#0c0c16;
+  --card:rgba(255,255,255,.04);
+  --card-border:rgba(255,255,255,.08);
+  --fire1:#ff6a00;
+  --fire2:#ffb300;
+  --violet:#8b5cf6;
+  --cyan:#22d3ee;
+  --text:#f3f4f6;
+  --muted:#9ca3af;
+  --ok:#22c55e;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
-h1,h2,h3,.font-display{font-weight:700;letter-spacing:-0.02em}
-
-.bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:-1}
-.bg-glow{position:fixed;width:500px;height:500px;border-radius:50%;filter:blur(180px);opacity:0.06;pointer-events:none;z-index:-1;animation:glowDrift 12s ease-in-out infinite}
-.bg-glow.g1{background:#1a1a1a;top:-200px;left:-200px;animation-delay:0s}
-.bg-glow.g2{background:#1a1a1a;bottom:-200px;right:-200px;opacity:0.04;animation-delay:4s}
-.bg-glow.g3{background:#ffffff;bottom:20%;left:40%;width:300px;height:300px;opacity:0.02;animation-delay:8s}
-
-@keyframes glowDrift{
-  0%,100%{transform:translate(0,0) scale(1)}
-  33%{transform:translate(40px,-30px) scale(1.1)}
-  66%{transform:translate(-30px,40px) scale(0.9)}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Rajdhani',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
 }
-
-/* Floating grid pulse */
-.bg-grid{animation:gridPulse 8s ease-in-out infinite}
-@keyframes gridPulse{
-  0%,100%{opacity:1}
-  50%{opacity:0.5}
+.orb{
+  position:fixed;border-radius:50%;filter:blur(110px);opacity:.35;z-index:-1;
+  animation:float 14s ease-in-out infinite alternate;
 }
-#bgParticles{position:fixed;inset:0;z-index:-2;pointer-events:none}
+.orb.a{width:480px;height:480px;background:#ff6a00;top:-140px;left:-120px}
+.orb.b{width:420px;height:420px;background:#8b5cf6;bottom:-120px;right:-100px;animation-delay:-6s}
+.orb.c{width:300px;height:300px;background:#0ea5e9;top:40%;left:55%;opacity:.18;animation-delay:-3s}
+@keyframes float{from{transform:translate(0,0) scale(1)}to{transform:translate(60px,40px) scale(1.15)}}
+
 .wrap{max-width:1080px;margin:0 auto;padding:24px 18px 60px}
 
-/* Navbar */
-.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px 0;transition:all .3s ease}
-.navbar.scrolled{background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 0}
-.nav-inner{max-width:1080px;margin:0 auto;padding:0 18px;display:flex;align-items:center;justify-content:space-between}
-.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
-.nav-brand h1{font-size:1.3rem;letter-spacing:.08em}
-.nav-links{display:flex;align-items:center;gap:28px}
-.nav-links a{color:var(--text-muted);text-decoration:none;font-weight:500;font-size:.9rem;transition:color .2s}
-.nav-links a:hover{color:var(--text)}
-.nav-enter{background:#fff;color:#000;border:none;padding:10px 20px;border-radius:10px;font-weight:700;font-size:.85rem;cursor:pointer;transition:all .2s;letter-spacing:.04em}
-.nav-enter:hover{box-shadow:0 4px 20px rgba(255,255,255,0.2);transform:translateY(-1px)}
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;z-index:1001;background:none;border:none;padding:4px}
-.hamburger span{width:22px;height:2px;background:var(--text);transition:all .3s}
-
-header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:26px;flex-wrap:wrap;padding-top:70px}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:26px;flex-wrap:wrap}
 .logo{display:flex;align-items:center;gap:12px}
-.logo-mark{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,0.08);border:1px solid var(--border)}
-.logo-mark svg{width:26px;height:26px}
-.logo h1{font-size:1.45rem;letter-spacing:.06em;line-height:1}
-.logo h1 span{color:var(--text)}
-.logo p{font-size:.78rem;color:var(--text-muted);letter-spacing:.25em;text-transform:uppercase}
-.badges{display:flex;gap:8px;flex-wrap:wrap}
-.chip{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-muted);display:flex;align-items:center;gap:6px}
-.chip i{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);display:inline-block}
-.chip.offline i{background:var(--err);box-shadow:0 0 8px var(--err)}
-.chip.vip-on{border-color:var(--border-hover);color:var(--text);background:rgba(255,255,255,0.05)}
-
-.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:28px}
-.mode-card{
-  cursor:pointer;text-align:left;color:var(--text);
-  border:1px solid var(--border);border-radius:20px;padding:20px 18px;background:var(--bg-card);
-  backdrop-filter:blur(10px);transition:.25s;position:relative;overflow:hidden;
-  font-family:'Inter',sans-serif;
+.logo-mark{
+  width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--fire1),var(--fire2));
+  box-shadow:0 0 26px rgba(255,106,0,.45);
 }
-.mode-card:hover{transform:translateY(-4px);border-color:var(--border-hover)}
-.mode-card.active{border-color:var(--text);box-shadow:0 0 30px rgba(255,255,255,0.08)}
-.mode-card .emoji{font-size:1.7rem;display:block;margin-bottom:8px}
-.mode-card h3{font-size:.98rem;letter-spacing:.08em;margin-bottom:5px;color:var(--text)}
-.mode-card p{color:var(--text-muted);font-size:.88rem;line-height:1.35}
-.mode-badge{position:absolute;top:12px;right:12px;font-size:.58rem;font-weight:800;letter-spacing:.14em;padding:4px 8px;border-radius:99px;text-transform:uppercase}
-.mb-free{background:rgba(34,197,94,.1);color:#86efac;border:1px solid rgba(34,197,94,.3)}
-.mb-key{background:rgba(255,255,255,.06);color:var(--text-secondary);border:1px solid var(--border)}
-.mode-card.premium.active{border-color:var(--text);box-shadow:0 0 34px rgba(255,255,255,0.1)}
-.mode-card.vip{background:rgba(255,255,255,0.03)}
-.mode-card.vip:hover{box-shadow:0 14px 40px rgba(0,0,0,0.4)}
-.mode-card.vip.active{border-color:var(--text);box-shadow:0 0 36px rgba(255,255,255,0.12)}
-.mb-proib{background:rgba(255,255,255,.06);color:var(--text-secondary);border:1px solid var(--border)}
+.logo-mark svg{width:26px;height:26px}
+.logo h1{font-family:'Orbitron',sans-serif;font-size:1.45rem;font-weight:900;letter-spacing:.06em;line-height:1}
+.logo h1 span{background:linear-gradient(90deg,var(--fire1),var(--fire2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo p{font-size:.78rem;color:var(--muted);letter-spacing:.25em;text-transform:uppercase}
+.badges{display:flex;gap:8px;flex-wrap:wrap}
+.chip{
+  font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:6px 12px;border-radius:999px;border:1px solid var(--card-border);
+  background:var(--card);color:var(--muted);display:flex;align-items:center;gap:6px;
+}
+.chip i{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);display:inline-block}
 
-.panel{animation:fadeUp .45s ease both}
+.tabs{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:6px;
+  background:rgba(255,255,255,.03);border:1px solid var(--card-border);
+  padding:6px;border-radius:18px;margin-bottom:26px;backdrop-filter:blur(10px);
+}
+.tab-btn{
+  appearance:none;border:none;cursor:pointer;font-family:'Orbitron',sans-serif;
+  font-weight:700;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:13px 8px;border-radius:13px;color:var(--muted);background:transparent;
+  transition:.25s;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{
+  color:#fff;background:linear-gradient(135deg,var(--fire1),var(--fire2));
+  box-shadow:0 6px 22px rgba(255,106,0,.4);
+}
+.tab-btn.vip.active{background:linear-gradient(135deg,var(--violet),#d946ef);box-shadow:0 6px 22px rgba(139,92,246,.45)}
+.tab-btn.gen.active{background:linear-gradient(135deg,#0891b2,var(--cyan));box-shadow:0 6px 22px rgba(34,211,238,.35)}
+.tab-btn svg{width:15px;height:15px}
+
+.panel{display:none;animation:fadeUp .45s ease both}
+.panel.show{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
-.hero{text-align:center;border:1px solid var(--border);border-radius:24px;background:var(--bg-card);padding:36px 22px;margin-bottom:26px;transition:.3s}
-.hero h2{font-size:clamp(1.4rem,4vw,2.2rem)}
-.hero h2 em{font-style:normal;color:var(--text)}
-.hero p{color:var(--text-muted);max-width:540px;margin:10px auto 0;font-size:1.02rem}
+.hero{
+  position:relative;overflow:hidden;text-align:center;
+  border:1px solid var(--card-border);border-radius:24px;
+  background:linear-gradient(180deg,rgba(255,106,0,.12),rgba(255,255,255,.02));
+  padding:44px 22px;margin-bottom:26px;
+}
+.hero::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 50% -20%,rgba(255,179,0,.25),transparent 60%);
+}
+.hero h2{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,4vw,2.2rem);font-weight:900;position:relative}
+.hero h2 em{font-style:normal;background:linear-gradient(90deg,var(--fire1),var(--fire2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);max-width:520px;margin:10px auto 0;position:relative;font-size:1.02rem}
 
-.section-title{display:flex;align-items:center;gap:10px;margin:0 0 16px;font-size:.95rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)}
-.section-title::after{content:"";flex:1;height:1px;background:var(--border)}
+.section-title{
+  display:flex;align-items:center;gap:10px;margin:0 0 16px;
+  font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+}
+.section-title::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--card-border),transparent)}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
-.sensi-card{border:1px solid var(--border);border-radius:18px;padding:18px 16px;background:var(--bg-card);backdrop-filter:blur(10px);transition:.25s}
-.sensi-card:hover{transform:translateY(-4px);border-color:var(--border-hover)}
-.sensi-card .label{font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)}
-.sensi-card .value{font-size:1.9rem;margin:6px 0 10px;color:var(--text)}
-.bar{height:6px;border-radius:99px;background:rgba(255,255,255,.05);overflow:hidden}
-.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--border-hover),var(--text));width:0;transition:width 1s cubic-bezier(.22,1,.36,1)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:14px}
+.sensi-card{
+  border:1px solid var(--card-border);border-radius:18px;padding:18px 16px;
+  background:var(--card);backdrop-filter:blur(10px);transition:.25s;position:relative;overflow:hidden;
+}
+.sensi-card:hover{transform:translateY(-4px);border-color:rgba(255,106,0,.45);box-shadow:0 14px 34px rgba(0,0,0,.45)}
+.sensi-card .label{font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.sensi-card .value{font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:900;margin:6px 0 10px;
+  background:linear-gradient(90deg,#fff,#ffd9a8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bar{height:6px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--fire1),var(--fire2));width:0;transition:width 1s cubic-bezier(.22,1,.36,1)}
 
-.btn{appearance:none;border:none;cursor:pointer;letter-spacing:.1em;text-transform:uppercase;font-size:.85rem;padding:16px 26px;border-radius:14px;display:inline-flex;align-items:center;gap:10px;transition:.25s;color:#fff}
+.copy-all-row{display:flex;justify-content:flex-end;margin-bottom:14px}
+.preset-card{
+  border:1px solid var(--card-border);border-radius:20px;padding:22px;
+  background:var(--card);backdrop-filter:blur(10px);transition:.25s;position:relative;
+}
+.preset-card:hover{transform:translateY(-4px);border-color:rgba(139,92,246,.5);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.preset-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.preset-head h3{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.05em;display:flex;align-items:center;gap:9px}
+.tag{font-size:.62rem;font-weight:800;letter-spacing:.16em;padding:4px 9px;border-radius:99px;text-transform:uppercase}
+.tag.head{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.35)}
+.tag.drag{background:rgba(34,211,238,.12);color:#67e8f9;border:1px solid rgba(34,211,238,.3)}
+.tag.tap{background:rgba(250,204,21,.12);color:#fde047;border:1px solid rgba(250,204,21,.3)}
+.tag.rush{background:rgba(74,222,128,.12);color:#86efac;border:1px solid rgba(74,222,128,.3)}
+.mini-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;margin-bottom:14px}
+.mini{border:1px solid var(--card-border);border-radius:13px;padding:10px 12px;background:rgba(0,0,0,.25)}
+.mini span{display:block;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.mini b{font-family:'Orbitron',sans-serif;font-size:1.15rem;font-weight:900}
+
+.btn{
+  appearance:none;border:none;cursor:pointer;font-family:'Orbitron',sans-serif;
+  font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:.88rem;
+  padding:17px 30px;border-radius:14px;display:inline-flex;align-items:center;gap:10px;transition:.25s;
+}
 .btn svg{width:15px;height:15px}
-.btn-red{background:#fff;color:#000;box-shadow:0 8px 24px rgba(255,255,255,0.15)}
-.btn-gold{background:var(--text-secondary);color:#000;box-shadow:0 8px 24px rgba(0,0,0,0.3)}
-.btn-ghost{background:rgba(255,255,255,.05);color:var(--text);border:1px solid var(--border)}
-.btn:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.btn-fire{background:linear-gradient(135deg,var(--fire1),var(--fire2));color:#fff;box-shadow:0 8px 24px rgba(255,106,0,.35)}
+.btn-vip{background:linear-gradient(135deg,var(--violet),#d946ef);color:#fff;box-shadow:0 8px 24px rgba(139,92,246,.4)}
+.btn-cyan{background:linear-gradient(135deg,#0891b2,var(--cyan));color:#fff;box-shadow:0 8px 24px rgba(34,211,238,.3)}
+.btn-ghost{background:rgba(255,255,255,.05);color:var(--text);border:1px solid var(--card-border)}
+.btn:hover{filter:brightness(1.15);transform:translateY(-2px)}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.7;cursor:wait;transform:none}
-.btn-sm{padding:12px 18px;font-size:.72rem}
+.btn-sm{padding:13px 20px;font-size:.76rem}
 
-.gen-box{border:1px solid var(--border);border-radius:24px;padding:26px 24px;background:var(--bg-card);backdrop-filter:blur(10px);margin-bottom:26px}
-.field-label{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin:18px 0 9px;display:block}
-.field-label:first-child{margin-top:0}
-.field-label b{color:var(--text)}
-.opts{display:flex;gap:10px;flex-wrap:wrap}
-.opt{cursor:pointer;user-select:none;border:1px solid var(--border);border-radius:13px;padding:10px 16px;font-weight:700;font-size:.88rem;background:rgba(0,0,0,.25);transition:.2s;color:var(--text-muted)}
-.opt:hover{border-color:var(--border-hover);color:var(--text)}
-.opt.sel{background:rgba(255,255,255,.08);border-color:var(--text);color:#fff}
-.f-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
-select.inp,input.inp{
-  width:100%;background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:12px;color:var(--text);
-  padding:12px 13px;font-family:'Inter',sans-serif;font-weight:600;font-size:.95rem;outline:none;transition:.2s;
+.vip-hero{
+  border:1px solid rgba(139,92,246,.35);border-radius:24px;padding:38px 22px;text-align:center;margin-bottom:26px;
+  background:linear-gradient(180deg,rgba(139,92,246,.16),rgba(217,70,239,.05));position:relative;overflow:hidden;
 }
-select.inp:focus,input.inp:focus{border-color:var(--border-hover);box-shadow:0 0 14px rgba(255,255,255,0.05)}
-select.inp option{background:#0A0A0A}
-.warn-msg{margin-top:12px;color:var(--text-secondary);font-weight:700;font-size:.95rem;display:none}
-.warn-msg.show{display:block}
-.gen-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:22px}
-.remaining{color:var(--text-muted);font-size:.86rem;font-weight:700;letter-spacing:.04em}
-
-.result{border:1px solid var(--border);border-radius:24px;padding:26px 24px;margin-top:6px;background:var(--bg-card);opacity:0;transform:translateY(18px);transition:.5s;pointer-events:none;display:none}
-.result.visible{opacity:1;transform:none;pointer-events:auto;display:block}
-.result-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px}
-.dpi-picker{display:flex;gap:8px;flex-wrap:wrap}
-.dp-opt{
-  cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;
-  border:1px dashed var(--border);border-radius:18px;padding:12px 20px;
-  background:rgba(255,255,255,.02);transition:.2s;font-family:'Inter',sans-serif;color:var(--text-muted);
-}
-.dp-opt b{font-size:1.4rem;color:var(--text-secondary);line-height:1}
-.dp-opt span{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;font-weight:800;text-align:center}
-.dp-opt:hover{border-color:var(--border-hover)}
-.dp-opt.sel{border-style:solid;border-color:var(--text);background:rgba(255,255,255,.05);color:#fff;box-shadow:0 0 18px rgba(255,255,255,0.05)}
-.dp-opt.sel b{color:#fff}
-.btn-chip{display:flex;flex-direction:column;align-items:center;gap:2px;border:1px dashed var(--border);border-radius:18px;padding:12px 22px;background:rgba(255,255,255,.02)}
-.btn-chip b{font-size:1.5rem;color:var(--text);line-height:1}
-.btn-chip span{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted);font-weight:700;text-align:center}
-.cic-chip{display:flex;flex-direction:column;align-items:center;gap:2px;border:1px dashed var(--border);border-radius:18px;padding:12px 22px;background:rgba(255,255,255,.02)}
-.cic-chip b{font-size:1.5rem;color:var(--text);line-height:1}
-.cic-chip span{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted);font-weight:700;text-align:center}
-
-.gen-note{margin-top:14px;color:var(--text-muted);font-size:.92rem;line-height:1.5}
-.gen-note b{color:var(--text-secondary)}
-
-.train-warn{
-  margin-top:20px;display:flex;gap:14px;align-items:flex-start;
-  border:1px solid var(--border);border-left:5px solid var(--text-muted);border-radius:16px;
-  background:rgba(255,255,255,0.02);
-  padding:16px 18px;
-}
-.tw-icon{font-size:1.6rem;line-height:1;flex-shrink:0}
-.train-warn b{color:var(--text);font-weight:700;letter-spacing:.04em;display:block;margin-bottom:6px;font-size:.92rem}
-.train-warn p{color:var(--text-muted);font-size:.92rem;line-height:1.55}
-.train-warn p b{display:inline;color:var(--text-secondary);font-family:inherit}
-
+.vip-hero h2{font-family:'Orbitron',sans-serif;font-size:clamp(1.3rem,4vw,2rem);font-weight:900}
+.vip-hero h2 em{font-style:normal;background:linear-gradient(90deg,var(--violet),#e879f9);-webkit-background-clip:text;background-clip:text;color:transparent}
+.vip-hero p{color:var(--muted);max-width:520px;margin:10px auto 20px}
 .lock-zone{position:relative}
 .blur-lock{filter:blur(7px) saturate(.6);pointer-events:none;user-select:none}
 .lock-overlay{
-  position:absolute;inset:-8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;z-index:5;
-  background:radial-gradient(circle at center,rgba(0,0,0,.65),rgba(0,0,0,.95));border-radius:24px;padding:18px;text-align:center;
+  position:absolute;inset:-8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:5;
+  background:radial-gradient(circle at center,rgba(7,7,13,.55),rgba(7,7,13,.85));border-radius:24px;transition:opacity .5s;
 }
-.lock-icon{width:60px;height:60px;border-radius:19px;display:grid;place-items:center;background:rgba(255,255,255,0.08);border:1px solid var(--border);animation:pulseLock 2.2s ease-in-out infinite}
-.lock-icon.gold{background:rgba(255,255,255,0.1);border-color:var(--border-hover)}
-@keyframes pulseLock{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
-.lock-icon svg{width:28px;height:28px}
-.lock-overlay.hide-lock{display:none}
-.lock-overlay h3{font-size:1.05rem;letter-spacing:.06em}
-.lock-overlay p{color:var(--text-muted);max-width:360px;font-size:.95rem;line-height:1.5}
-.lock-divider{width:min(340px,80%);height:1px;background:var(--border);margin:6px 0}
-.key-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-.key-input{background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:12px 14px;font-family:'Inter',sans-serif;font-weight:700;font-size:.95rem;width:230px;outline:none;transition:.2s;letter-spacing:.05em}
-.key-input:focus{border-color:var(--border-hover);box-shadow:0 0 16px rgba(255,255,255,0.05)}
-.spinner{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+.lock-overlay.hide{opacity:0;pointer-events:none}
+.lock-icon{
+  width:64px;height:64px;border-radius:20px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--violet),#d946ef);box-shadow:0 0 40px rgba(139,92,246,.55);
+  animation:pulseLock 2.2s ease-in-out infinite;
+}
+@keyframes pulseLock{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.lock-icon svg{width:30px;height:30px}
+.lock-overlay p{color:var(--muted);max-width:340px;text-align:center}
+.spinner{width:17px;height:17px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+body.vip-unlocked .preset-grid .bar i{width:100%!important}
 
-.list-box{border:1px solid var(--border);border-radius:20px;background:var(--bg-card);backdrop-filter:blur(10px);padding:8px}
-.row-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;border-bottom:1px solid rgba(255,255,255,.03);flex-wrap:wrap}
-.row-item:last-child{border-bottom:none}
-.row-main b{font-size:.95rem}
-.row-main span{display:block;color:var(--text-muted);font-size:.78rem;letter-spacing:.04em}
-.empty-hint{padding:22px;text-align:center;color:var(--text-muted);font-size:.92rem}
+.gen-box{
+  border:1px solid var(--card-border);border-radius:24px;padding:28px 24px;
+  background:var(--card);backdrop-filter:blur(10px);margin-bottom:26px;
+}
+.field-label{font-size:.75rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:block}
+.opts{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.opt{
+  cursor:pointer;user-select:none;border:1px solid var(--card-border);border-radius:13px;
+  padding:11px 18px;font-weight:700;font-size:.9rem;background:rgba(0,0,0,.25);transition:.2s;color:var(--muted);
+}
+.opt:hover{border-color:rgba(34,211,238,.5);color:var(--text)}
+.opt.sel{background:linear-gradient(135deg,rgba(8,145,178,.25),rgba(34,211,238,.12));border-color:var(--cyan);color:#fff;box-shadow:0 0 18px rgba(34,211,238,.25)}
+.gen-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.result{
+  border:1px solid rgba(255,106,0,.35);border-radius:24px;padding:28px 24px;margin-top:26px;
+  background:linear-gradient(180deg,rgba(255,106,0,.1),rgba(255,255,255,.02));
+  opacity:0;transform:translateY(18px);transition:.5s;pointer-events:none;
+}
+.result.visible{opacity:1;transform:none;pointer-events:auto}
+.vip-result{border-color:rgba(139,92,246,.45);background:linear-gradient(180deg,rgba(139,92,246,.12),rgba(255,255,255,.02))}
+.result-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px}
+.dpi-chip{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  border:1px dashed rgba(255,179,0,.5);border-radius:18px;padding:14px 26px;background:rgba(255,179,0,.07);
+}
+.dpi-chip b{font-family:'Orbitron',sans-serif;font-size:2.2rem;font-weight:900;color:var(--fire2);line-height:1}
+.dpi-chip span{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:700}
 
-.modal-back{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:18px}
-.modal-back.show{display:flex}
-.modal{width:min(420px,100%);border:1px solid var(--border);border-radius:24px;padding:30px 26px;text-align:center;background:var(--bg-card);box-shadow:0 30px 80px rgba(0,0,0,.8);animation:fadeUp .3s ease both}
-.modal .lock-icon{margin:0 auto 14px}
-.modal h3{font-size:1.15rem;margin-bottom:8px}
-.modal p{color:var(--text-muted);margin-bottom:20px;line-height:1.5}
-.modal-actions{display:flex;flex-direction:column;gap:10px}
-
-.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,80px);z-index:120;background:#0A0A0A;border:1px solid rgba(34,197,94,.4);color:#86efac;padding:12px 22px;border-radius:14px;font-weight:700;font-size:.92rem;box-shadow:0 12px 34px rgba(0,0,0,.6);transition:.35s cubic-bezier(.22,1,.36,1)}
+.toast{
+  position:fixed;left:50%;bottom:28px;transform:translate(-50%,80px);z-index:99;
+  background:#111827;border:1px solid rgba(34,197,94,.5);color:#bbf7d0;
+  padding:12px 22px;border-radius:14px;font-weight:700;letter-spacing:.04em;font-size:.9rem;
+  box-shadow:0 12px 34px rgba(0,0,0,.5);transition:.35s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;gap:9px;
+}
 .toast.show{transform:translate(-50%,0)}
-.toast.err{border-color:rgba(239,68,68,.4);color:#fca5a5}
-
-.videos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-.video-card{border:1px solid var(--border);border-radius:18px;overflow:hidden;background:var(--bg-card);cursor:pointer;transition:.25s}
-.video-card:hover{transform:translateY(-4px);border-color:var(--border-hover);box-shadow:0 14px 34px rgba(0,0,0,0.3)}
-.video-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000}
-.video-frame img{width:100%;height:100%;object-fit:cover;display:block;opacity:.85}
-.video-frame iframe{width:100%;height:100%;display:block;border:0}
-.play-btn{position:absolute;inset:0;display:grid;place-items:center}
-.play-btn span{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.9);display:grid;place-items:center;box-shadow:0 8px 30px rgba(0,0,0,0.4);transition:.2s}
-.video-card:hover .play-btn span{transform:scale(1.1)}
-.play-btn svg{width:24px;height:24px;fill:#000;margin-left:3px}
-.vc-body{padding:14px 16px 16px}
-.vc-cat{font-size:.6rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);border:1px solid var(--border);border-radius:99px;padding:3px 9px;display:inline-block;margin-bottom:8px;background:rgba(255,255,255,0.03)}
-.vc-body h3{font-size:.82rem;letter-spacing:.03em;line-height:1.4;margin-bottom:5px}
-.vc-body p{color:var(--text-muted);font-size:.84rem;line-height:1.45}
+.toast svg{width:16px;height:16px}
 
 .tips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
-.tip-card{border:1px solid var(--border);border-radius:18px;padding:20px;background:var(--bg-card);transition:.25s}
-.tip-card:hover{transform:translateY(-4px);border-color:var(--border-hover)}
-.tip-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;margin-bottom:14px;background:rgba(255,255,255,0.04);border:1px solid var(--border)}
-.tip-icon svg{width:20px;height:20px;color:var(--text-muted)}
-.tip-card h3{font-size:.82rem;letter-spacing:.06em;margin-bottom:8px}
-.tip-card p{color:var(--text-muted);font-size:.93rem;line-height:1.55}
+.tip-card{
+  border:1px solid var(--card-border);border-radius:18px;padding:20px;
+  background:var(--card);backdrop-filter:blur(10px);transition:.25s;
+}
+.tip-card:hover{transform:translateY(-4px);border-color:rgba(34,211,238,.45);box-shadow:0 14px 34px rgba(0,0,0,.45)}
+.tip-icon{
+  width:42px;height:42px;border-radius:12px;display:grid;place-items:center;margin-bottom:14px;
+  background:linear-gradient(135deg,rgba(8,145,178,.3),rgba(34,211,238,.1));
+  border:1px solid rgba(34,211,238,.35);
+}
+.tip-icon svg{width:20px;height:20px;color:var(--cyan)}
+.tip-card h3{font-family:'Orbitron',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.06em;margin-bottom:8px}
+.tip-card p{color:var(--muted);font-size:.94rem;line-height:1.55}
+
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.testi-card{
+  border:1px solid var(--card-border);border-radius:18px;padding:20px;
+  background:var(--card);backdrop-filter:blur(10px);transition:.25s;
+}
+.testi-card:hover{transform:translateY(-4px);border-color:rgba(255,106,0,.4);box-shadow:0 14px 34px rgba(0,0,0,.45)}
+.stars{color:#fbbf24;letter-spacing:3px;font-size:.95rem;margin-bottom:10px}
+.testi-card>p{color:#e5e7eb;font-size:.96rem;line-height:1.55;font-style:italic;margin-bottom:14px}
+.testi-user{display:flex;align-items:center;gap:11px}
+.avatar{
+  width:38px;height:38px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;
+  font-family:'Orbitron',sans-serif;font-weight:900;font-size:.78rem;color:#fff;
+}
+.av-1{background:linear-gradient(135deg,#ff6a00,#ffb300)}
+.av-2{background:linear-gradient(135deg,#8b5cf6,#d946ef)}
+.av-3{background:linear-gradient(135deg,#0891b2,#22d3ee)}
+.av-4{background:linear-gradient(135deg,#16a34a,#4ade80)}
+.testi-user b{display:block;font-size:.92rem;line-height:1.2}
+.testi-user span{font-size:.74rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
 
 .faq-list{display:flex;flex-direction:column;gap:10px;max-width:760px;margin:0 auto}
-.faq-item{border:1px solid var(--border);border-radius:16px;background:var(--bg-card)}
-.faq-q{width:100%;appearance:none;border:none;background:transparent;color:var(--text);font-family:'Inter',sans-serif;font-size:1.02rem;font-weight:700;text-align:left;padding:16px 18px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.faq-q svg{width:17px;height:17px;flex-shrink:0;color:var(--text-muted);transition:.3s}
+.faq-item{border:1px solid var(--card-border);border-radius:16px;background:var(--card);transition:.25s}
+.faq-item.open{border-color:rgba(255,106,0,.5);box-shadow:0 10px 30px rgba(255,106,0,.08)}
+.faq-q{
+  width:100%;appearance:none;border:none;background:transparent;color:var(--text);
+  font-family:'Rajdhani',sans-serif;font-size:1.04rem;font-weight:700;text-align:left;
+  padding:17px 18px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;
+}
+.faq-q svg{width:17px;height:17px;flex-shrink:0;color:var(--fire2);transition:.3s}
 .faq-item.open .faq-q svg{transform:rotate(180deg)}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease}
-.faq-a-inner{padding:0 18px 16px;color:var(--text-muted);line-height:1.65;font-size:.96rem}
+.faq-a-inner{padding:0 18px 17px;color:var(--muted);line-height:1.65;font-size:.97rem}
 
-.share-fab{position:fixed;right:20px;bottom:20px;z-index:90;width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;display:grid;place-items:center;background:rgba(255,255,255,0.08);border:1px solid var(--border);box-shadow:0 10px 30px rgba(0,0,0,0.4);transition:.25s}
-.share-fab:hover{transform:translateY(-3px) scale(1.06);border-color:var(--border-hover)}
-.share-fab svg{width:26px;height:26px}
-
-footer{text-align:center;margin-top:44px;color:var(--text-muted);font-size:.82rem;line-height:1.7}
-footer b{color:var(--text-secondary)}
-
-/* Welcome Screen */
-.welcome-screen{position:fixed;inset:0;z-index:10001;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s ease, visibility .5s ease}
-.welcome-screen.hidden{opacity:0;visibility:hidden;pointer-events:none}
-
-/* Animated orbs */
-.welcome-screen .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0;pointer-events:none;animation:orbFloat 8s ease-in-out infinite, orbFadeIn 1.5s ease forwards}
-.welcome-screen .orb-1{width:400px;height:400px;background:rgba(255,255,255,0.04);top:-10%;left:-10%;animation-delay:0s}
-.welcome-screen .orb-2{width:300px;height:300px;background:rgba(255,255,255,0.03);bottom:-5%;right:-5%;animation-delay:1.5s}
-.welcome-screen .orb-3{width:200px;height:200px;background:rgba(255,255,255,0.025);top:40%;left:60%;animation-delay:3s}
-.welcome-screen .orb-4{width:150px;height:150px;background:rgba(255,255,255,0.02);top:20%;right:30%;animation-delay:4.5s}
-
-@keyframes orbFloat{
-  0%,100%{transform:translate(0,0) scale(1)}
-  25%{transform:translate(30px,-20px) scale(1.1)}
-  50%{transform:translate(-20px,30px) scale(0.95)}
-  75%{transform:translate(20px,15px) scale(1.05)}
+.share-fab{
+  position:fixed;right:20px;bottom:20px;z-index:90;width:56px;height:56px;border-radius:50%;
+  border:none;cursor:pointer;display:grid;place-items:center;
+  background:linear-gradient(135deg,#16a34a,#22c55e);
+  box-shadow:0 10px 30px rgba(34,197,94,.5);transition:.25s;
 }
-@keyframes orbFadeIn{to{opacity:1}}
+.share-fab:hover{transform:translateY(-3px) scale(1.06)}
+.share-fab:active{transform:scale(.95)}
+.share-fab svg{width:27px;height:27px}
 
-/* Scan line */
-.welcome-screen::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.01) 2px,rgba(255,255,255,0.01) 4px);pointer-events:none;animation:scanMove 6s linear infinite}
-@keyframes scanMove{from{transform:translateY(-100%)}to{transform:translateY(100%)}}
-
-.welcome-logo{font-size:clamp(3rem,8vw,6rem);font-weight:900;color:#fff;margin-bottom:16px;opacity:0;transform:translateY(20px);animation:welcomeFadeIn .8s ease .2s forwards;position:relative;z-index:1;text-shadow:0 0 60px rgba(255,255,255,0.15)}
-.welcome-sub{color:#71717A;font-size:1rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:40px;opacity:0;animation:welcomeFadeIn .8s ease .4s forwards;position:relative;z-index:1}
-.welcome-enter{background:#fff;color:#000;border:none;padding:16px 40px;border-radius:14px;font-weight:700;font-size:1rem;cursor:pointer;transition:all .3s;opacity:0;animation:welcomeFadeIn .8s ease .6s forwards;letter-spacing:.06em;position:relative;z-index:10}
-.welcome-enter:hover{box-shadow:0 8px 30px rgba(255,255,255,0.25);transform:translateY(-2px)}
-@keyframes welcomeFadeIn{to{opacity:1;transform:translateY(0)}}
-
-/* Voice Control */
-.voice-control{position:fixed;bottom:20px;left:20px;z-index:1000}
-.voice-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:var(--bg-card);color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s ease}
-.voice-btn:hover{border-color:var(--border-hover);color:var(--text)}
-.voice-btn.active{background:rgba(255,255,255,0.1);border-color:var(--text);color:#fff}
-
-/* Custom Cursor */
-.custom-cursor{position:fixed;width:20px;height:20px;pointer-events:none;z-index:10000;mix-blend-mode:difference;transform:translate(-50%,-50%);transition:transform .1s ease}
-.cursor-dot{width:8px;height:8px;background:#fff;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 10px rgba(255,255,255,0.5)}
-.cursor-glow{position:fixed;width:40px;height:40px;border:1px solid rgba(255,255,255,0.2);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:all .15s ease}
-.custom-cursor.hovering .cursor-dot{transform:translate(-50%,-50%) scale(1.5);box-shadow:0 0 15px rgba(255,255,255,0.6)}
-.custom-cursor.hovering .cursor-glow{transform:translate(-50%,-50%) scale(1.5);border-color:rgba(255,255,255,0.3)}
-
-@media(max-width:760px){
-  .modes{grid-template-columns:1fr}
-  .dp-opt,.btn-chip,.cic-chip{flex-direction:row;gap:10px}
-  .nav-links{display:none}
-  .hamburger{display:flex}
+.admin-box{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
+.key-input{
+  background:rgba(0,0,0,.35);border:1px solid var(--card-border);border-radius:12px;
+  color:var(--text);padding:11px 14px;font-family:'Rajdhani',sans-serif;font-weight:600;
+  font-size:.92rem;width:210px;outline:none;transition:.2s;
 }
-@media(hover:none){
-  .custom-cursor,.cursor-glow{display:none !important}
+.key-input:focus{border-color:var(--violet);box-shadow:0 0 16px rgba(139,92,246,.3)}
+.toast.err{border-color:rgba(239,68,68,.55);color:#fecaca}
+
+footer{text-align:center;margin-top:44px;color:#5b6270;font-size:.82rem}
+footer b{color:var(--muted)}
+
+@media(max-width:560px){
+  header{justify-content:center;text-align:center}
+  .badges{justify-content:center}
 }
 </style>
-<link rel="stylesheet" href="/styles/theme.css">
 </head>
-<body data-tier="normal">
-
-<!-- WELCOME SCREEN -->
-<div class="welcome-screen" id="welcomeScreen" style="display:none">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-  <div class="orb orb-4"></div>
-  <div class="welcome-logo">AIMZY</div>
-  <div class="welcome-sub">Sua sensibilidade. Seu melhor desempenho.</div>
-  <button class="welcome-enter" id="welcomeEnter">ENTRAR NO AIMZY</button>
-</div>
-
-<div class="bg-grid"></div>
-<div class="bg-glow g1"></div>
-<div class="bg-glow g2"></div>
-<div class="bg-glow g3"></div>
-
-<!-- NAVBAR -->
-<nav class="navbar" id="navbar">
-  <div class="nav-inner">
-    <a href="/" class="nav-brand">
-      <h1>AIMZY</h1>
-    </a>
-    <div class="nav-links">
-      <a href="#generator">Gerador</a>
-      <a href="#plans">Planos</a>
-      <a href="#benefits">Benefícios</a>
-      <a href="#faq">Suporte</a>
-      <a href="#generator" style="color:#e63946;font-weight:800">Criar Conta</a>
-      <button class="nav-enter" id="navEnterBtn">ENTRAR</button>
-    </div>
-    <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</nav>
+<body>
+<div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
 
 <div class="wrap">
 
 <header>
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
+    </div>
+    <div>
+      <h1>SENSI<span>PRO</span></h1>
+      <p>Free Fire Sensibilidade</p>
+    </div>
+  </div>
   <div class="badges">
-    <button class="chip" id="installChip" style="display:none;cursor:pointer;border-color:var(--border-hover);color:var(--text-secondary);background:rgba(255,255,255,0.04)">
-      ⬇️ Instalar app
-    </button>
-    <button class="chip" id="accountChip" style="cursor:pointer;border-color:var(--border);color:var(--text-secondary);background:rgba(255,255,255,0.03)">👤 <span id="accountChipTxt">Entrar</span></button>
-    <span class="chip" id="userChip" style="display:none"><i id="userStatusDot"></i><span id="userChipName"></span></span>
     <span class="chip"><i></i>Servidor Online</span>
-    <span class="chip">Escala 200 · 2026</span>
-    <span class="chip vip-on" id="vipChip" style="display:none"><i style="background:var(--text);box-shadow:0 0 8px var(--text)"></i><em id="vipChipTxt" style="font-style:normal">VIP Ativo</em></span>
-    <button class="chip" id="hudChip" style="cursor:pointer;border-color:var(--border);color:var(--text-secondary);background:rgba(255,255,255,0.03)">🎮 HUDs</button>
+    <span class="chip">+50K Jogadores</span>
+    <span class="chip">Sensi até 200 · 2026</span>
   </div>
 </header>
 
-<!-- TIER SELECTOR -->
-<nav class="modes" id="modes">
-  <button class="mode-card normal active animate-fadeInUp" data-tier="normal" style="animation-delay:0.1s">
-    <span class="mode-badge mb-free">Grátis</span>
-    <span class="emoji">🎯</span>
-    <h3>AIMZY NORMAL</h3>
-    <p>Equilibrada e fácil de se adaptar. Para todos os jogadores.</p>
+<nav class="tabs" id="tabs">
+  <button class="tab-btn gen active" data-tab="gen">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+    Gerador
   </button>
-  <button class="mode-card premium animate-fadeInUp" data-tier="premium" style="animation-delay:0.2s">
-    <span class="mode-badge mb-key">Key VIP</span>
-    <span class="emoji">⭐</span>
-    <h3>AIMZY PREMIUM</h3>
-    <p>Refinada com o perfil do seu aparelho e o seu estilo de jogo.</p>
-  </button>
-  <button class="mode-card vip animate-fadeInUp" data-tier="proibida" style="animation-delay:0.3s">
-    <span class="mode-badge mb-proib">Key VIP</span>
-    <span class="emoji">🔥</span>
-    <h3>AIMZY VIP</h3>
-    <p>AGRESSIVA. Drag insano pra quem já tem controle. Exige treino.</p>
-  </button>
-  <button class="mode-card emulator animate-fadeInUp" data-tier="emulator" style="animation-delay:0.4s">
-    <span class="mode-badge mb-free">Grátis</span>
-    <span class="emoji">🖥️</span>
-    <h3>AIMZY EMULATOR</h3>
-    <p>Para quem joga no PC. Sensibilidade calibrada para mouse.</p>
+  <button class="tab-btn vip" data-tab="vip">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 8l5 4 5-8 5 8 5-4-2 12H4L2 8z"/></svg>
+    Sensi VIP
   </button>
 </nav>
 
-<!-- HUD TABS -->
-<nav class="modes" id="hudTabs" style="display:none;margin-bottom:28px">
-  <button class="mode-card hud-tab active animate-fadeInUp" data-hud="2dedos" style="animation-delay:0.1s">
-    <span class="mode-badge mb-free">2 Dedos</span>
-    <span class="emoji">✌️</span>
-    <h3>HUD 2 Dedos</h3>
-    <p>Ideal para iniciantes e Instaplayer. Conforto e facilidade.</p>
-  </button>
-  <button class="mode-card hud-tab animate-fadeInUp" data-hud="3dedos" style="animation-delay:0.2s">
-    <span class="mode-badge mb-key">3 Dedos</span>
-    <span class="emoji">🤟</span>
-    <h3>HUD 3 Dedos</h3>
-    <p>Equilíbrio entre mobilidade e precisão. Popular no competitivo.</p>
-  </button>
-  <button class="mode-card hud-tab animate-fadeInUp" data-hud="4dedos" style="animation-delay:0.3s">
-    <span class="mode-badge mb-proib">4 Dedos</span>
-    <span class="emoji">🖐️</span>
-    <h3>HUD 4 Dedos</h3>
-    <p>Controle total para avançados. Ranqueadas e campeonatos.</p>
-  </button>
-  <button class="mode-card hud-tab animate-fadeInUp" data-hud="famosos" style="animation-delay:0.4s">
-    <span class="mode-badge" style="background:rgba(255,215,0,.1);color:#ffd700;border-color:rgba(255,215,0,.3)">Famosos</span>
-    <span class="emoji">⭐</span>
-    <h3>HUDs de Famosos</h3>
-    <p>Layouts de jogadores conhecidos e streamers.</p>
-  </button>
-</nav>
-
-<!-- HUD SECTION -->
-<section class="panel" id="hudSection" style="display:none">
-  <div class="hero animate-fadeInUp" style="animation-delay:0.5s;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-    <div>
-      <h2 id="hudHeroTitle"><em>HUDs 2 Dedos</em></h2>
-      <p id="hudHeroDesc">Layouts testados pela comunidade. Copie o código e cole no Free Fire: Configurações → HUD Personalizada → Importar.</p>
-    </div>
-    <button class="btn btn-ghost btn-sm" id="hudBackBtn" style="margin-top:0">← Voltar ao Gerador</button>
+<section class="panel" id="panel-vip">
+  <div class="vip-hero">
+    <h2>SENSI <em>VIP PREMIUM</em></h2>
+    <p>Gerador VIP exclusivo por marca de celular na escala 200 + presets de competição. Acesso pago — compre pelo WhatsApp ou entre com sua chave de administrador.</p>
   </div>
-
-  <!-- HUD FILTER TABS -->
-  <div class="modes" id="hudFilterTabs" style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap">
-    <button class="mode-card hud-filter-btn active" data-filter="all" style="padding:10px 18px;min-width:auto">
-      <span class="emoji" style="font-size:1.2rem">📋</span>
-      <span style="font-weight:700">Todos</span>
-    </button>
-    <button class="mode-card hud-filter-btn" data-filter="free" style="padding:10px 18px;min-width:auto">
-      <span class="emoji" style="font-size:1.2rem">🆓</span>
-      <span style="font-weight:700;color:#86efac">Free</span>
-    </button>
-    <button class="mode-card hud-filter-btn" data-filter="vip" style="padding:10px 18px;min-width:auto">
-      <span class="emoji" style="font-size:1.2rem">⭐</span>
-      <span style="font-weight:700;color:#ffd700">VIP</span>
-    </button>
-  </div>
-
-  <div class="grid" id="hudGrid"></div>
-
-  <div style="margin-top:30px;padding:20px;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:16px;text-align:center">
-    <h3 style="margin-bottom:10px">📥 Como usar o código do HUD</h3>
-    <p style="color:var(--text-muted);margin-bottom:16px;max-width:600px;margin-left:auto;margin-right:auto">
-      1. Copie o código abaixo do HUD desejado<br>
-      2. Abra o Free Fire → Configurações (⚙️) → <b>HUD Personalizada</b><br>
-      3. Toque em <b>Importar</b> → Cole o código → <b>OK</b><br>
-      4. Ajuste transparência/tamanho se quiser e salve
-    </p>
-    <a class="btn btn-ghost btn-sm" href="https://www.freefiremania.com.br/huds.html" target="_blank" rel="noopener">Ver mais HUDs no Free Fire Mania →</a>
-  </div>
-</section>
-
-<!-- GENERATOR -->
-<section class="panel" id="generator">
-  <div class="hero animate-fadeInUp" style="animation-delay:0.5s">
-    <h2 id="heroTitle"><em>AIMZY NORMAL</em></h2>
-    <p id="heroDesc">Configuração equilibrada gerada na hora. Informe o modelo do seu celular e comece.</p>
-  </div>
-
   <div class="lock-zone">
-    <div class="lock-overlay hide-lock" id="tierLock">
-      <div class="lock-icon" id="lockIcon">
+    <div class="lock-overlay" id="lockOverlay">
+      <div class="lock-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
       </div>
-      <h3 id="lockTitle">🔒 Área VIP</h3>
-      <p id="lockDesc">Para conseguir acesso VIP, entre em contato com um administrador e solicite sua KEY.</p>
-      <div class="key-row">
-        <input type="password" class="key-input activate-key" placeholder="Digite sua KEY" autocomplete="off" maxlength="24">
-        <button class="btn btn-red btn-sm activate-btn">Ativar KEY</button>
-      </div>
-      <div class="lock-divider"></div>
-      <p>Quer acesso Premium ou VIP?<br>Envie uma mensagem para um administrador solicitando sua KEY.</p>
-      <button class="btn btn-ghost btn-sm contact-btn">📩 Solicitar acesso</button>
-    </div>
-
-    <div id="genBox">
-      <label class="field-label">Modelo do celular <b>*</b></label>
-      <select class="inp" id="modelSel"><option value="">Carregando modelos...</option></select>
-      <input class="inp" id="modelCustom" placeholder='Ex: Redmi Note 13 Pro' autocomplete="off" maxlength="60" style="display:none;margin-top:10px">
-      <div class="warn-msg" id="genWarn">Informe o modelo do seu celular para continuar.</div>
-
-      <label class="field-label">DPI atual do celular (opcional)</label>
-      <input type="number" class="inp" id="dpiAtual" min="200" max="1200" placeholder="Ex: 480" style="max-width:260px">
-
-      <label class="field-label">Estilo de jogo</label>
-      <div class="opts" id="styleOpts">
-        <div class="opt sel" data-v="eq">Equilibrado</div>
-        <div class="opt" data-v="ag">Agressivo</div>
-        <div class="opt" data-v="pr">Precisão</div>
-      </div>
-      <label class="field-label">Nível do jogador</label>
-      <div class="opts" id="levelOpts">
-        <div class="opt" data-v="iniciante">Iniciante</div>
-        <div class="opt sel" data-v="intermediario">Intermediário</div>
-        <div class="opt" data-v="avancado">Avançado</div>
-        <div class="opt" data-v="competitivo">Competitivo</div>
-      </div>
-      <label class="field-label">Preferência de mira</label>
-      <div class="opts" id="aimOpts">
-        <div class="opt sel" data-v="equilibrada">Equilibrada</div>
-        <div class="opt" data-v="cabeca">Headshot (drag)</div>
-        <div class="opt" data-v="precisao">Precisão / controle</div>
-      </div>
-    </div>
-
-    <div id="emuBox" style="display:none">
-      <label class="field-label">Emulador <b>*</b></label>
-      <select class="inp" id="emuSel">
-        <option value="bluestacks">BlueStacks</option>
-        <option value="gameloop">GameLoop</option>
-        <option value="ldplayer">LDPlayer</option>
-        <option value="msi">MSI App Player</option>
-      </select>
-
-      <label class="field-label">DPI do mouse (opcional)</label>
-      <input type="number" class="inp" id="mouseDpi" min="100" max="16000" placeholder="Ex: 800" style="max-width:260px">
-
-      <label class="field-label">Sensibilidade do mouse no emulador (opcional)</label>
-      <input type="number" class="inp" id="mouseSens" min="0.5" max="100" step="0.5" placeholder="Ex: 25" style="max-width:260px">
-
-      <label class="field-label">Estilo de jogo</label>
-      <div class="opts" id="emuStyleOpts">
-        <div class="opt sel" data-v="eq">Equilibrado</div>
-        <div class="opt" data-v="ag">Agressivo</div>
-        <div class="opt" data-v="pr">Precisão</div>
-      </div>
-
-      <label class="field-label">Ajuste padrão (preset)</label>
-      <select class="inp" id="emuPreset">
-        <option value="padrao">Padrão</option>
-        <option value="confortavel">Confortável</option>
-        <option value="casual">Casual</option>
-        <option value="hipico">Hípico (drag)</option>
-        <option value="sensivel">Sensível</option>
-      </select>
-    </div>
-
-    <div class="gen-actions" style="margin-top:18px">
-      <button class="btn btn-red" id="genBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
-        <span id="genBtnLabel">Gerar Sensi</span>
+      <p>Sensi VIP é acesso pago. Compre pelo WhatsApp ou entre com sua chave de administrador.</p>
+      <button class="btn btn-vip" onclick="buyVip()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+        Comprar VIP
       </button>
-      <span class="remaining" id="remaining"></span>
-      <button class="btn btn-ghost" id="copyBtn" style="display:none">Copiar Config</button>
+      <div class="admin-box">
+        <input type="password" id="vipKey" class="key-input" placeholder="Chave de acesso (adm)" autocomplete="off">
+        <button class="btn btn-ghost btn-sm" onclick="unlockVip()">Entrar</button>
+      </div>
+    </div>
+    <div id="vipContent" class="blur-lock">
+      <div class="gen-box">
+        <label class="field-label">Marca do celular</label>
+        <div class="opts" id="brandOpts">
+          <div class="opt sel" data-v="sam">Samsung</div>
+          <div class="opt" data-v="mot">Motorola</div>
+          <div class="opt" data-v="iph">iPhone</div>
+          <div class="opt" data-v="xia">Xiaomi / POCO</div>
+          <div class="opt" data-v="rea">Realme</div>
+          <div class="opt" data-v="asu">Asus / ROG</div>
+          <div class="opt" data-v="out">Outro</div>
+        </div>
+        <label class="field-label">Estilo de jogo</label>
+        <div class="opts" id="vipStyleOpts">
+          <div class="opt sel" data-v="eq">Equilibrado</div>
+          <div class="opt" data-v="ag">Agressivo</div>
+          <div class="opt" data-v="pr">Precisão</div>
+        </div>
+        <div class="gen-actions">
+          <button class="btn btn-vip" id="vipGenBtn" onclick="generateVip()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+            Gerar Sensi VIP
+          </button>
+          <button class="btn btn-ghost" id="copyVipBtn" onclick="copyVip()" style="display:none">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copiar Config
+          </button>
+        </div>
+      </div>
+      <div class="result vip-result" id="vipResult">
+        <div class="result-head">
+          <div class="section-title" style="margin:0">Sua Sensi VIP gerada</div>
+          <div class="dpi-chip"><b id="dpiVipVal">0</b><span>DPI recomendado</span></div>
+        </div>
+        <div class="grid" id="vipGenGrid"></div>
+      </div>
+      <div class="section-title" style="margin-top:34px">Presets Exclusivos</div>
+      <div class="grid" id="vipGrid"></div>
     </div>
   </div>
+</section>
 
+<section class="panel show" id="panel-gen">
+  <div class="hero">
+    <h2>GERADOR DE <em>SENSI + DPI</em></h2>
+    <p>Nova escala do Free Fire: sensibilidade até 200. Escolha seu aparelho e estilo — sua config aparece na hora abaixo.</p>
+  </div>
+  <div class="gen-box">
+    <label class="field-label">Memória RAM do aparelho</label>
+    <div class="opts" id="ramOpts">
+      <div class="opt sel" data-v="2">2 GB</div>
+      <div class="opt" data-v="3">3 GB</div>
+      <div class="opt" data-v="4">4 GB</div>
+      <div class="opt" data-v="6">6 GB</div>
+      <div class="opt" data-v="8">8+ GB</div>
+    </div>
+    <label class="field-label">Estilo de jogo</label>
+    <div class="opts" id="styleOpts">
+      <div class="opt sel" data-v="eq">Equilibrado</div>
+      <div class="opt" data-v="ag">Agressivo</div>
+      <div class="opt" data-v="pr">Precisão</div>
+    </div>
+    <div class="gen-actions">
+      <button class="btn btn-cyan" id="genBtn" onclick="generate()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+        Gerar Sensibilidade
+      </button>
+      <button class="btn btn-ghost" id="copyGenBtn" onclick="copyGen()" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copiar Config
+      </button>
+    </div>
+  </div>
   <div class="result" id="result">
     <div class="result-head">
-      <div class="section-title" style="margin:0" id="resTitle">Sua config gerada</div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <div class="dpi-picker" id="dpiPicker">
-          <button type="button" class="dp-opt" data-dpi="baixa"><b id="dpiB">0</b><span>DPI Baixa</span></button>
-          <button type="button" class="dp-opt sel" data-dpi="equilibrada"><b id="dpiEq">0</b><span>DPI Equilibrada</span></button>
-          <button type="button" class="dp-opt" data-dpi="alta"><b id="dpiA">0</b><span>DPI Alta</span></button>
-        </div>
-        <div class="btn-chip"><b id="resBtn">0%</b><span>Botão de disparo</span></div>
-        <div class="cic-chip" id="cicChip" style="display:none"><b id="resCic">0</b><span>Ciclos (iPhone)</span></div>
-      </div>
+      <div class="section-title" style="margin:0">Sua config gerada</div>
+      <div class="dpi-chip"><b id="dpiVal">0</b><span>DPI recomendado</span></div>
     </div>
-    <div class="grid" id="resGrid"></div>
-    <p class="gen-note" id="resDpiNote" style="display:none"></p>
-
-    <div class="train-warn">
-      <div class="tw-icon">⚠️</div>
-      <div>
-        <b>TREINE COM ESSA SENSI ANTES DE TROCAR!</b>
-        <p>Não fique trocando de sensibilidade toda hora — isso atrasa sua evolução. Dê pelo menos <b>3 dias</b> para o seu dedo e o seu cérebro se acostumarem com essa config. Faça <b>15 minutos de campo de treino por dia</b>, aqueça antes das ranqueadas e assista aos vídeos de treino aqui embaixo. Sensi boa é sensi que você domina.</p>
-      </div>
-    </div>
-
-    <div class="gen-note" id="resNote"></div>
+    <div class="grid" id="genGrid"></div>
   </div>
 </section>
 
-<!-- VIP EXTRAS -->
-<section id="vipExtras" style="display:none">
-  <div class="section-title" style="margin-top:40px">Perfis Salvos</div>
-  <div class="list-box" id="profileList"><div class="empty-hint">Nenhum perfil salvo ainda.</div></div>
-
-  <div class="section-title" style="margin-top:30px">Histórico de Gerações</div>
-  <div class="list-box" id="historyList"><div class="empty-hint">Suas gerações aparecem aqui.</div></div>
-</section>
-
-<!-- BENEFITS -->
-<section id="benefits" class="animate-fadeInUp" style="margin-top:48px">
-  <div class="section-title">Benefícios</div>
-  <div class="tips-grid">
-    <div class="tip-card">
-      <div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg></div>
-      <h3>Geração rápida</h3>
-      <p>Sensibilidade gerada em segundos com base no seu dispositivo e estilo de jogo.</p>
-    </div>
-    <div class="tip-card">
-      <div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.32 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
-      <h3>Sensibilidade personalizada</h3>
-      <p>Cada config é única, baseada no seu dispositivo, DPI e estilo de jogo.</p>
-    </div>
-    <div class="tip-card">
-      <div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
-      <h3>Planos Premium</h3>
-      <p>Acesse configurações avançadas com gerações ilimitadas e suporte prioritário.</p>
-    </div>
-    <div class="tip-card">
-      <div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      <h3>Sistema seguro</h3>
-      <p>Seus dados estão protegidos. Nenhuma informação sensível é compartilhada.</p>
-    </div>
-    <div class="tip-card">
-      <div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-      <h3>Alta performance</h3>
-      <p>Otimizado para的速度 e precisão. Resultados em menos de 1 segundo.</p>
-    </div>
-  </div>
-</section>
-
-<!-- TUTORIALS -->
-<section style="margin-top:48px">
-  <div class="section-title">Treino &amp; Evolução · Vídeos</div>
-  <p style="color:var(--text-muted);margin:-6px 0 18px;font-size:.95rem;max-width:640px;line-height:1.5">
-    Gerou a sensi? Agora treine! Assista esses vídeos para aprender a se acostumar com a sua config,
-    treinar mira e subir de capa/rank mais rápido.
-  </p>
-  <div class="videos-grid" id="videosGrid">
-    <div class="video-card" data-yt="mlRV_XjTpN8">
-      <div class="video-frame"><img loading="lazy" src="https://i.ytimg.com/vi/mlRV_XjTpN8/hqdefault.jpg" alt=""><div class="play-btn"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div></div>
-      <div class="vc-body"><span class="vc-cat">Adaptação</span><h3>Aprenda criar uma sensibilidade PERFEITA para VOCÊ</h3><p>O passo a passo completo para regular a própria sensi, DPI e botão de disparo.</p></div>
-    </div>
-    <div class="video-card" data-yt="Is7WoMkCkKw">
-      <div class="video-frame"><img loading="lazy" src="https://i.ytimg.com/vi/Is7WoMkCkKw/hqdefault.jpg" alt=""><div class="play-btn"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div></div>
-      <div class="vc-body"><span class="vc-cat">Subir Capa</span><h3>Como treinar sua sensi para dar FULL CAPA em poucos dias</h3><p>Treino rápido e direto para dominar a sensi e subir capa no mobile.</p></div>
-    </div>
-    <div class="video-card" data-yt="RyT_HJ0LzP8">
-      <div class="video-frame"><img loading="lazy" src="https://i.ytimg.com/vi/RyT_HJ0LzP8/hqdefault.jpg" alt=""><div class="play-btn"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div></div>
-      <div class="vc-body"><span class="vc-cat">Treino</span><h3>Treinamento 100% focado em melhorar a sensi</h3><p>Melhor treino para melhorar a sensi com UMP, Desert ou qualquer arma.</p></div>
-    </div>
-    <div class="video-card" data-yt="2K9HuD5OGrQ">
-      <div class="video-frame"><img loading="lazy" src="https://i.ytimg.com/vi/2K9HuD5OGrQ/hqdefault.jpg" alt=""><div class="play-btn"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div></div>
-      <div class="vc-body"><span class="vc-cat">Adaptação</span><h3>ACHE A SENSI PERFEITA! Como ajustar sua sensibilidade</h3><p>Aprenda a ajustar cada barra de sensibilidade no passo a passo.</p></div>
-    </div>
-    <div class="video-card" data-yt="UEO0Ji7RMSU">
-      <div class="video-frame"><img loading="lazy" src="https://i.ytimg.com/vi/UEO0Ji7RMSU/hqdefault.jpg" alt=""><div class="play-btn"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div></div>
-      <div class="vc-body"><span class="vc-cat">Headshot</span><h3>Melhor sensibilidade e DPI para dar HEADSHOT</h3><p>Sensi e DPI para acertar muito headshot, funciona até em celular fraco.</p></div>
-    </div>
-    <div class="video-card" data-yt="qbZV6Jf8QwE">
-      <div class="video-frame"><img loading="lazy" src="https://i.ytimg.com/vi/qbZV6Jf8QwE/hqdefault.jpg" alt=""><div class="play-btn"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div></div>
-      <div class="vc-body"><span class="vc-cat">Rank</span><h3>SEGREDOS para SUBIR de RANK RÁPIDO no Free Fire</h3><p>Estratégias, dicas avançadas e os erros que você deve evitar para evoluir rápido.</p></div>
-    </div>
-    <div class="video-card" data-yt="Ink_X09uRY0">
-      <div class="video-frame"><img loading="lazy" src="https://i.ytimg.com/vi/Ink_X09uRY0/hqdefault.jpg" alt=""><div class="play-btn"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div></div>
-      <div class="vc-body"><span class="vc-cat">Rank</span><h3>10 DICAS DE ESTRATÉGIA para subir de rank rápido</h3><p>Dicas essenciais para subir de rank de maneira rápida e inteligente.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- TRAINING TIPS -->
-<section style="margin-top:44px" id="training">
+<section style="margin-top:40px">
   <div class="section-title">Dicas de Treino</div>
   <div class="tips-grid">
     <div class="tip-card">
@@ -688,253 +435,389 @@ footer b{color:var(--text-secondary)}
     <div class="tip-card">
       <div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
       <h3>Ajuste Gradual</h3>
-      <p>Mude apenas 2 ou 3 pontos por vez. Mudanças bruscas atrapalham sua memória muscular.</p>
+      <p>Mude apenas 2 ou 3 pontos de sensibilidade por vez. Mudanças bruscas atrapalham sua memória muscular.</p>
     </div>
     <div class="tip-card">
       <div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
       <h3>Mira na Altura da Cabeça</h3>
-      <p>Ande pelo mapa sempre com a mira na altura da cabeça do inimigo.</p>
+      <p>Ande pelo mapa sempre com a mira na altura da cabeça do inimigo. Assim o headshot sai no primeiro contato.</p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4M8 16h8"/></svg></div>
+      <h3>Treine o Drag</h3>
+      <p>Em salas custom, pratique puxar a mira do peito para a cabeça. É a base do headshot drag com M1887.</p>
     </div>
     <div class="tip-card">
       <div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+      <h3>Controle do Recuo</h3>
+      <p>Com SMG e rifle, arraste levemente para baixo enquanto atira. A sensi certa faz isso virar reflexo.</p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
       <h3>Constância</h3>
-      <p>Não troque de sensi toda hora. Dê pelo menos 3 dias de adaptação antes de mudar.</p>
+      <p>Não troque de sensi toda hora. Dê pelo menos 3 dias de adaptação antes de decidir mudar.</p>
     </div>
   </div>
 </section>
 
-<!-- PLANS -->
-<section class="animate-fadeInUp" style="margin-top:44px;padding:24px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:16px;text-align:center" id="plans">
-  <div class="section-title" style="justify-content:center;font-size:1.1rem;color:var(--text)">
-    Planos AIMZY Premium e VIP
+<section style="margin-top:40px">
+  <div class="section-title">O Que Dizem os Jogadores</div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p>"Usei a sensi Drag Headshot e minha taxa de HS subiu muito. Melhor config que já testei, copiei e colei direto no jogo."</p>
+      <div class="testi-user">
+        <div class="avatar av-1">LT</div>
+        <div><b>Lucas "Trovão"</b><span>Mestre · Android 4GB</span></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p>"O gerador me deu uma sensi perfeita pro meu aparelho fraco. Finalmente paro de errar tiro fácil kkk"</p>
+      <div class="testi-user">
+        <div class="avatar av-2">DF</div>
+        <div><b>Duda Ferreira</b><span>Diamante · 2GB RAM</span></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★☆</div>
+      <p>"Ajustei o preset Rusher conforme as dicas daqui e agora jogo bem mais agressivo. Recomendo testar."</p>
+      <div class="testi-user">
+        <div class="avatar av-3">PH</div>
+        <div><b>Pedro HS</b><span>Grandmaster · iPhone</span></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p>Simples e direto. Copiou, colou, jogou. Subí de Ouro pra Diamante em duas semanas."</p>
+      <div class="testi-user">
+        <div class="avatar av-4">RM</div>
+        <div><b>Rafa_Mira</b><span>Diamante · Android 6GB</span></div>
+      </div>
+    </div>
   </div>
-  <p style="color:var(--text-muted);margin:12px auto 16px;max-width:520px;line-height:1.55">
-    Os planos com sensibilidade personalizada completa e acesso total (drag, mira alta, gerações ilimitadas)
-    estão disponíveis. Entre em contato com um administrador que ele libera seu acesso na hora.
-  </p>
-  <a class="btn btn-red contact-btn" style="display:inline-flex;justify-content:center;text-decoration:none" href="https://wa.me/5527981289782" target="_blank" rel="noopener">📩 Fale com admin (+55 27 98128-9782)</a>
 </section>
 
-<!-- FAQ -->
-<section class="animate-fadeInUp" style="margin-top:40px" id="faq">
+<section style="margin-top:40px">
   <div class="section-title">Perguntas Frequentes</div>
   <div class="faq-list">
     <div class="faq-item">
-      <button class="faq-q">Qual a diferença entre Sensi Normal, Premium e VIP?
+      <button class="faq-q">
+        Essa sensibilidade funciona em qualquer celular?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
-      <div class="faq-a"><div class="faq-a-inner">A <b>Normal</b> é equilibrada, grátis e ideal para começar. A <b>Premium</b> analisa seu aparelho e preferências para uma config refinada. A <b>VIP</b> é a mais agressiva: mira alta e drag insano — recomendada para quem já tem bom controle e vai treinar bastante.</div></div>
+      <div class="faq-a"><div class="faq-a-inner">Sim! As configs servem para Android e iOS. Mas cada aparelho tem seu toque: use os valores como base e ajuste 2 ou 3 pontos até ficar confortável para você.</div></div>
     </div>
     <div class="faq-item">
-      <button class="faq-q">Como funciona o limite de gerações?
+      <button class="faq-q">
+        Por que as sensibilidades agora vão até 200?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
-      <div class="faq-a"><div class="faq-a-inner">A Sensi Normal tem algumas gerações por dia. Com uma KEY ativa, você libera também a Premium e a VIP, com gerações ilimitadas.</div></div>
+      <div class="faq-a"><div class="faq-a-inner">O Free Fire aumentou o limite das barras para 200 na nova atualização. Todas as configs deste site já estão na escala nova — se a sua tela mostra só até 100, atualize o jogo.</div></div>
     </div>
     <div class="faq-item">
-      <button class="faq-q">Quanto tempo leva para me acostumar com a sensi?
+      <button class="faq-q">
+        O que é DPI e como configurar?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
-      <div class="faq-a"><div class="faq-a-inner">Dê pelo menos 3 dias com a mesma config, treinando 15 minutos por dia no campo de treinamento. Trocar de sensi toda hora reinicia sua adaptação do zero — escolha uma e evolua nela.</div></div>
+      <div class="faq-a"><div class="faq-a-inner">DPI é a sensibilidade da tela do aparelho. Você pode ativar nas opções do sistema (toque/velocidade do ponteiro) ou usar apps de DPI do fabricante. O gerador sugere um DPI ideal conforme a RAM do seu celular.</div></div>
     </div>
     <div class="faq-item">
-      <button class="faq-q">Como consigo uma KEY VIP?
+      <button class="faq-q">
+        Preciso pagar para usar as sensis VIP?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
-      <div class="faq-a"><div class="faq-a-inner">Nas áreas Premium/VIP, toque em "📩 Solicitar acesso" para falar com um administrador. Ele vai te enviar uma KEY única. Depois é só digitar no campo "Digite sua KEY" e ativar.</div></div>
+      <div class="faq-a"><div class="faq-a-inner">Sim, os presets VIP são exclusivos para quem compra o acesso pelo WhatsApp ou administradores com chave de acesso. O gerador da aba principal é totalmente grátis e já usa a escala nova de 200.</div></div>
     </div>
     <div class="faq-item">
-      <button class="faq-q">Minha mira treme com sensibilidade alta. E agora?
+      <button class="faq-q">
+        Minha mira treme com sensibilidade alta. E agora?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
-      <div class="faq-a"><div class="faq-a-inner">Reduza a Olhadinha e a Mira AWM primeiro. Mantenha Geral e Red Dot altas para o drag continuar rápido. Ajuste 2 ou 3 pontos por vez até ficar confortável.</div></div>
+      <div class="faq-a"><div class="faq-a-inner">Reduza a Olhar Livre e a Luneta AWM primeiro — são elas que mais causam tremedeira. Mantenha Geral e Ponto Vermelho altas para o drag continuar rápido.</div></div>
     </div>
     <div class="faq-item">
-      <button class="faq-q">Funciona no iPhone?
+      <button class="faq-q">
+        De quanto em quanto tempo devo mudar a sensi?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
-      <div class="faq-a"><div class="faq-a-inner">Sim! Ao escolher um modelo Apple, o gerador inclui automaticamente os <b>ciclos recomendados</b> junto com a sensi completa, DPI e botão de disparo.</div></div>
+      <div class="faq-a"><div class="faq-a-inner">O ideal é manter a mesma config por pelo menos 3 a 5 dias. Trocar toda hora impede sua memória muscular de se adaptar e piora sua mira.</div></div>
     </div>
   </div>
 </section>
 
 <footer>
-  <b>AIMZY</b> — Ferramenta feita pela comunidade. Não afiliado à Garena / Free Fire.<br>
-  As configurações apresentadas são <b>recomendações personalizadas</b> baseadas nas informações que você informou.<br>
-  Resultados variam conforme aparelho, toque e prática. Sem promessas de desempenho garantido.
+  <b>SENSIPRO</b> — Ferramenta feita pela comunidade. Não afiliado à Garena / Free Fire.<br>
+  As sensibilidades são sugestões: ajuste fino depende do seu aparelho e toque.
 </footer>
 
 </div>
 
-<button class="share-fab" id="shareFab" title="Compartilhar">
+<button class="share-fab" onclick="shareSite()" title="Compartilhar no WhatsApp">
   <svg viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </button>
 
-<!-- MODALS -->
-<div class="modal-back" id="upsellModal">
-  <div class="modal">
-    <div class="lock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></div>
-    <h3>Recurso VIP</h3>
-    <p>Desbloqueie a Sensi Premium e VIP com gerações ilimitadas.</p>
-    <div class="modal-actions">
-      <button class="btn btn-red" id="upsellGo">DESBLOQUEAR VIP</button>
-      <button class="btn btn-ghost btn-sm" id="upsellClose">Agora não</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"><span id="toastMsg">Copiado!</span></div>
-
-<div class="modal-back" id="nameModal">
-  <div class="modal">
-    <div class="lock-icon" style="background:rgba(255,255,255,0.08);border-color:var(--border-hover)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    </div>
-    <h3>Bem-vindo ao AIMZY!</h3>
-    <p>Digite seu nome para começar. Ele ficará salvo nas suas próximas visitas.</p>
-    <div style="margin:18px 0 0">
-      <input class="inp" id="nameInput" placeholder="Seu nome..." maxlength="40" autocomplete="off" style="text-align:center;font-size:1.05rem">
-    </div>
-    <div style="margin-top:18px;text-align:center">
-      <button class="btn btn-red" onclick="confirmName()" id="nameConfirm">COMEÇAR</button>
-      <button class="btn btn-ghost btn-sm" onclick="hideNameModal(); document.getElementById('generator').scrollIntoView({behavior:'smooth',block:'start'});" style="margin-top:10px">Fechar sem nome</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-back" id="accountModal">
-  <div class="modal" style="text-align:left">
-    <div class="lock-icon" style="background:rgba(255,255,255,0.08);border-color:var(--border-hover)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    </div>
-    <h3 style="text-align:center">Minha Conta</h3>
-
-    <div id="accLogged" style="display:none">
-      <p style="color:var(--text-muted);font-size:.92rem;margin-bottom:14px;text-align:center">Conectado como <b id="accEmail" style="color:var(--text-secondary)"></b></p>
-      <label class="field-label">Senha atual</label>
-      <input type="password" class="inp" id="accOldPw" autocomplete="current-password">
-      <label class="field-label" style="margin-top:10px">Nova senha (mín. 8)</label>
-      <input type="password" class="inp" id="accNewPw" autocomplete="new-password">
-      <div class="modal-actions" style="margin-top:16px">
-        <button class="btn btn-red btn-sm" id="accPwBtn">Trocar senha</button>
-        <button class="btn btn-ghost btn-sm" id="accLogoutBtn">Sair</button>
-        <button class="btn btn-ghost btn-sm" id="accClose2">Fechar</button>
-      </div>
-    </div>
-
-    <div id="accForms">
-      <div class="opts" id="accTabs" style="margin-bottom:14px">
-        <div class="opt sel" data-v="login">Entrar</div>
-        <div class="opt" data-v="register">Criar conta</div>
-      </div>
-      <div id="accNameRow" style="display:none">
-        <label class="field-label">Nome de jogador</label>
-        <input class="inp" id="accName" maxlength="40" autocomplete="nickname" placeholder="Como quer ser chamado?">
-      </div>
-      <label class="field-label">E-mail</label>
-      <input type="email" class="inp" id="accEmailInp" autocomplete="email" placeholder="voce@email.com">
-      <label class="field-label" style="margin-top:10px">Senha (mín. 8)</label>
-      <input type="password" class="inp" id="accPwInp" autocomplete="current-password" placeholder="••••••••">
-      <div class="modal-actions" style="margin-top:16px">
-        <button class="btn btn-red" id="accGo">Entrar</button>
-        <button class="btn btn-ghost btn-sm" id="accClose">Fechar</button>
-      </div>
-      <p style="color:var(--text-muted);font-size:.78rem;margin-top:12px;text-align:center">Sua conta guarda VIP, histórico e perfis — entre em qualquer aparelho.</p>
-    </div>
-  </div>
-</div>
-
-<div id="announceModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9999;align-items:center;justify-content:center;padding:20px">
-  <div style="background:#0A0A0A;border:1px solid var(--border);border-radius:16px;max-width:400px;width:100%;padding:28px;text-align:center;backdrop-filter:blur(20px)">
-    <div style="font-size:2.2rem;margin-bottom:12px">📢</div>
-    <h3 id="announceTitle" style="margin-bottom:12px;color:var(--text)"></h3>
-    <p id="announceMsg" style="color:var(--text-muted);margin-bottom:20px;line-height:1.6"></p>
-    <button class="btn" onclick="document.getElementById('announceModal').style.display='none'" style="background:#fff;color:#000;border:none;padding:10px 28px;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600">Entendi</button>
-  </div>
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+  <span id="toastMsg">Copiado!</span>
 </div>
 
 <script>
-// Block app.js from showing name modal until welcome is dismissed
-window.__welcomeDismissed = false;
-window.__pendingShowNameModal = false;
+const NAMES = [
+  ["geral","Geral"],
+  ["pd","Ponto Vermelho"],
+  ["m2","Mira 2x"],
+  ["m4","Mira 4x"],
+  ["awm","Luneta AWM"],
+  ["ol","Olhar Livre"]
+];
 
-// Hide cursor elements while welcome is showing
-(function() {
-  var style = document.createElement('style');
-  style.textContent = '.custom-cursor,.cursor-glow{display:none !important}';
-  style.id = 'hideCursorOnWelcome';
-  document.head.appendChild(style);
-})();
-</script>
-<script src="/particles.js"></script>
-<script src="/js/cursor.js"></script>
-<script src="/js/animations.js"></script>
-<script src="/js/voice.js"></script>
-<script src="/app.js"></script>
-<script>
-// Welcome screen
-document.getElementById('welcomeEnter').addEventListener('click', function() {
-  var ws = document.getElementById('welcomeScreen');
-  ws.classList.add('hidden');
-  setTimeout(function() { ws.style.display = 'none'; }, 500);
-  window.__welcomeDismissed = true;
-  
-  // Rolar direto para o gerador após entrar
-  document.getElementById('generator').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  
-  // Restore cursor elements
-  var hideStyle = document.getElementById('hideCursorOnWelcome');
-  if (hideStyle) hideStyle.remove();
-  
-  if (window.AIMZYVoice) {
-    AIMZYVoice.playSound();
-    AIMZYVoice.playWelcome();
-  }
-  if (window.__pendingShowNameModal) {
-    setTimeout(function() { showNameModal(); }, 600);
-  }
+const MAX_SENSI = 200;
+const ADMIN_KEY = "SENSI-ADM-2026";
+const VIP_WA_LINK = "https://wa.me/5527981289782?text="+encodeURIComponent("Olá! Quero comprar o acesso VIP do SENSI PRO.");
+
+const VIP_PRESETS = [
+  {name:"Drag Headshot",tag:"drag",cls:"tag drag",vals:{geral:197,pd:192,m2:186,m4:170,awm:135,ol:145}},
+  {name:"One Tap",tag:"tap",cls:"tag tap",vals:{geral:188,pd:195,m2:180,m4:176,awm:152,ol:118}},
+  {name:"Headshot Pro",tag:"head",cls:"tag head",vals:{geral:200,pd:190,m2:184,m4:168,awm:148,ol:132}},
+  {name:"Rusher",tag:"rush",cls:"tag rush",vals:{geral:198,pd:187,m2:190,m4:158,awm:125,ol:150}}
+];
+
+const RAM_DPI = {"2":[380,440],"3":[420,500],"4":[460,540],"6":[500,600],"8":[560,660]};
+const STYLE_OFFSET = {eq:[-4,4],ag:[10,22],pr:[-22,-10]};
+
+const BRANDS = {
+  sam:{dpi:[420,520],adj:{geral:-6,pd:-4,m2:-6,m4:-6,awm:-8,ol:-10}},
+  mot:{dpi:[380,480],adj:{geral:2,pd:0,m2:0,m4:-2,awm:-4,ol:-2}},
+  iph:{dpi:[460,560],adj:{geral:6,pd:4,m2:4,m4:2,awm:0,ol:2}},
+  xia:{dpi:[440,540],adj:{geral:8,pd:6,m2:6,m4:4,awm:2,ol:4}},
+  rea:{dpi:[420,520],adj:{geral:4,pd:2,m2:2,m4:0,awm:-2,ol:0}},
+  asu:{dpi:[480,600],adj:{geral:10,pd:8,m2:8,m4:6,awm:4,ol:6}},
+  out:{dpi:[400,500],adj:{geral:0,pd:0,m2:0,m4:0,awm:0,ol:0}}
+};
+
+let lastGen = null;
+
+function el(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+
+function sensiCard(key,label,val){
+  const c = el("div","sensi-card");
+  c.appendChild(el("div","label",label));
+  c.appendChild(el("div","value","<span class='num'>0</span>"));
+  const bar = el("div","bar","<i></i>");
+  c.appendChild(bar);
+  c.dataset.val = val;
+  return c;
+}
+
+function renderGrid(gridEl,data){
+  gridEl.innerHTML="";
+  NAMES.forEach(([k,label])=>{
+    gridEl.appendChild(sensiCard(k,label,data[k]));
+  });
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    gridEl.querySelectorAll(".sensi-card").forEach(card=>{
+      const v=+card.dataset.val;
+      card.querySelector(".num").textContent=v;
+      card.querySelector(".bar i").style.width=(v/MAX_SENSI*100)+"%";
+    });
+  }));
+}
+
+function buildVip(){
+  const wrap=document.getElementById("vipGrid");
+  wrap.className="grid";
+  VIP_PRESETS.forEach(p=>{
+    const card=el("div","preset-card");
+    const head=el("div","preset-head",
+      "<h3>"+p.name+"</h3><span class='"+p.cls+"'>"+p.tag+"</span>");
+    card.appendChild(head);
+    const mg=el("div","mini-grid");
+    NAMES.forEach(([k,label])=>{
+      mg.appendChild(el("div","mini","<span>"+label+"</span><b>"+p.vals[k]+"</b>"));
+    });
+    card.appendChild(mg);
+    const btn=el("button","btn btn-vip btn-sm",
+      "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round'><rect x='9' y='9' width='13' height='13' rx='2'/><path d='M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1'/></svg>Copiar Preset");
+    btn.onclick=()=>copyPreset(p.name,p.vals);
+    card.appendChild(btn);
+    wrap.appendChild(card);
+  });
+}
+
+function setupOpts(id){
+  const box=document.getElementById(id);
+  box.querySelectorAll(".opt").forEach(o=>{
+    o.addEventListener("click",()=>{
+      box.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));
+      o.classList.add("sel");
+    });
+  });
+}
+setupOpts("ramOpts");
+setupOpts("styleOpts");
+setupOpts("brandOpts");
+setupOpts("vipStyleOpts");
+
+document.getElementById("tabs").querySelectorAll(".tab-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll(".panel").forEach(p=>p.classList.remove("show"));
+    document.getElementById("panel-"+btn.dataset.tab).classList.add("show");
+  });
 });
 
-// Also allow clicking anywhere on welcome screen to enter
-document.getElementById('welcomeScreen').addEventListener('click', function(e) {
-  if (e.target === this || e.target.classList.contains('welcome-logo') || e.target.classList.contains('welcome-sub')) {
-    document.getElementById('welcomeEnter').click();
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+
+function generate(){
+  const btn=document.getElementById("genBtn");
+  btn.disabled=true;
+  btn.innerHTML="<span class='spinner'></span> Gerando...";
+  setTimeout(()=>{
+    const ram=document.querySelector("#ramOpts .sel").dataset.v;
+    const style=document.querySelector("#styleOpts .sel").dataset.v;
+    const [offMin,offMax]=STYLE_OFFSET[style];
+    const off=rand(offMin,offMax);
+    const data={};
+    const base={geral:rand(174,192),pd:rand(166,184),m2:rand(156,176),m4:rand(146,166),awm:rand(128,152),ol:rand(108,132)};
+    NAMES.forEach(([k])=>data[k]=clamp(base[k]+off,40,MAX_SENSI));
+    const dpi=rand(RAM_DPI[ram][0],RAM_DPI[ram][1]);
+    lastGen={vals:data,dpi:dpi};
+    renderGrid(document.getElementById("genGrid"),data);
+    animateNum(document.getElementById("dpiVal"),dpi);
+    document.getElementById("result").classList.add("visible");
+    document.getElementById("copyGenBtn").style.display="inline-flex";
+    btn.disabled=false;
+    btn.innerHTML="<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round'><path d='M13 2L3 14h7l-1 8 10-12h-7l1-8z'/></svg>Gerar Novamente";
+    toast("Config gerada com sucesso!");
+  },900);
+}
+
+let lastVipGen=null;
+
+function generateVip(){
+  const btn=document.getElementById("vipGenBtn");
+  btn.disabled=true;
+  btn.innerHTML="<span class='spinner'></span> Gerando...";
+  setTimeout(()=>{
+    const brand=document.querySelector("#brandOpts .sel").dataset.v;
+    const style=document.querySelector("#vipStyleOpts .sel").dataset.v;
+    const b=BRANDS[brand];
+    const [offMin,offMax]=STYLE_OFFSET[style];
+    const off=rand(offMin,offMax);
+    const base={geral:rand(190,200),pd:rand(185,196),m2:rand(176,190),m4:rand(158,176),awm:rand(128,152),ol:rand(122,148)};
+    const data={};
+    NAMES.forEach(([k])=>data[k]=clamp(base[k]+off+(b.adj[k]||0),40,MAX_SENSI));
+    const dpi=rand(b.dpi[0],b.dpi[1]);
+    lastVipGen={vals:data,dpi:dpi};
+    renderGrid(document.getElementById("vipGenGrid"),data);
+    animateNum(document.getElementById("dpiVipVal"),dpi);
+    document.getElementById("vipResult").classList.add("visible");
+    document.getElementById("copyVipBtn").style.display="inline-flex";
+    btn.disabled=false;
+    btn.innerHTML="<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round'><path d='M13 2L3 14h7l-1 8 10-12h-7l1-8z'/></svg>Gerar Novamente";
+    toast("Sensi VIP gerada!");
+  },900);
+}
+
+function copyVip(){
+  if(!lastVipGen)return;
+  copyText(fmt(lastVipGen.vals,lastVipGen.dpi),"Config VIP copiada!");
+}
+
+function animateNum(elm,target){
+  const start=performance.now();
+  function step(t){
+    const p=Math.min((t-start)/800,1);
+    const eased=1-Math.pow(1-p,3);
+    elm.textContent=Math.round(eased*target);
+    if(p<1)requestAnimationFrame(step);
   }
-});
+  requestAnimationFrame(step);
+}
 
-// Navbar scroll effect
-window.addEventListener('scroll', function() {
-  var navbar = document.getElementById('navbar');
-  if (window.scrollY > 50) {
-    navbar.classList.add('scrolled');
-  } else {
-    navbar.classList.remove('scrolled');
+async function copyText(text,msg){
+  try{await navigator.clipboard.writeText(text);}
+  catch(e){
+    const ta=document.createElement("textarea");
+    ta.value=text;document.body.appendChild(ta);ta.select();
+    document.execCommand("copy");ta.remove();
   }
-});
+  toast(msg||"Copiado!");
+}
 
-// Hamburger menu
-document.getElementById('hamburgerBtn').addEventListener('click', function() {
-  alert('Menu mobile - Implementar');
-});
+function fmt(vals,dpi){
+  let s="=== SENSI PRO | FREE FIRE ===\n";
+  NAMES.forEach(([k,label])=>{s+=label+": "+vals[k]+"\n";});
+  if(dpi)s+="DPI: "+dpi+"\n";
+  return s;
+}
+function copyPreset(name,vals){copyText(fmt(vals),"Preset "+name+" copiado!");}
+function copyGen(){
+  if(!lastGen)return;
+  copyText(fmt(lastGen.vals,lastGen.dpi),"Config gerada copiada!");
+}
 
-// Smooth scroll for nav links
-document.querySelectorAll('.nav-links a').forEach(function(link) {
-  link.addEventListener('click', function(e) {
-    e.preventDefault();
-    var target = document.querySelector(this.getAttribute('href'));
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+let toastTimer;
+function toast(msg,isErr){
+  const t=document.getElementById("toast");
+  document.getElementById("toastMsg").textContent=msg;
+  t.classList.toggle("err",!!isErr);
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove("show"),2200);
+}
+
+function unlockVip(){
+  const inp=document.getElementById("vipKey");
+  const val=inp.value.trim();
+  if(!val){toast("Digite a chave de acesso!",true);return;}
+  if(val!==ADMIN_KEY){
+    toast("Chave inválida! Acesso somente para administradores.",true);
+    inp.value="";
+    return;
+  }
+  inp.value="";
+  document.getElementById("lockOverlay").classList.add("hide");
+  document.getElementById("vipContent").classList.remove("blur-lock");
+  toast("Acesso VIP liberado! Bom jogo!");
+}
+
+function buyVip(){
+  window.open(VIP_WA_LINK,"_blank");
+  toast("Abrindo WhatsApp...");
+}
+
+document.getElementById("vipKey").addEventListener("keydown",e=>{if(e.key==="Enter")unlockVip();});
+
+document.querySelectorAll(".faq-item").forEach(item=>{
+  item.querySelector(".faq-q").addEventListener("click",()=>{
+    const wasOpen=item.classList.contains("open");
+    document.querySelectorAll(".faq-item").forEach(i=>{
+      i.classList.remove("open");
+      i.querySelector(".faq-a").style.maxHeight=null;
+    });
+    if(!wasOpen){
+      item.classList.add("open");
+      const a=item.querySelector(".faq-a");
+      a.style.maxHeight=a.scrollHeight+"px";
     }
   });
 });
 
-// Quando a pessoa entra no site, pede o nome automaticamente e rola para o gerador
-window.addEventListener('load', function() {
-  setTimeout(function() {
-    showNameModal();
-    document.getElementById('generator').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 300);
-});
+async function shareSite(){
+  const data={title:"SENSI PRO",text:"Olha essa ferramenta de sensibilidade do Free Fire! Sensi pronta pra headshot 🔥",url:location.href};
+  if(navigator.share){
+    try{await navigator.share(data);}catch(e){}
+  }else{
+    window.open("https://wa.me/?text="+encodeURIComponent(data.text+" "+data.url),"_blank");
+    toast("Abrindo WhatsApp...");
+  }
+}
+
+buildVip();
 </script>
 </body>
 </html>
