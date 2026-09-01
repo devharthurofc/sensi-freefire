@@ -1088,6 +1088,18 @@ function hideNameModal() {
   if (m) m.classList.remove("show");
 }
 
+function syncUserNameChip(name) {
+  if (!name) return;
+  localStorage.setItem(LS_NAME, name);
+  var chipName = document.getElementById("userChipName");
+  var chip = document.getElementById("userChip");
+  if (chipName) chipName.textContent = name;
+  if (chip) chip.style.display = "inline-flex";
+  if (state.user && state.user.label !== name) {
+    state.user.label = name;
+  }
+}
+
 function confirmName() {
   var input = document.getElementById("nameInput");
   if (!input) return;
@@ -1096,13 +1108,13 @@ function confirmName() {
     input.focus();
     return;
   }
-  localStorage.setItem(LS_NAME, name);
-  var chipName = document.getElementById("userChipName");
-  var chip = document.getElementById("userChip");
-  if (chipName) chipName.textContent = name;
-  if (chip) chip.style.display = "inline-flex";
+  syncUserNameChip(name);
   hideNameModal();
-  api("/api/me/name", { method: "PUT", body: { name: name } }).catch(function() {});
+  api("/api/me/name", { method: "PUT", body: { name: name } }).then(function(r) {
+    if (r && r.user && r.user.label) {
+      syncUserNameChip(r.user.label);
+    }
+  }).catch(function() {});
 }
 
 document.getElementById("nameConfirm").addEventListener("click", function(e) {
@@ -1192,6 +1204,10 @@ document.getElementById("accGo").addEventListener("click", async function() {
 
   if (r && r.token) {
     localStorage.setItem(LS_TOKEN, r.token);
+    if (accMode === "register" && name) {
+      localStorage.setItem(LS_NAME, name);
+      if (r.user && r.user.label) localStorage.setItem(LS_NAME, r.user.label);
+    }
     toast(accMode === "register" ? "Conta criada! Bem-vindo 🎮" : "Bem-vindo de volta!");
     setTimeout(function() { location.reload(); }, 900);
   } else {
@@ -1233,17 +1249,10 @@ document.getElementById("accPwBtn").addEventListener("click", async function() {
 
   if (savedName) {
     hideNameModal();
-    var cn = document.getElementById("userChipName");
-    var cc = document.getElementById("userChip");
-    if (cn) cn.textContent = savedName;
-    if (cc) cc.style.display = "inline-flex";
+    syncUserNameChip(savedName);
   } else if (state.user && state.user.label && state.user.label.indexOf("Jogador #") !== 0) {
     hideNameModal();
-    localStorage.setItem(LS_NAME, state.user.label);
-    var cn2 = document.getElementById("userChipName");
-    var cc2 = document.getElementById("userChip");
-    if (cn2) cn2.textContent = state.user.label;
-    if (cc2) cc2.style.display = "inline-flex";
+    syncUserNameChip(state.user.label);
   } else {
     // Defer name modal until welcome screen is dismissed
     if (window.__welcomeDismissed) {

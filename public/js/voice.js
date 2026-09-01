@@ -7,7 +7,9 @@ class VoiceWelcome {
     this.synth = window.speechSynthesis;
     this.isEnabled = localStorage.getItem('aimzy_voice_enabled') !== 'false';
     this.hasPlayed = false;
-    
+    this.audioUrl = '/audio/gojo-welcome.mp3';
+    this.audio = null;
+
     this.init();
   }
   
@@ -103,69 +105,110 @@ class VoiceWelcome {
       if (callback) callback();
       return;
     }
-    
+
     // Cancel any ongoing speech
     this.synth.cancel();
-    
+
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'pt-BR';
     utterance.rate = 0.75;
     utterance.pitch = 0.6;
     utterance.volume = 0.9;
-    
+
     // Try to find a male Brazilian Portuguese voice
     const voices = this.synth.getVoices();
     const maleVoice = voices.find(v => v.lang === 'pt-BR' && (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('ricardo') || v.name.toLowerCase().includes('antonio'))) ||
-                      voices.find(v => v.lang === 'pt-BR') || 
+                      voices.find(v => v.lang === 'pt-BR') ||
                       voices.find(v => v.lang.startsWith('pt'));
-    
+
     if (maleVoice) {
       utterance.voice = maleVoice;
     }
-    
+
     utterance.onend = () => {
       if (callback) callback();
     };
-    
+
     utterance.onerror = (e) => {
       console.warn('[Voice] Error:', e.error);
       if (callback) callback();
     };
-    
+
     this.synth.speak(utterance);
   }
-  
+
+  playFileAudio(callback) {
+    if (!this.isEnabled) {
+      if (callback) callback();
+      return;
+    }
+
+    try {
+      this.synth?.cancel();
+
+      if (this.audio) {
+        this.audio.pause();
+        this.audio.currentTime = 0;
+      }
+
+      const audio = new Audio(this.audioUrl);
+      audio.preload = 'auto';
+      audio.volume = 0.9;
+      this.audio = audio;
+
+      const done = () => {
+        this.audio = null;
+        if (callback) callback();
+      };
+
+      audio.onended = done;
+      audio.onerror = () => {
+        this.audio = null;
+        console.warn('[Voice] Audio file unavailable, fallback to speech synthesis');
+        this.speak('Seja bem-vindo à Aimzy.', callback);
+      };
+
+      audio.play().catch(() => {
+        this.audio = null;
+        this.speak('Seja bem-vindo à Aimzy.', callback);
+      });
+    } catch (e) {
+      console.warn('[Voice] Audio file not supported:', e);
+      this.speak('Seja bem-vindo à Aimzy.', callback);
+    }
+  }
+
   playWelcome(callback) {
     if (this.hasPlayed) {
       if (callback) callback();
       return;
     }
-    
+
     this.hasPlayed = true;
-    this.speak('Seja bem-vindo à Aimzy.', callback);
+    this.playFileAudio(callback);
   }
-  
+
   // Play futuristic sound effect
   playSound() {
     if (!this.isEnabled) return;
-    
+
     try {
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      
+
       // Create a futuristic swoosh sound
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
-      
+
       oscillator.connect(gainNode);
       gainNode.connect(audioContext.destination);
-      
+
       oscillator.type = 'sine';
       oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
       oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.3);
-      
+
       gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
       gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-      
+
       oscillator.start(audioContext.currentTime);
       oscillator.stop(audioContext.currentTime + 0.3);
     } catch (e) {

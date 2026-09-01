@@ -496,14 +496,19 @@ function requireUser(req, res, next) {
 
   store.touchUser(user);
 
-
   next();
 
 }
 
 
-function requireVip(req, res, next) {
+function requireUserAuth(req, res, next) {
 
+  return requireUser(req, res, next);
+
+}
+
+
+function requireVip(req, res, next) {
   requireUser(req, res, () => {
 
     if (!req.user.isVip) {
@@ -898,7 +903,14 @@ app.post(
 
       user = store.createUser(deviceId);
 
-      if (name) user.label = name;
+    }
+
+
+    if (name) {
+
+      user.label = name;
+
+      store.persistNow();
 
     }
 
@@ -2093,30 +2105,62 @@ function ensureDefaultAdmin() {
 
   );
 
+  const desiredUsername =
+    cleanStr(
+      process.env.ADMIN_USERNAME || 'Aimzy',
+      40
+    ) || 'Aimzy';
+
+  const desiredPassword =
+    (process.env.ADMIN_PASSWORD || 'store')
+      .toString();
+
+
+  const ownerAdmin =
+    db.admins.find(
+      admin => admin.role === 'owner'
+    ) ||
+    db.admins.find(
+      admin =>
+        String(admin.username || '').toLowerCase() === desiredUsername.toLowerCase()
+    ) ||
+    db.admins[0];
+
+
+  if (ownerAdmin) {
+
+    ownerAdmin.username = desiredUsername;
+    ownerAdmin.passwordHash = hashPassword(desiredPassword);
+    ownerAdmin.role = 'owner';
+    ownerAdmin.mustChange = false;
+
+    if (!ownerAdmin.createdAt) {
+      ownerAdmin.createdAt = new Date().toISOString();
+    }
+
+    db.admins.forEach(admin => {
+      if (admin !== ownerAdmin && admin.role === 'owner') {
+        admin.role = 'mod';
+      }
+    });
+
+    store.persistNow();
+
+  }
+
 
   if (db.admins.length === 0) {
-
-    const password =
-      process.env.ADMIN_PASSWORD ||
-      'sensi-admin-2026';
-
-
-    const username =
-      process.env.ADMIN_USERNAME ||
-      'admin';
-
 
     db.admins.push({
 
       id: store.id('adm'),
-      username,
+      username: desiredUsername,
       passwordHash:
-        hashPassword(password),
+        hashPassword(desiredPassword),
       role: 'owner',
       createdAt:
         new Date().toISOString(),
-      mustChange:
-        !process.env.ADMIN_PASSWORD
+      mustChange: false
     });
 
 
@@ -2124,30 +2168,22 @@ function ensureDefaultAdmin() {
 
 
     console.log(
-      '=============================================================='
+      '\n================================================'
     );
 
 
     console.log(
-      '  DONO criado -> usuário: ' +
-      username +
-      ' | senha: ' +
-      password
+      '  ✅ Admin criado com sucesso!'
     );
 
 
     console.log(
-      '  (definida pela env ADMIN_PASSWORD ou padrão acima)'
+      '  Realize login no painel: ' + ADMIN_PANEL_PATH
     );
 
 
     console.log(
-      '  Troque a senha no painel administrativo após o primeiro acesso.'
-    );
-
-
-    console.log(
-      '=============================================================='
+      '  ================================================\n'
     );
 
   }
@@ -4100,7 +4136,7 @@ app.get(
 
 app.post(
   '/api/sales',
-  express.json({ limit: '2mb' }),
+  express.json({ limit: '100kb' }), // SECURITY: Reduced from 2mb to prevent large payload attacks
   (req, res) => {
 
     const b = req.body || {};
@@ -4129,6 +4165,21 @@ app.post(
 
     if (!receipt) return res.status(400).json({ error: 'bad_request', message: 'Envie o comprovante de pagamento.' });
 
+    // SECURITY: Validate receipt format and size
+    if (receipt.length > 10000) {
+      return res.status(413).json({ error: 'payload_too_large', message: 'Comprovante muito grande.' });
+    }
+
+    // SECURITY: Basic validation that receipt looks like base64 or data URL
+    if (!receipt.match(/^data:image\/\w+;base64,/) && !receipt.match(/^[A-Za-z0-9+/=]{50,}$/)) {
+      return res.status(400).json({ error: 'bad_request', message: 'Formato de comprovante inválido.' });
+    }
+
+    // SECURITY: Price validation (prevent negative or extreme values)
+    if (price < 0.01 || price > 9999) {
+      return res.status(400).json({ error: 'bad_request', message: 'Valor de preço inválido.' });
+    }
+
 
     const ms = msFromPlan(plan);
 
@@ -4151,12 +4202,12 @@ app.post(
       sellerAdminName: '',
       notes,
       receipt,
-      status: 'pendente',
+      status: 'pendente_revisao', // SECURITY: Changed to pending review instead of immediate pendente
       paidAt: null
     });
 
-
-    res.json({ ok: true, sale, expiresAt });
+    // SECURITY: Don't immediately return full sale data; require admin approval
+    res.json({ ok: true, saleId: sale.id, message: 'Comprovante recebido. Aguarde revisão.' });
 
   }
 
@@ -4166,6 +4217,7 @@ app.post(
 app.get(
   '/api/sales/status/:contact',
   saleStatusLimiter,
+  requireAdmin,
   (req, res) => {
 
     const contact = cleanStr(req.params.contact, 120);

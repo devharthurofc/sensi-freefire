@@ -624,16 +624,34 @@ async function pushAllRemote() {
     warnThrottled('accounts_save', '[store] falha ao salvar accounts — rode criar-tabela-accounts.sql: ' + e.message);
   }
 
-  // admins: upsert sem role/must_change (colunas podem não existir)
+  // admins: gravar username/senha/role no Supabase e degradar suavemente se
+  // as colunas extras ainda não existirem no schema antigo.
   for (const a of d.admins) {
     ops.push({
       name: 'admins',
-      fn: () => supabase.from('admins').upsert({
-        id: a.id,
-        username: a.username,
-        password_hash: a.passwordHash,
-        created_at: a.createdAt
-      }, { onConflict: 'id' })
+      fn: async () => {
+        const base = {
+          id: a.id,
+          username: a.username,
+          password_hash: a.passwordHash,
+          created_at: a.createdAt
+        };
+        const variants = [
+          { ...base, role: a.role || 'mod', must_change: !!a.mustChange },
+          { ...base, role: a.role || 'mod' },
+          base
+        ];
+        let lastErr = null;
+        for (const row of variants) {
+          const r = await supabase.from('admins').upsert(row, { onConflict: 'id' });
+          if (!r.error) return r;
+          lastErr = r.error;
+          const message = String(r.error.message || '');
+          if (!message.includes('Could not find the') && !message.includes('column')) break;
+          warnThrottled('admins_variant', '[store] admins: colunas ausentes no Supabase — tentando fallback compatível.');
+        }
+        return { error: lastErr || new Error('admins: erro ao salvar') };
+      }
     });
   }
 
